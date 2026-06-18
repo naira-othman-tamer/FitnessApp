@@ -1,4 +1,22 @@
 services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=SqlServer@123
+    ports:
+      - "1434:1433"
+    healthcheck:
+        test : ["CMD", "/opt/mssql-tools/bin/sqlcmd", "-S", "localhost", "-U", "sa", "-P", "SqlServer@123", "-Q", "SELECT 1"]
+        interval: 10s
+        timeout: 5s
+        retries: 5
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "15672:15672"
+      - "5672:5672"
   fitnessapp:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
