@@ -1,0 +1,6 @@
+services:
+  fitnessapp:
+    image: ${DOCKER_REGISTRY-}fitnessapp
+    build:
+      context: .
+      dockerfile: FitnessApp/Dockerfile
