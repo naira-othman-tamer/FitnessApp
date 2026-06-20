@@ -7,4 +7,5 @@
   <Project Path="FitnessApp/FitnessApp.csproj" />
   <Project Path="NutritionService/NutritionService.csproj" Id="0819576e-9d8f-4778-8675-a58952440995" />
   <Project Path="ProgressTrackingService/ProgressTrackingService.csproj" Id="832d895b-ffa6-46b3-ad3f-504f3ce7b8a0" />
+  <Project Path="WorkoutService/WorkoutService.csproj" Id="1e740085-13fc-49f4-951f-2a40b9e1deec" />
 </Solution>

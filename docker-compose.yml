@@ -24,3 +24,8 @@ services:
     build:
       context: .
       dockerfile: ProgressTrackingService/Dockerfile
+  workoutservice:
+    image: ${DOCKER_REGISTRY-}workoutservice
+    build:
+      context: .
+      dockerfile: WorkoutService/Dockerfile
