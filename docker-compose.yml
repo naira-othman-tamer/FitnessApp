@@ -19,3 +19,8 @@ services:
     build:
       context: .
       dockerfile: NutritionService/Dockerfile
+  progresstrackingservice:
+    image: ${DOCKER_REGISTRY-}progresstrackingservice
+    build:
+      context: .
+      dockerfile: ProgressTrackingService/Dockerfile
