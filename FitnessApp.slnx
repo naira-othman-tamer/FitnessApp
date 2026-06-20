@@ -2,5 +2,6 @@
   <Project Path="docker-compose.dcproj">
     <Build />
   </Project>
+  <Project Path="FCE/FCE.csproj" Id="1b1b3148-176b-4b15-93f6-e7467ea95ad0" />
   <Project Path="FitnessApp/FitnessApp.csproj" />
 </Solution>
