@@ -4,8 +4,7 @@
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
       "serviceActions": {
-        "fitnessapp": "StartDebugging",
-        "authenticationservice": "StartDebugging"
+        "fitnessapp": "StartDebugging"
       }
     }
   }
