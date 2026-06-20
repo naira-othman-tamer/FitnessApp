@@ -4,7 +4,11 @@ services:
     build:
       context: .
       dockerfile: FitnessApp/Dockerfile
-
+  fce:
+    image: ${DOCKER_REGISTRY-}fce
+    build:
+      context: .
+      dockerfile: Fce/Dockerfile
   authenticationservice:
     image: ${DOCKER_REGISTRY-}authenticationservice
     build:
