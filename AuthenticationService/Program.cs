@@ -13,7 +13,8 @@ builder.Services.AddMediatR(configuration =>
     configuration.RegisterServicesFromAssembly(typeof(Program).Assembly));
 builder.Services.AddScoped<ExceptionMiddleware>();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+    options.CustomSchemaIds(type => (type.FullName ?? type.Name).Replace('+', '.')));
 builder.Services.AddHealthChecks();
 
 var app = builder.Build();

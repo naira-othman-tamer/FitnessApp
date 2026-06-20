@@ -21,19 +21,26 @@ public sealed class AuthenticationDataSeeder(
                 await roleManager.CreateAsync(new IdentityRole<Guid>(roleName));
         }
 
-        var email = configuration["Seed:Administrator:Email"];
-        var password = configuration["Seed:Administrator:Password"];
+        await SeedUserAsync("Seed:Administrator", "Admin");
+        await SeedUserAsync("Seed:User", "User");
+    }
+
+    private async Task SeedUserAsync(string configurationSection, string roleName)
+    {
+        var email = configuration[$"{configurationSection}:Email"];
+        var password = configuration[$"{configurationSection}:Password"];
         if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
             return;
 
-        var user = await userManager.FindByEmailAsync(email);
+        var normalizedEmail = email.Trim().ToLowerInvariant();
+        var user = await userManager.FindByEmailAsync(normalizedEmail);
         if (user is null)
         {
             user = new ApplicationUser
             {
                 Id = Guid.NewGuid(),
-                UserName = email.Trim().ToLowerInvariant(),
-                Email = email.Trim().ToLowerInvariant(),
+                UserName = normalizedEmail,
+                Email = normalizedEmail,
                 EmailConfirmed = true,
                 CreatedAt = DateTime.UtcNow
             };
@@ -42,7 +49,11 @@ public sealed class AuthenticationDataSeeder(
                 throw new InvalidOperationException(string.Join(" ", created.Errors.Select(x => x.Description)));
         }
 
-        if (await roleManager.RoleExistsAsync("Admin") && !await userManager.IsInRoleAsync(user, "Admin"))
-            await userManager.AddToRoleAsync(user, "Admin");
+        if (!await roleManager.RoleExistsAsync(roleName) || await userManager.IsInRoleAsync(user, roleName))
+            return;
+
+        var roleResult = await userManager.AddToRoleAsync(user, roleName);
+        if (!roleResult.Succeeded)
+            throw new InvalidOperationException(string.Join(" ", roleResult.Errors.Select(x => x.Description)));
     }
 }
