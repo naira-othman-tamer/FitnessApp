@@ -51,9 +51,11 @@ services:
       - ConnectionStrings__AuthenticationDatabase=Server=sqlserver,1433;Database=FitnessAuthentication;User Id=sa;Password=SqlServer@123;TrustServerCertificate=True;MultipleActiveResultSets=true
     ports:
       - "8082:8080"
-      - "8083:8081"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    depends_on:
+      sqlserver:
+        condition: service_healthy
