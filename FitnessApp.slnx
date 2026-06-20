@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="AuthenticationService/AuthenticationService.csproj" Id="893720d3-7a74-4739-854c-20507512cea9" />
   <Project Path="docker-compose.dcproj">
     <Build />
   </Project>

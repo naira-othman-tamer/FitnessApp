@@ -4,3 +4,9 @@ services:
     build:
       context: .
       dockerfile: FitnessApp/Dockerfile
+
+  authenticationservice:
+    image: ${DOCKER_REGISTRY-}authenticationservice
+    build:
+      context: .
+      dockerfile: AuthenticationService/Dockerfile
