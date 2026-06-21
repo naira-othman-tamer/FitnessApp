@@ -36,7 +36,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
-      - ConnectionStrings__AuthenticationDatabase=Server=sqlserver,1433;Database=FceDB;User Id=sa;Password=SqlServer@123;TrustServerCertificate=True;MultipleActiveResultSets=true
+      - ConnectionStrings__FCEDatabase=Server=sqlserver,1433;Database=FceDB;User Id=sa;Password=SqlServer@123;TrustServerCertificate=True;MultipleActiveResultSets=true
     ports:
       - "7080:8080"
       - "7081:8081"
@@ -67,7 +67,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
-      - ConnectionStrings__AuthenticationDatabase=Server=sqlserver,1433;Database=profileservice;User Id=sa;Password=SqlServer@123;TrustServerCertificate=True;MultipleActiveResultSets=true
+      - ConnectionStrings__ProfileDatabase=Server=sqlserver,1433;Database=profileservice;User Id=sa;Password=SqlServer@123;TrustServerCertificate=True;MultipleActiveResultSets=true
     ports:
       - "3080:8080"
       - "3081:8081"    
