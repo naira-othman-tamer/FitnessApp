@@ -11,6 +11,8 @@
   <ItemGroup>
     <PackageReference Include="Autofac" Version="8.4.0" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="FluentValidation" Version="11.12.0" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.12.0" />
     <PackageReference Include="MassTransit" Version="8.5.10" />
     <PackageReference Include="MassTransit.RabbitMQ" Version="8.5.10" />
     <PackageReference Include="MediatR" Version="12.5.0" />
@@ -22,10 +24,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\MetricsCalculation\" />
-    <Folder Include="Features\PlanAssignment\" />
-    <Folder Include="Features\Recalculation\" />
-    <Folder Include="Features\UserStates\" />
+    <Folder Include="Features\MetricsCalculation\GetCurrentMetrics\" />
+    <Folder Include="Features\MetricsCalculation\GetCurrentUserFitnessStates\" />
+    <Folder Include="Features\MetricsCalculation\CalculateFitnessMetrics\" />
+    <Folder Include="Features\PlanAssignment\GetFitnessPlanConfigs\" />
+    <Folder Include="Features\PlanAssignment\AssignPlan\" />
+    <Folder Include="Features\PlanAssignment\GetPlanById\" />
+    <Folder Include="Features\Recalculation\RecalculateMetrics\" />
+    <Folder Include="Features\UserStates\SetWeightGoalActivity\" />
   </ItemGroup>
 
 </Project>
