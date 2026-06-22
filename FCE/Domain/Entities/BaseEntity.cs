@@ -1,4 +1,4 @@
-﻿namespace FCE.Domain
+﻿namespace FCE.Domain.Entities
 {
     public class BaseEntity
     {

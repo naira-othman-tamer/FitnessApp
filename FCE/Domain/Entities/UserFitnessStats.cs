@@ -1,0 +1,65 @@
+﻿using FCE.Domain.Enums;
+using FCE.Domain.ValueObject;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace FCE.Domain.Entities
+{
+    public class UserFitnessStats : BaseEntity //stage1 [Stores raw physical input variables]
+    {
+        public Guid userId { get; set; }
+        public PhysicalStats PhysicalStats { get; set; }
+        public Goal goal { get; set; }
+        public ActivityLevel activityLevel { get; set; }
+        public bool IsActive { get; set; }
+    }
+
+    public class UserFitnessStatsConfiguration : IEntityTypeConfiguration<UserFitnessStats>
+    {
+        public void Configure(EntityTypeBuilder<UserFitnessStats> builder)
+        {
+            builder.ToTable("UserFitnessStats");
+
+            builder.HasKey(x => x.Id);
+
+            builder.HasIndex(x => x.userId).IsUnique();
+
+            builder.Property(x => x.userId)
+                   .IsRequired();
+
+            builder.Property(x => x.goal)
+                   .HasConversion<string>()
+                   .HasMaxLength(50)
+                   .IsRequired();
+
+            builder.Property(x => x.activityLevel)
+                   .HasConversion<string>()
+                   .HasMaxLength(50)
+                   .IsRequired();
+
+            builder.Property(x => x.IsActive)
+                   .HasDefaultValue(true);
+
+            builder.OwnsOne(x => x.PhysicalStats, p =>
+            {
+                p.Property(x => x.Weight)
+                 .HasColumnName("Weight")
+                 .IsRequired();
+
+                p.Property(x => x.Height)
+                 .HasColumnName("Height")
+                 .IsRequired();
+
+                p.Property(x => x.Age)
+                 .HasColumnName("Age")
+                 .IsRequired();
+
+                p.Property(x => x.Gender)
+                 .HasColumnName("Gender")
+                 .HasConversion<string>()
+                 .HasMaxLength(10)
+                 .IsRequired();
+            });
+        }
+    }
+}

@@ -1,4 +1,4 @@
-﻿using FCE.Domain;
+﻿using FCE.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 

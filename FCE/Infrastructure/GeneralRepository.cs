@@ -1,4 +1,4 @@
-﻿using FCE.Domain;
+﻿using FCE.Domain.Entities;
 using FCE.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
