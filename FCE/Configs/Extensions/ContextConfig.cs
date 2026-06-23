@@ -11,7 +11,7 @@ namespace FCE.Configs.Extensions
         public static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<Context>(opt =>
-                opt.UseSqlServer(configuration.GetConnectionString("DefaultConnection"))
+                opt.UseSqlServer(configuration.GetConnectionString("cs"))
                    .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
                    .LogTo(log => Debug.WriteLine(log), LogLevel.Information)
                    .EnableSensitiveDataLogging()

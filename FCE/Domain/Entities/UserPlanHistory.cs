@@ -8,7 +8,7 @@ namespace FCE.Domain.Entities
         public int UserId { get; set; }
         public int ExternalPlanId { get; set; }
         //public DateTime AssignedAt { get; set; } >> CreatedAt
-        public DateTime EndedAt { get; set; }
+        public DateTime? EndedAt { get; set; }
         public string? ResonForChange { get; set; }
     }
 
