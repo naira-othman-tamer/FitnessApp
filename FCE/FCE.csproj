@@ -28,14 +28,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\MetricsCalculation\GetCurrentMetrics\" />
-    <Folder Include="Features\MetricsCalculation\GetCurrentUserFitnessStates\" />
-    <Folder Include="Features\MetricsCalculation\CalculateFitnessMetrics\" />
+    <Folder Include="Features\MetricsCalculation\CalculateFitnessMetrics\Orchestrators\" />
+    <Folder Include="Features\MetricsCalculation\CalculateFitnessMetrics\Requests\" />
+    <Folder Include="Features\MetricsCalculation\CalculateFitnessMetrics\Requests\GetCurrentMetrics\" />
+    <Folder Include="Features\MetricsCalculation\CalculateFitnessMetrics\Requests\GetCurrentUserFitnessStates\" />
     <Folder Include="Features\PlanAssignment\GetFitnessPlanConfigs\" />
     <Folder Include="Features\PlanAssignment\AssignPlan\" />
     <Folder Include="Features\PlanAssignment\GetPlanById\" />
     <Folder Include="Features\Recalculation\RecalculateMetrics\" />
-    <Folder Include="Features\UserStates\SetWeightGoalActivity\" />
   </ItemGroup>
 
 	<ItemGroup>

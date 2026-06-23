@@ -3,8 +3,10 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using FCE.Configs;
 using FCE.Configs.Extensions;
+using FCE.Features.MetricsCalculation.CalculateFitnessMetrics;
 using FCE.Features.UserStates.SubmitFitnessStats;
 using System.Reflection;
+using System.Text.Json.Serialization;
 
 namespace FCE
 {
@@ -27,6 +29,13 @@ namespace FCE
             builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
             builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
                 containerBuilder.RegisterModule(new AutofacModule()));
+
+            builder.Services.ConfigureHttpJsonOptions(options =>
+            {
+                options.SerializerOptions.Converters.Add(
+                    new JsonStringEnumConverter());
+            });
+
             var app = builder.Build();
 
             await app.MigrateDatabaseAsync();
@@ -40,7 +49,8 @@ namespace FCE
             app.UseHttpsRedirection();
             app.UseAuthorization();
             app.MapControllers();
-            app.MapSubmitFitnessStateEndPoints();
+           // app.MapSubmitFitnessStateEndPoints();
+            app.MapCalculateMetricsEndPoints();
             app.Run();
         }
     }

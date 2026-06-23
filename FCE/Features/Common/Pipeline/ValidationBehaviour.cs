@@ -43,7 +43,6 @@ namespace FCE.Features.Common.Pipeline
                     .GetMethod("Failure")!
                     .Invoke(null, new object[] { errorMessage, RequestErrorCode.ValidationError });
 
-                //return (TResponse)(object)failureResult;
                 return (TResponse)failureResult!;
             }
 

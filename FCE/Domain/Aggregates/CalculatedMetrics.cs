@@ -1,9 +1,10 @@
-﻿using FCE.Domain.Enums;
+﻿using FCE.Domain.Entities;
+using FCE.Domain.Enums;
 using FCE.Domain.ValueObject;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace FCE.Domain.Entities
+namespace FCE.Domain.Aggregates
 {
     public class CalculatedMetrics : BaseEntity
     {
