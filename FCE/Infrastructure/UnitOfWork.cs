@@ -41,7 +41,6 @@ namespace FCE.Infrastructure
             }
             catch
             {
-
                 if (!string.IsNullOrEmpty(_savePointName))
                     await _transaction.RollbackToSavepointAsync(_savePointName, cs);
                 else
@@ -56,9 +55,7 @@ namespace FCE.Infrastructure
                     await _transaction.DisposeAsync();
                     _transaction = null;
                 }
-
             }
-        
         }  
     }
 }

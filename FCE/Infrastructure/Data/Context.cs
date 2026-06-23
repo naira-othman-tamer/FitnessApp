@@ -9,6 +9,10 @@ namespace FCE.Infrastructure.Data
         public Context(DbContextOptions<Context> options) : base (options) { }
 
         public DbSet<UserFitnessStats> UserFitnessStats { get; set; }
+        public DbSet<CalculatedMetrics> CalculatedMetrics { get; set; }
+        public DbSet<UserAssignedPlan> UserAssignedPlans { get; set; }
+        public DbSet<PlanRule> PlanRules { get; set; }
+        public DbSet<UserPlanHistory> UserPlanHistories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

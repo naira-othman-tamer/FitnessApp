@@ -16,7 +16,6 @@ namespace FCE.Infrastructure
             _dbSet = context.Set<T>();
         }
 
-
         #region ReadRegion
         public IQueryable<T> GetAll()
         {
@@ -36,10 +35,8 @@ namespace FCE.Infrastructure
         {
             var trackedEntity = _dbSet.Where(x => x.Id == id && !x.IsDeleted)
                 .AsTracking();
-
             return trackedEntity;
         }
-
         #endregion
 
         public void Add(T entity)
@@ -47,7 +44,6 @@ namespace FCE.Infrastructure
             _dbSet.Add(entity);
             entity.CreatedAt = DateTime.UtcNow;
         }
-
         public int AddAndReturnId(T entity)
         {
             _dbSet.Add(entity);
@@ -56,7 +52,6 @@ namespace FCE.Infrastructure
         }
 
         #region UpdateRegion
-
         public void Update(T entity)
         {
             _dbSet.Update(entity);
@@ -72,15 +67,11 @@ namespace FCE.Infrastructure
 
             //1-Check if the entity is already being tracked by the context
             var local = _dbSet.Local.FirstOrDefault(entry => entry.Id == entity.Id);
-
             EntityEntry entityEntry;
-
-
             if (local is null)
             {
                 // 2- If the entity is not being tracked, attach it to the context
                 entityEntry = _context.Entry(entity); //start tracking the entity
-
             }
             else
             {
@@ -88,7 +79,6 @@ namespace FCE.Infrastructure
                 entityEntry = _context.ChangeTracker.Entries<T>()
                                                     .FirstOrDefault(e => e.Entity.Id == entity.Id);
             }
-
             // 4- Mark only the specified properties as modified
             foreach (var prop in entityEntry.Properties)
             {
@@ -99,13 +89,9 @@ namespace FCE.Infrastructure
                                               .GetProperty(prop.Metadata.Name)
                                               .GetValue(entity);
                     prop.IsModified = true;
-
                 }
-
             }
         }
-
-        #endregion
 
         public void SoftDelete(T entity)
         {
@@ -122,5 +108,6 @@ namespace FCE.Infrastructure
             SoftDelete(entity.FirstOrDefault());
             return true;
         }
+        #endregion
     }
 }

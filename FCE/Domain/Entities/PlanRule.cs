@@ -13,6 +13,23 @@ namespace FCE.Domain.Entities
         public string ExternalPlanId { get; private set; }
         public string? PlanName { get; private set; }
         public int WorkoutsPerWeek { get; private  set; }
+
+        public static PlanRule Create(
+       Goal goal,
+       CalorieIntensityTier tier,
+       string externalPlanId,
+       string planName,
+       int workoutsPerWeek)
+        {
+            return new PlanRule
+            {
+                goal = goal,
+                calorieIntensityTier = tier,
+                ExternalPlanId = externalPlanId,
+                PlanName = planName,
+                WorkoutsPerWeek = workoutsPerWeek
+            };
+        }
     }
 
     public class PlanRuleConfiguration : IEntityTypeConfiguration<PlanRule>

@@ -34,4 +34,10 @@
     <Folder Include="Features\UserStates\SetWeightGoalActivity\" />
   </ItemGroup>
 
+	<ItemGroup>
+		<Content Update="Infrastructure\Data\Seed\PlanRules.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
 </Project>

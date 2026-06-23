@@ -1,9 +1,15 @@
 
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using FCE.Configs;
+using FCE.Configs.Extensions;
+using System.Reflection;
+
 namespace FCE
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -13,8 +19,16 @@ namespace FCE
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddDatabase(builder.Configuration);
+            builder.Services.AddMediatR(cfg =>
+                 cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
+            builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+            builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
+                containerBuilder.RegisterModule(new AutofacModule()));
             var app = builder.Build();
+
+            await app.MigrateDatabaseAsync();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

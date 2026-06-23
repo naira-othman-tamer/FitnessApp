@@ -66,8 +66,8 @@ namespace FCE.Domain.Entities
         private static CalorieIntensityTier ClassifyTier(double calorieTarget) =>
             calorieTarget switch
             {
-                <= 1800 => CalorieIntensityTier.low,
-                > 1800 and <= 2500 => CalorieIntensityTier.moderate,
+                <= 1800 => CalorieIntensityTier.Low,
+                > 1800 and <= 2500 => CalorieIntensityTier.Moderate,
                 _ => CalorieIntensityTier.High
             };
     }
