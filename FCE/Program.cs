@@ -3,6 +3,7 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using FCE.Configs;
 using FCE.Configs.Extensions;
+using FCE.Features.UserStates.SubmitFitnessStats;
 using System.Reflection;
 
 namespace FCE
@@ -36,14 +37,10 @@ namespace FCE
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
             app.UseHttpsRedirection();
-
             app.UseAuthorization();
-
-
             app.MapControllers();
-
+            app.MapSubmitFitnessStateEndPoints();
             app.Run();
         }
     }

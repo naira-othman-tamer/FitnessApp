@@ -1,6 +1,23 @@
-@FCE_HostAddress = http://localhost:5083
+@FCE_HostAddress = https://localhost:7013
 
 GET {{FCE_HostAddress}}/weatherforecast/
 Accept: application/json
+
+###
+
+POST {{FCE_HostAddress}}/stats
+Content-Type: application/json
+{
+  "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "physicalStats": {
+    "weight": 60,
+    "height": 160,
+    "age": 25,
+    "gender": 1
+  },
+  "goal": 2,
+  "activityLevel": 1,
+  "isActive": true
+}
 
 ###
