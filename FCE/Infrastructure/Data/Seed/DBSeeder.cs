@@ -33,7 +33,7 @@ namespace FCE.Infrastructure.Data.Seed
         private record PlanRuleJson(
             string Goal,
             string CalorieIntensityTier,
-            string ExternalPlanId,
+            int ExternalPlanId,
             string PlanName,
             int WorkoutsPerWeek
         );

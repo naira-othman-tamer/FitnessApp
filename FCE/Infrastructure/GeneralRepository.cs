@@ -42,7 +42,7 @@ namespace FCE.Infrastructure
         public void Add(T entity)
         {
             _dbSet.Add(entity);
-            entity.CreatedAt = DateTime.UtcNow;
+            //entity.CreatedAt = DateTime.UtcNow;
         }
         public int AddAndReturnId(T entity)
         {

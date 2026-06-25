@@ -8,7 +8,7 @@ namespace FCE.Domain.Entities
         public Guid userId { get; set; }
         public int ExternalPlanId { get; set; }
         //public DateTime AssignedAt { get; set; } >> CreatedAt
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; } = true;
     }
 
     public class UserAssignedPlanConfiguration : IEntityTypeConfiguration<UserAssignedPlan>
@@ -19,7 +19,7 @@ namespace FCE.Domain.Entities
 
             builder.HasKey(x => x.Id);
 
-            builder.HasIndex(x => x.userId).IsUnique();
+            //builder.HasIndex(x => x.userId).IsUnique();
 
             builder.Property(x => x.userId)
                    .IsRequired();

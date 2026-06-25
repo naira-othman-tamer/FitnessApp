@@ -12,8 +12,8 @@ Content-Type: application/json
   "physicalStats": {
     "weight": 60,
     "height": 160,
-    "age": 25,
-    "gender": "Female"
+    "age": 20,
+    "gender": "male"
   },
   "goal": "GetFitter",
   "activityLevel": "Beginner",
@@ -27,4 +27,8 @@ Content-Type: application/json
 {
   "userId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
 }
+###
+
+GET {{FCE_HostAddress}}/Metrics/3FA85F64-5717-4562-B3FC-2C963F66AFA6
+
 ###

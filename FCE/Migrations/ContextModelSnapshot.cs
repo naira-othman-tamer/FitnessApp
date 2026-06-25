@@ -22,7 +22,7 @@ namespace FCE.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("FCE.Domain.Entities.CalculatedMetrics", b =>
+            modelBuilder.Entity("FCE.Domain.Aggregates.CalculatedMetrics", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -67,10 +67,9 @@ namespace FCE.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("ExternalPlanId")
-                        .IsRequired()
+                    b.Property<int>("ExternalPlanId")
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -137,9 +136,6 @@ namespace FCE.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("userId")
-                        .IsUnique();
 
                     b.ToTable("UserAssignedPlans", (string)null);
                 });
@@ -221,8 +217,8 @@ namespace FCE.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -231,7 +227,7 @@ namespace FCE.Migrations
                     b.ToTable("UserPlanHistory", (string)null);
                 });
 
-            modelBuilder.Entity("FCE.Domain.Entities.CalculatedMetrics", b =>
+            modelBuilder.Entity("FCE.Domain.Aggregates.CalculatedMetrics", b =>
                 {
                     b.OwnsOne("FCE.Domain.ValueObject.MetabolicCalculator", "Result", b1 =>
                         {

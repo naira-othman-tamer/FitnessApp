@@ -17,6 +17,24 @@ namespace FCE.Domain.Aggregates
 
         private CalculatedMetrics() { }
 
+        public static CalculatedMetrics Calculate(Guid userId,PhysicalStats physicalStats,ActivityLevel activityLevel,Goal goal)
+        {
+            var bmr = CalculateBmr(physicalStats);  //from value object
+            var tdee = CalculateTdee(bmr,activityLevel);
+            var calorieTarget = CalculateCalorieTarget(tdee, goal);
+            var tier = ClassifyTier(calorieTarget);
+
+            return new CalculatedMetrics
+            {
+                UserId = userId,
+                Result = new MetabolicCalculator(
+                    Math.Round(bmr, 2),
+                    Math.Round(tdee, 2),
+                    Math.Round(calorieTarget, 2),
+                    tier
+                )
+            };
+        }
         public static CalculatedMetrics Calculate(UserFitnessStats stats)
         {
             var bmr = CalculateBmr(stats.PhysicalStats);  //from value object

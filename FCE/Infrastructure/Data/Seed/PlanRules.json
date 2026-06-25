@@ -2,105 +2,105 @@
   {
     "Goal": "LoseWeight",
     "CalorieIntensityTier": "Low",
-    "ExternalPlanId": "plan_lw_low",
+    "ExternalPlanId": 100,
     "PlanName": "Weight Loss - Light Intensity",
     "WorkoutsPerWeek": 3
   },
   {
     "Goal": "LoseWeight",
     "CalorieIntensityTier": "Moderate",
-    "ExternalPlanId": "plan_lw_moderate",
+    "ExternalPlanId": 200,
     "PlanName": "Weight Loss - Moderate Intensity",
     "WorkoutsPerWeek": 4
   },
   {
     "Goal": "LoseWeight",
     "CalorieIntensityTier": "High",
-    "ExternalPlanId": "plan_lw_high",
+    "ExternalPlanId": 300,
     "PlanName": "Weight Loss - High Intensity",
     "WorkoutsPerWeek": 5
   },
   {
     "Goal": "GainWeight",
     "CalorieIntensityTier": "Low",
-    "ExternalPlanId": "plan_gw_low",
+    "ExternalPlanId": 400,
     "PlanName": "Weight Gain - Light Intensity",
     "WorkoutsPerWeek": 3
   },
   {
     "Goal": "GainWeight",
     "CalorieIntensityTier": "Moderate",
-    "ExternalPlanId": "plan_gw_moderate",
+    "ExternalPlanId": 500,
     "PlanName": "Weight Gain - Moderate Intensity",
     "WorkoutsPerWeek": 4
   },
   {
     "Goal": "GainWeight",
     "CalorieIntensityTier": "High",
-    "ExternalPlanId": "plan_gw_high",
+    "ExternalPlanId": 600,
     "PlanName": "Weight Gain - High Intensity",
     "WorkoutsPerWeek": 5
   },
   {
     "Goal": "GetFitter",
     "CalorieIntensityTier": "Low",
-    "ExternalPlanId": "plan_gf_low",
+    "ExternalPlanId": 700,
     "PlanName": "Get Fitter - Light Intensity",
     "WorkoutsPerWeek": 3
   },
   {
     "Goal": "GetFitter",
     "CalorieIntensityTier": "Moderate",
-    "ExternalPlanId": "plan_gf_moderate",
+    "ExternalPlanId": 800,
     "PlanName": "Get Fitter - Moderate Intensity",
     "WorkoutsPerWeek": 4
   },
   {
     "Goal": "GetFitter",
     "CalorieIntensityTier": "High",
-    "ExternalPlanId": "plan_gf_high",
+    "ExternalPlanId": 900,
     "PlanName": "Get Fitter - High Intensity",
     "WorkoutsPerWeek": 5
   },
   {
     "Goal": "GainMoreFlexible",
     "CalorieIntensityTier": "Low",
-    "ExternalPlanId": "plan_gmf_low",
+    "ExternalPlanId": 1000,
     "PlanName": "Flexibility - Light Intensity",
     "WorkoutsPerWeek": 3
   },
   {
     "Goal": "GainMoreFlexible",
     "CalorieIntensityTier": "Moderate",
-    "ExternalPlanId": "plan_gmf_moderate",
+    "ExternalPlanId": 1100,
     "PlanName": "Flexibility - Moderate Intensity",
     "WorkoutsPerWeek": 4
   },
   {
     "Goal": "GainMoreFlexible",
     "CalorieIntensityTier": "High",
-    "ExternalPlanId": "plan_gmf_high",
+    "ExternalPlanId": 1200,
     "PlanName": "Flexibility - High Intensity",
     "WorkoutsPerWeek": 5
   },
   {
     "Goal": "LearnTheBasic",
     "CalorieIntensityTier": "Low",
-    "ExternalPlanId": "plan_ltb_low",
+    "ExternalPlanId": 1300,
     "PlanName": "Learn The Basic - Light Intensity",
     "WorkoutsPerWeek": 2
   },
   {
     "Goal": "LearnTheBasic",
     "CalorieIntensityTier": "Moderate",
-    "ExternalPlanId": "plan_ltb_moderate",
+    "ExternalPlanId": 1400,
     "PlanName": "Learn The Basic - Moderate Intensity",
     "WorkoutsPerWeek": 3
   },
   {
     "Goal": "LearnTheBasic",
     "CalorieIntensityTier": "High",
-    "ExternalPlanId": "plan_ltb_high",
+    "ExternalPlanId": 1500,
     "PlanName": "Learn The Basic - High Intensity",
     "WorkoutsPerWeek": 4
   }

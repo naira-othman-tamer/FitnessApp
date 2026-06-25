@@ -27,17 +27,6 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\MetricsCalculation\CalculateFitnessMetrics\Orchestrators\" />
-    <Folder Include="Features\MetricsCalculation\CalculateFitnessMetrics\Requests\" />
-    <Folder Include="Features\MetricsCalculation\CalculateFitnessMetrics\Requests\GetCurrentMetrics\" />
-    <Folder Include="Features\MetricsCalculation\CalculateFitnessMetrics\Requests\GetCurrentUserFitnessStates\" />
-    <Folder Include="Features\PlanAssignment\GetFitnessPlanConfigs\" />
-    <Folder Include="Features\PlanAssignment\AssignPlan\" />
-    <Folder Include="Features\PlanAssignment\GetPlanById\" />
-    <Folder Include="Features\Recalculation\RecalculateMetrics\" />
-  </ItemGroup>
-
 	<ItemGroup>
 		<Content Update="Infrastructure\Data\Seed\PlanRules.json">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -6,7 +6,7 @@ using FCE.Infrastructure;
 using FluentValidation;
 using MediatR;
 
-namespace FCE.Features.UserStates.SubmitFitnessStats
+namespace FCE.Features.Stats.SubmitFitnessStats
 {
     public record SubmitStateCommand
     (Guid userId,

@@ -10,14 +10,14 @@ namespace FCE.Domain.Entities
        public CalorieIntensityTier calorieIntensityTier { get; private set; }
         //public double? calorieMin { get; private set; }
         //public double? calorieMax { get; private set; }
-        public string ExternalPlanId { get; private set; }
+        public int ExternalPlanId { get; private set; }
         public string? PlanName { get; private set; }
         public int WorkoutsPerWeek { get; private  set; }
 
         public static PlanRule Create(
        Goal goal,
        CalorieIntensityTier tier,
-       string externalPlanId,
+       int externalPlanId,
        string planName,
        int workoutsPerWeek)
         {
