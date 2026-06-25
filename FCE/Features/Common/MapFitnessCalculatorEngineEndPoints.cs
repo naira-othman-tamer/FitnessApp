@@ -13,12 +13,7 @@ namespace FCE.Features.Common
             //var group = endpoints.MapGroup("/api/v1/auth").WithTags("Authentication");
             //group.MapRegister();
             //group.MapCompleteProfile();
-            //group.MapLogin();
-            //group.MapForgotPassword();
-            //group.MapVerifyOtp();
-            //group.MapResetPassword();
-            //group.MapRefreshToken();
-            //group.MapLogout();
+
             //return endpoints;
         }
     }

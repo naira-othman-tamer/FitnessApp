@@ -24,7 +24,7 @@ namespace FCE.Features.Metrics
     {
         public static void MapSubmitCalculateMetricsEndPoint(this IEndpointRouteBuilder builder)
         {
-            builder.MapPost("stats", async (
+            builder.MapPost("Metrics", async (
                 SubmitCalculatedMetricsOrchestrator request,
                 IMediator mediator) =>
             {
