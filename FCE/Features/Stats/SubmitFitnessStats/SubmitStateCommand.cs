@@ -74,7 +74,7 @@ namespace FCE.Features.Stats.SubmitFitnessStats
 
     public static class SubmitFitnessEndPoint
     {
-        public static void MapSubmitFitnessStateEndPoints(this IEndpointRouteBuilder builder)
+        public static void MapSubmitFitnessStateEndPoint(this IEndpointRouteBuilder builder)
         {
             builder.MapPost("stats", async (
                 SubmitStateCommand request,

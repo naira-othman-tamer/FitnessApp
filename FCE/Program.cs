@@ -3,6 +3,9 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using FCE.Configs;
 using FCE.Configs.Extensions;
+using FCE.Features.Common;
+using FCE.Features.Metrics;
+using FCE.Features.Stats.SubmitFitnessStats;
 using System.Reflection;
 using System.Text.Json.Serialization;
 
@@ -47,8 +50,9 @@ namespace FCE
             app.UseHttpsRedirection();
             app.UseAuthorization();
             app.MapControllers();
-           // app.MapSubmitFitnessStateEndPoints();
-            //app.MapSubmitCalculateMetricsEndPoints();
+            // app.MapFCEEndpoints();
+           // app.MapSubmitCalculateMetricsEndPoint();
+            app.MapSubmitFitnessStateEndPoint();
             app.Run();
         }
     }

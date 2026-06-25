@@ -22,7 +22,7 @@ namespace FCE.Features.Metrics
 
     public static class CalculateMetricsEndPoint
     {
-        public static void MapSubmitCalculateMetricsEndPoints(this IEndpointRouteBuilder builder)
+        public static void MapSubmitCalculateMetricsEndPoint(this IEndpointRouteBuilder builder)
         {
             builder.MapPost("stats", async (
                 SubmitCalculatedMetricsOrchestrator request,
