@@ -5,6 +5,7 @@ using FCE.Features.Common.Helpers;
 using FCE.Infrastructure;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FCE.Features.Stats.SubmitFitnessStats
 {
@@ -76,9 +77,10 @@ namespace FCE.Features.Stats.SubmitFitnessStats
     {
         public static void MapSubmitFitnessStateEndPoint(this IEndpointRouteBuilder builder)
         {
-            builder.MapPost("stats", async (
-                SubmitStateCommand request,
-                IMediator mediator) =>
+            builder.MapPost("", async (
+               [FromBody] SubmitStateCommand request,
+               [FromServices] IMediator mediator
+                ) =>
             {
                 var id = await mediator.Send(request);
                 return Results.Created($"stats/{id}", new { id });

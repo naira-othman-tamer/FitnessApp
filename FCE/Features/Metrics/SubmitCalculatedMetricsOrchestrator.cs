@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FCE.Features.Metrics
 {
@@ -24,9 +25,9 @@ namespace FCE.Features.Metrics
     {
         public static void MapSubmitCalculateMetricsEndPoint(this IEndpointRouteBuilder builder)
         {
-            builder.MapPost("Metrics", async (
-                SubmitCalculatedMetricsOrchestrator request,
-                IMediator mediator) =>
+            builder.MapPost("", async (
+                [FromBody] SubmitCalculatedMetricsOrchestrator request, 
+                [FromServices] IMediator mediator) =>
             {
                 var result = await mediator.Send(request);
                 return Results.Ok(result);
