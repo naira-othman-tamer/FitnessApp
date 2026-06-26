@@ -1,4 +1,4 @@
-﻿using FCE.Domain.Entities;
+﻿using FCE.Domain.Aggregates;
 using FCE.Domain.Enums;
 using FCE.Domain.ValueObject;
 using FCE.Features.Common.Helpers;
@@ -34,7 +34,7 @@ namespace FCE.Features.Stats.SubmitFitnessStats
                 IsActive = request.IsActive
             };
             _userStatsRepo.Add(userFitnessStats);
-
+            await _userStatsRepo.SaveChangesAsync();
             return userFitnessStats.Id;
         }
     }
@@ -75,7 +75,7 @@ namespace FCE.Features.Stats.SubmitFitnessStats
 
     public static class SubmitFitnessEndPoint
     {
-        public static void MapSubmitFitnessStateEndPoint(this IEndpointRouteBuilder builder)
+        public static void SubmitFitnessStateEndPoint(this IEndpointRouteBuilder builder)
         {
             builder.MapPost("", async (
                [FromBody] SubmitStateCommand request,

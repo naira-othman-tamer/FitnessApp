@@ -1,5 +1,4 @@
 ﻿using FCE.Domain.Aggregates;
-using FCE.Domain.Entities;
 using FCE.Infrastructure;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

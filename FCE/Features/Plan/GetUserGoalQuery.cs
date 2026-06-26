@@ -1,4 +1,4 @@
-﻿using FCE.Domain.Entities;
+﻿using FCE.Domain.Aggregates;
 using FCE.Domain.Enums;
 using FCE.Infrastructure;
 using MediatR;

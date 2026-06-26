@@ -1,7 +1,9 @@
 ﻿using FCE.Domain.Aggregates;
 using FCE.Domain.ValueObject;
+using FCE.Features.Plan;
 using FCE.Infrastructure;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace FCE.Features.Metrics
@@ -24,6 +26,19 @@ namespace FCE.Features.Metrics
                 .FirstOrDefaultAsync(cancellationToken);
 
             return usermetrics;
+        }
+    }
+
+    public static class GetMetricsEndPoint
+    {
+        public static void GetUserMetricsEndpoint(this IEndpointRouteBuilder builder)
+        {
+            builder.MapGet("/{userId}", async ([FromQuery] Guid userId,
+               [FromServices] IMediator mediator) =>
+            {
+                var id = await mediator.Send(new GetUserMetricsQuery(userId));
+                return Results.Ok(id);
+            });
         }
     }
 
