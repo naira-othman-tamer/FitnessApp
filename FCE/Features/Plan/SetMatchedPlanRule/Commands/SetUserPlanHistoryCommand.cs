@@ -3,7 +3,7 @@ using FCE.Features.Common.Helpers;
 using FCE.Infrastructure;
 using MediatR;
 
-namespace FCE.Features.Plan
+namespace FCE.Features.Plan.SetMatchedPlanRule.Commands
 {
     public record SetUserPlanHistoryCommand 
        ( Guid userId,

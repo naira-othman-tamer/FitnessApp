@@ -1,7 +1,9 @@
-﻿using MediatR;
+﻿using FCE.Features.Metrics.SetUserCalculatedMetrics.Commands;
+using FCE.Features.Metrics.SetUserCalculatedMetrics.Queries;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FCE.Features.Metrics
+namespace FCE.Features.Metrics.SetUserCalculatedMetrics.Orchestrator
 {
     public record SubmitCalculatedMetricsOrchestrator(Guid userId) : IRequest<bool>;
     public class SubmitCalculatedMetricsOrchestratorHandler : IRequestHandler<SubmitCalculatedMetricsOrchestrator, bool>

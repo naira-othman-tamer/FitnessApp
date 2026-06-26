@@ -1,8 +1,9 @@
 ﻿using FCE.Domain.Enums;
-using FCE.Features.Stats.SubmitFitnessStats;
+using FCE.Features.Plan.SetMatchedPlanRule.Commands;
+using FCE.Features.Plan.SetMatchedPlanRule.Queries;
 using MediatR;
 
-namespace FCE.Features.Plan
+namespace FCE.Features.Plan.SetMatchedPlanRule.Orchestrator
 {
     public record MatchPlanRuleOrchestrator(Guid userId) : IRequest<bool>;
 
@@ -38,9 +39,9 @@ namespace FCE.Features.Plan
 
     public static class MatchPlanRuleEndPoint
     {
-        public static void MapMatchPlanRuleEndPoint(this IEndpointRouteBuilder builder)
+        public static void SetMatchedPlanRuleEndPoint(this IEndpointRouteBuilder builder)
         {
-            builder.MapPost("stats/{userId}", async (
+            builder.MapPost("/{userId}", async (
                 MatchPlanRuleOrchestrator request,
                 IMediator mediator) =>
             {

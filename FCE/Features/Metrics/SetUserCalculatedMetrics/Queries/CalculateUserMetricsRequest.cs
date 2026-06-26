@@ -3,7 +3,7 @@ using FCE.Infrastructure;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace FCE.Features.Metrics
+namespace FCE.Features.Metrics.SetUserCalculatedMetrics.Queries
 {
     public record CalculateUserMetricsRequest(Guid userId) : IRequest<CalculatedMetrics> ;
 

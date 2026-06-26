@@ -3,7 +3,7 @@ using FCE.Features.Common.Helpers;
 using FCE.Infrastructure;
 using MediatR;
 
-namespace FCE.Features.Metrics
+namespace FCE.Features.Metrics.SetUserCalculatedMetrics.Commands
 {
     public record SetMetricsCommand(CalculatedMetrics metrics) : ICommand<bool>;
 

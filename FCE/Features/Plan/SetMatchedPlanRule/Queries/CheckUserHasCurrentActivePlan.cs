@@ -3,7 +3,7 @@ using FCE.Infrastructure;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace FCE.Features.Plan
+namespace FCE.Features.Plan.SetMatchedPlanRule.Queries
 {
     public record CheckUserHasCurrentActivePlanQuery(Guid userId) : IRequest<bool>;
 

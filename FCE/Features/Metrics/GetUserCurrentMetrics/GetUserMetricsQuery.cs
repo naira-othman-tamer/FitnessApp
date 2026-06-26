@@ -6,7 +6,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace FCE.Features.Metrics
+namespace FCE.Features.Metrics.GetUserCurrentMetrics
 {
     public record GetUserMetricsQuery(Guid userId) : IRequest<MetabolicCalculator>;
 

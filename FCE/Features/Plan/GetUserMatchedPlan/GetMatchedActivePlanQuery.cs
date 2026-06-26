@@ -5,7 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace FCE.Features.Plan
+namespace FCE.Features.Plan.GetUserMatchedPlan
 {
     public record GetMatchedActivePlanQuery(Guid userId) : IRequest<int>;
 
