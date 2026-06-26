@@ -48,7 +48,7 @@ namespace FCE
             app.UseHttpsRedirection();
             app.UseAuthorization();
             app.MapControllers();
-             app.MapFCEEndpoints();
+            app.MapFCEEndpoints();
            
             app.Run();
         }
