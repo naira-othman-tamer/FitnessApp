@@ -13,7 +13,7 @@ namespace FCE.Domain.Aggregates
         //public double TDEE { get; private set; }
         //public double CalorieTarget { get; private set; }
         public MetabolicCalculator Result { get; private set; } 
-       // public CalorieIntensityTier Status { get; private set; }
+       // public CalorieTarget Status { get; private set; }
 
         private CalculatedMetrics() { }
 
@@ -82,12 +82,12 @@ namespace FCE.Domain.Aggregates
                 _ => throw new ArgumentOutOfRangeException()
             };
 
-        private static CalorieIntensityTier ClassifyTier(double calorieTarget) =>
+        private static CalorieTarget ClassifyTier(double calorieTarget) =>
             calorieTarget switch
             {
-                <= 1800 => CalorieIntensityTier.Low,
-                > 1800 and <= 2500 => CalorieIntensityTier.Moderate,
-                _ => CalorieIntensityTier.High
+                <= 1800 => CalorieTarget.Low,
+                > 1800 and <= 2500 => CalorieTarget.Moderate,
+                _ => CalorieTarget.High
             };
     }
 

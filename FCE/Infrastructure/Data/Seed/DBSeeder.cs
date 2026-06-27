@@ -18,9 +18,9 @@ namespace FCE.Infrastructure.Data.Seed
 
             var records = JsonSerializer.Deserialize<List<PlanRuleJson>>(json)!;
 
-            var planRules = records.Select(r => PlanRule.Create(
+            var planRules = records.Select(r => TargetPlan.Create(
                 Enum.Parse<Goal>(r.Goal),
-                Enum.Parse<CalorieIntensityTier>(r.CalorieIntensityTier),
+                Enum.Parse<CalorieTarget>(r.CalorieIntensityTier),
                 r.ExternalPlanId,
                 r.PlanName,
                 r.WorkoutsPerWeek

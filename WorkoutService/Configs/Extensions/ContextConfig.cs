@@ -15,9 +15,6 @@ namespace WorkoutService.Configs.Extensions
                    .EnableSensitiveDataLogging()
             );
 
-            //services.AddScoped<IDbConnection>(_ =>
-            //new SqlConnection(configuration.GetConnectionString("DefaultConnection")));
-
             return services;
         }
     }

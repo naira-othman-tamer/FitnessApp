@@ -12,7 +12,9 @@ namespace FCE.Domain.Aggregates
         public PhysicalStats PhysicalStats { get; set; }
         public Goal goal { get; set; }
         public ActivityLevel activityLevel { get; set; }
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; } = true;
+
+        //public int AssignedPlanId { get; set; }
     }
 
     public class UserFitnessStatsConfiguration : IEntityTypeConfiguration<UserFitnessStats>

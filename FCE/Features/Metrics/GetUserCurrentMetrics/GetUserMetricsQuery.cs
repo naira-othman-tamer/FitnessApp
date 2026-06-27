@@ -1,6 +1,5 @@
 ﻿using FCE.Domain.Aggregates;
 using FCE.Domain.ValueObject;
-using FCE.Features.Plan;
 using FCE.Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

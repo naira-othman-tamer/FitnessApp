@@ -7,6 +7,6 @@ namespace FCE.Domain.ValueObject
     double BMR,
     double TDEE,
     double CalorieTarget,
-    CalorieIntensityTier Tier
+    CalorieTarget Tier
     );
 }

@@ -1,6 +1,6 @@
 ﻿namespace FCE.Domain.Enums
 {
-    public enum CalorieIntensityTier
+    public enum CalorieTarget
     { 
         Low, // <= 1800
         Moderate, // 1801 - 2500

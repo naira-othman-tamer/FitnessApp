@@ -4,37 +4,37 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FCE.Domain.Entities
 {
-    public class PlanRule : BaseEntity //stage 3 [Stores derived fitness plan outputs]
+    public class TargetPlan : BaseEntity //stage 3 [Stores derived fitness plan outputs]
     {
         public Goal goal { get; private set; }
-       public CalorieIntensityTier calorieIntensityTier { get; private set; }
+       public CalorieTarget calorieIntake { get; private set; }
         //public double? calorieMin { get; private set; }
         //public double? calorieMax { get; private set; }
         public int ExternalPlanId { get; private set; }
         public string? PlanName { get; private set; }
-        public int WorkoutsPerWeek { get; private  set; }
+       // public int WorkoutsPerWeek { get; private  set; }
 
-        public static PlanRule Create(
+        public static TargetPlan Create(
        Goal goal,
-       CalorieIntensityTier tier,
+       CalorieTarget tier,
        int externalPlanId,
-       string planName,
-       int workoutsPerWeek)
+       string planName)
+       //int workoutsPerWeek)
         {
-            return new PlanRule
+            return new TargetPlan
             {
                 goal = goal,
-                calorieIntensityTier = tier,
+                calorieIntake = tier,
                 ExternalPlanId = externalPlanId,
                 PlanName = planName,
-                WorkoutsPerWeek = workoutsPerWeek
+               // WorkoutsPerWeek = workoutsPerWeek
             };
         }
     }
 
-    public class PlanRuleConfiguration : IEntityTypeConfiguration<PlanRule>
+    public class PlanRuleConfiguration : IEntityTypeConfiguration<TargetPlan>
     {
-        public void Configure(EntityTypeBuilder<PlanRule> builder)
+        public void Configure(EntityTypeBuilder<TargetPlan> builder)
         {
             builder.ToTable("PlanRules");
 
@@ -45,7 +45,7 @@ namespace FCE.Domain.Entities
                    .HasMaxLength(50)
                    .IsRequired();
 
-            builder.Property(x => x.calorieIntensityTier)
+            builder.Property(x => x.calorieIntake)
                    .HasConversion<string>()
                    .HasMaxLength(20)
                    .IsRequired();
@@ -58,11 +58,11 @@ namespace FCE.Domain.Entities
                    .HasMaxLength(100)
                    .IsRequired();
 
-            builder.Property(x => x.WorkoutsPerWeek)
-                   .IsRequired();
+            //builder.Property(x => x.WorkoutsPerWeek)
+            //       .IsRequired();
 
             // One Goal + Tier combination must be unique >> enforces that seed data never has duplicate matching rules
-            builder.HasIndex(x => new { x.goal, x.calorieIntensityTier })
+            builder.HasIndex(x => new { x.goal, x.calorieIntake })
                    .IsUnique();
         }
     }

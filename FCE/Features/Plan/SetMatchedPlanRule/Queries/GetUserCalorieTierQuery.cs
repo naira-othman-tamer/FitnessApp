@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FCE.Features.Plan.SetMatchedPlanRule.Queries
 {
-    public record GetUserCalorieTierQuery(Guid userId) : IRequest<CalorieIntensityTier>;
+    public record GetUserCalorieTierQuery(Guid userId) : IRequest<CalorieTarget>;
 
-    public class GetUserCalorieTierQueryHandler : IRequestHandler<GetUserCalorieTierQuery, CalorieIntensityTier>
+    public class GetUserCalorieTierQueryHandler : IRequestHandler<GetUserCalorieTierQuery, CalorieTarget>
     {
         private readonly GeneralRepository<CalculatedMetrics> _metricsRepo;
 
@@ -17,7 +17,7 @@ namespace FCE.Features.Plan.SetMatchedPlanRule.Queries
             _metricsRepo = metricsRepo;
         }
 
-        public async Task<CalorieIntensityTier> Handle(GetUserCalorieTierQuery request, CancellationToken cancellationToken)
+        public async Task<CalorieTarget> Handle(GetUserCalorieTierQuery request, CancellationToken cancellationToken)
         {
            var tier = await _metricsRepo
                 .Get(u => u.UserId == request.userId)

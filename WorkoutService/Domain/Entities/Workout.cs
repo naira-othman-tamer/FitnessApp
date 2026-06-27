@@ -15,7 +15,7 @@ namespace WorkoutService.Domain.Entities
         public int DurationInMinutes { get; set; }
         public double CaloriesBurn { get; set; }
         public string? ImageUrl { get; set; }
-        public bool IsPremium { get; set; }=false;
+        //public bool IsPremium { get; set; }=false;
         public ICollection<WorkoutExercise> Exercise { get; set; } = new List<WorkoutExercise>();
 
         private Workout() { } 
@@ -32,7 +32,7 @@ namespace WorkoutService.Domain.Entities
                 Category = category,
                 WorkoutDifficulty = difficulty,
                 DurationInMinutes = durationMinutes,
-                IsPremium = isPremium,
+                //IsPremium = isPremium,
                 CaloriesBurn = manualCaloriesBurn ?? WorkoutCalorieEstimator.Estimate(category, difficulty, durationMinutes)
             };
         }

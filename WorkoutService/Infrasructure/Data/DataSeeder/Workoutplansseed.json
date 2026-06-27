@@ -1,0 +1,1067 @@
+[
+  {
+    "ExternalPlanId": 100,
+    "PlanDescription": "Light full-body program for sustainable, beginner-friendly fat loss.",
+    "Difficulty": "Beginner",
+    "Workouts": [
+      {
+        "Name": "Full Body Starter",
+        "WorkoutDescription": "Light full-body circuit for beginners.",
+        "Category": "FullBody",
+        "WorkoutDifficulty": "Beginner",
+        "DurationInMinutes": 30,
+        "ImageUrl": "/images/workouts/fb-starter.jpg",
+        "IsPremium": false,
+        "Exercises": [
+          {
+            "ExerciseName": "Squats",
+            "OrderIndex": 1,
+            "Sets": 3,
+            "Reps": "12-15",
+            "RestSeconds": 45
+          },
+          {
+            "ExerciseName": "Push-ups",
+            "OrderIndex": 2,
+            "Sets": 3,
+            "Reps": "10-12",
+            "RestSeconds": 45
+          },
+          {
+            "ExerciseName": "Plank",
+            "OrderIndex": 3,
+            "Sets": 3,
+            "Reps": "30s",
+            "RestSeconds": 30
+          }
+        ]
+      },
+      {
+        "Name": "Light Cardio Core",
+        "WorkoutDescription": "Gentle core activation and stability work.",
+        "Category": "Stomach",
+        "WorkoutDifficulty": "Beginner",
+        "DurationInMinutes": 25,
+        "ImageUrl": "/images/workouts/light-core.jpg",
+        "IsPremium": false,
+        "Exercises": [
+          {
+            "ExerciseName": "Plank",
+            "OrderIndex": 1,
+            "Sets": 3,
+            "Reps": "30s",
+            "RestSeconds": 30
+          },
+          {
+            "ExerciseName": "Glute Bridges",
+            "OrderIndex": 2,
+            "Sets": 3,
+            "Reps": "15",
+            "RestSeconds": 30
+          },
+          {
+            "ExerciseName": "Shoulder Taps",
+            "OrderIndex": 3,
+            "Sets": 3,
+            "Reps": "20",
+            "RestSeconds": 30
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "ExternalPlanId": 200,
+    "PlanDescription": "Moderate-intensity full-body and cardio program for steady fat loss.",
+    "Difficulty": "Intermediate",
+    "Workouts": [
+      {
+        "Name": "Full Body Burner",
+        "WorkoutDescription": "Higher-intensity full-body circuit.",
+        "Category": "FullBody",
+        "WorkoutDifficulty": "Intermediate",
+        "DurationInMinutes": 40,
+        "ImageUrl": "/images/workouts/fb-burner.jpg",
+        "IsPremium": false,
+        "Exercises": [
+          {
+            "ExerciseName": "Burpees",
+            "OrderIndex": 1,
+            "Sets": 4,
+            "Reps": "10",
+            "RestSeconds": 45
+          },
+          {
+            "ExerciseName": "Mountain Climbers",
+            "OrderIndex": 2,
+            "Sets": 4,
+            "Reps": "30s",
+            "RestSeconds": 30
+          },
+          {
+            "ExerciseName": "Squats",
+            "OrderIndex": 3,
+            "Sets": 4,
+            "Reps": "15",
+            "RestSeconds": 45
+          }
+        ]
+      },
+      {
+        "Name": "Cardio Legs Circuit",
+        "WorkoutDescription": "Leg-focused circuit to elevate heart rate.",
+        "Category": "Legs",
+        "WorkoutDifficulty": "Intermediate",
+        "DurationInMinutes": 35,
+        "ImageUrl": "/images/workouts/cardio-legs.jpg",
+        "IsPremium": false,
+        "Exercises": [
+          {
+            "ExerciseName": "Walking Lunges",
+            "OrderIndex": 1,
+            "Sets": 3,
+            "Reps": "12 each leg",
+            "RestSeconds": 45
+          },
+          {
+            "ExerciseName": "Lunges",
+            "OrderIndex": 2,
+            "Sets": 3,
+            "Reps": "15",
+            "RestSeconds": 30
+          },
+          {
+            "ExerciseName": "Glute Bridges",
+            "OrderIndex": 3,
+            "Sets": 3,
+            "Reps": "15",
+            "RestSeconds": 30
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "ExternalPlanId": 300,
+    "PlanDescription": "High-intensity fat-loss program with advanced conditioning work.",
+    "Difficulty": "Advanced",
+    "Workouts": [
+      {
+        "Name": "HIIT Full Body",
+        "WorkoutDescription": "High-intensity interval circuit hitting the whole body.",
+        "Category": "FullBody",
+        "WorkoutDifficulty": "Advanced",
+        "DurationInMinutes": 45,
+        "ImageUrl": "/images/workouts/hiit-fb.jpg",
+        "IsPremium": true,
+        "Exercises": [
+          {
+            "ExerciseName": "Burpees",
+            "OrderIndex": 1,
+            "Sets": 5,
+            "Reps": "15",
+            "RestSeconds": 30
+          },
+          {
+            "ExerciseName": "Jump Squats",
+            "OrderIndex": 2,
+            "Sets": 4,
+            "Reps": "15",
+            "RestSeconds": 30
+          },
+          {
+            "ExerciseName": "Mountain Climbers",
+            "OrderIndex": 3,
+            "Sets": 4,
+            "Reps": "45s",
+            "RestSeconds": 20
+          }
+        ]
+      },
+      {
+        "Name": "Advanced Cardio Blast",
+        "WorkoutDescription": "Advanced lower-body cardio conditioning.",
+        "Category": "Legs",
+        "WorkoutDifficulty": "Advanced",
+        "DurationInMinutes": 40,
+        "ImageUrl": "/images/workouts/advanced-cardio.jpg",
+        "IsPremium": true,
+        "Exercises": [
+          {
+            "ExerciseName": "Jump Squats",
+            "OrderIndex": 1,
+            "Sets": 4,
+            "Reps": "20",
+            "RestSeconds": 30
+          },
+          {
+            "ExerciseName": "Pistol Squats",
+            "OrderIndex": 2,
+            "Sets": 3,
+            "Reps": "6 each leg",
+            "RestSeconds": 45
+          },
+          {
+            "ExerciseName": "Walking Lunges",
+            "OrderIndex": 3,
+            "Sets": 4,
+            "Reps": "15 each leg",
+            "RestSeconds": 30
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "ExternalPlanId": 400,
+    "PlanDescription": "Light strength program to build a foundation for weight gain.",
+    "Difficulty": "Beginner",
+    "Workouts": [
+      {
+        "Name": "Beginner Strength Chest",
+        "WorkoutDescription": "Introductory pressing movements for the chest.",
+        "Category": "Chest",
+        "WorkoutDifficulty": "Beginner",
+        "DurationInMinutes": 35,
+        "ImageUrl": "/images/workouts/beginner-chest.jpg",
+        "IsPremium": false,
+        "Exercises": [
+          {
+            "ExerciseName": "Push-ups",
+            "OrderIndex": 1,
+            "Sets": 3,
+            "Reps": "10-12",
+            "RestSeconds": 60
+          },
+          {
+            "ExerciseName": "Bodyweight Rows",
+            "OrderIndex": 2,
+            "Sets": 3,
+            "Reps": "10",
+            "RestSeconds": 60
+          },
+          {
+            "ExerciseName": "Bicep Curls",
+            "OrderIndex": 3,
+            "Sets": 3,
+            "Reps": "12",
+            "RestSeconds": 45
+          }
+        ]
+      },
+      {
+        "Name": "Beginner Strength Back",
+        "WorkoutDescription": "Introductory pulling movements for the back.",
+        "Category": "Back",
+        "WorkoutDifficulty": "Beginner",
+        "DurationInMinutes": 35,
+        "ImageUrl": "/images/workouts/beginner-back.jpg",
+        "IsPremium": false,
+        "Exercises": [
+          {
+            "ExerciseName": "Bodyweight Rows",
+            "OrderIndex": 1,
+            "Sets": 3,
+            "Reps": "10",
+            "RestSeconds": 60
+          },
+          {
+            "ExerciseName": "Glute Bridges",
+            "OrderIndex": 2,
+            "Sets": 3,
+            "Reps": "15",
+            "RestSeconds": 45
+          },
+          {
+            "ExerciseName": "Plank",
+            "OrderIndex": 3,
+            "Sets": 3,
+            "Reps": "30s",
+            "RestSeconds": 30
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "ExternalPlanId": 500,
+    "PlanDescription": "Moderate-intensity hypertrophy program for steady weight gain.",
+    "Difficulty": "Intermediate",
+    "Workouts": [
+      {
+        "Name": "Strength Chest & Arms",
+        "WorkoutDescription": "Pressing and isolation work for chest and arms.",
+        "Category": "Chest",
+        "WorkoutDifficulty": "Intermediate",
+        "DurationInMinutes": 45,
+        "ImageUrl": "/images/workouts/strength-chest-arms.jpg",
+        "IsPremium": false,
+        "Exercises": [
+          {
+            "ExerciseName": "Bench Press",
+            "OrderIndex": 1,
+            "Sets": 4,
+            "Reps": "8-10",
+            "RestSeconds": 90
+          },
+          {
+            "ExerciseName": "Push-ups",
+            "OrderIndex": 2,
+            "Sets": 3,
+            "Reps": "15",
+            "RestSeconds": 60
+          },
+          {
+            "ExerciseName": "Bicep Curls",
+            "OrderIndex": 3,
+            "Sets": 3,
+            "Reps": "12",
+            "RestSeconds": 45
+          }
+        ]
+      },
+      {
+        "Name": "Strength Back & Legs",
+        "WorkoutDescription": "Compound pulling and lower-body strength work.",
+        "Category": "Back",
+        "WorkoutDifficulty": "Intermediate",
+        "DurationInMinutes": 45,
+        "ImageUrl": "/images/workouts/strength-back-legs.jpg",
+        "IsPremium": false,
+        "Exercises": [
+          {
+            "ExerciseName": "Deadlifts",
+            "OrderIndex": 1,
+            "Sets": 4,
+            "Reps": "8",
+            "RestSeconds": 90
+          },
+          {
+            "ExerciseName": "Pull-ups",
+            "OrderIndex": 2,
+            "Sets": 3,
+            "Reps": "8",
+            "RestSeconds": 75
+          },
+          {
+            "ExerciseName": "Walking Lunges",
+            "OrderIndex": 3,
+            "Sets": 3,
+            "Reps": "12 each leg",
+            "RestSeconds": 45
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "ExternalPlanId": 600,
+    "PlanDescription": "High-intensity strength program for maximal muscle gain.",
+    "Difficulty": "Advanced",
+    "Workouts": [
+      {
+        "Name": "Heavy Chest Press",
+        "WorkoutDescription": "Heavy pressing and pulling for upper-body mass.",
+        "Category": "Chest",
+        "WorkoutDifficulty": "Advanced",
+        "DurationInMinutes": 50,
+        "ImageUrl": "/images/workouts/heavy-chest.jpg",
+        "IsPremium": true,
+        "Exercises": [
+          {
+            "ExerciseName": "Barbell Bench Press",
+            "OrderIndex": 1,
+            "Sets": 5,
+            "Reps": "5",
+            "RestSeconds": 120
+          },
+          {
+            "ExerciseName": "Weighted Pull-ups",
+            "OrderIndex": 2,
+            "Sets": 4,
+            "Reps": "6",
+            "RestSeconds": 90
+          },
+          {
+            "ExerciseName": "Handstand Push-ups",
+            "OrderIndex": 3,
+            "Sets": 3,
+            "Reps": "8",
+            "RestSeconds": 75
+          }
+        ]
+      },
+      {
+        "Name": "Heavy Leg Day",
+        "WorkoutDescription": "Heavy compound lower-body strength work.",
+        "Category": "Legs",
+        "WorkoutDifficulty": "Advanced",
+        "DurationInMinutes": 50,
+        "ImageUrl": "/images/workouts/heavy-legs.jpg",
+        "IsPremium": true,
+        "Exercises": [
+          {
+            "ExerciseName": "Deadlifts",
+            "OrderIndex": 1,
+            "Sets": 5,
+            "Reps": "5",
+            "RestSeconds": 120
+          },
+          {
+            "ExerciseName": "Pistol Squats",
+            "OrderIndex": 2,
+            "Sets": 4,
+            "Reps": "6 each leg",
+            "RestSeconds": 75
+          },
+          {
+            "ExerciseName": "Jump Squats",
+            "OrderIndex": 3,
+            "Sets": 4,
+            "Reps": "15",
+            "RestSeconds": 45
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "ExternalPlanId": 700,
+    "PlanDescription": "Light general-fitness program covering full-body basics.",
+    "Difficulty": "Beginner",
+    "Workouts": [
+      {
+        "Name": "Full Body Basics",
+        "WorkoutDescription": "Foundational full-body movements.",
+        "Category": "FullBody",
+        "WorkoutDifficulty": "Beginner",
+        "DurationInMinutes": 30,
+        "ImageUrl": "/images/workouts/fb-basics.jpg",
+        "IsPremium": false,
+        "Exercises": [
+          {
+            "ExerciseName": "Squats",
+            "OrderIndex": 1,
+            "Sets": 3,
+            "Reps": "12",
+            "RestSeconds": 45
+          },
+          {
+            "ExerciseName": "Push-ups",
+            "OrderIndex": 2,
+            "Sets": 3,
+            "Reps": "10",
+            "RestSeconds": 45
+          },
+          {
+            "ExerciseName": "Plank",
+            "OrderIndex": 3,
+            "Sets": 3,
+            "Reps": "30s",
+            "RestSeconds": 30
+          }
+        ]
+      },
+      {
+        "Name": "Light Shoulders & Arms",
+        "WorkoutDescription": "Light upper-body activation work.",
+        "Category": "Shoulders",
+        "WorkoutDifficulty": "Beginner",
+        "DurationInMinutes": 25,
+        "ImageUrl": "/images/workouts/light-shoulders.jpg",
+        "IsPremium": false,
+        "Exercises": [
+          {
+            "ExerciseName": "Shoulder Taps",
+            "OrderIndex": 1,
+            "Sets": 3,
+            "Reps": "20",
+            "RestSeconds": 30
+          },
+          {
+            "ExerciseName": "Bicep Curls",
+            "OrderIndex": 2,
+            "Sets": 3,
+            "Reps": "12",
+            "RestSeconds": 45
+          },
+          {
+            "ExerciseName": "Push-ups",
+            "OrderIndex": 3,
+            "Sets": 3,
+            "Reps": "10",
+            "RestSeconds": 45
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "ExternalPlanId": 800,
+    "PlanDescription": "Moderate full-body conditioning program for general fitness.",
+    "Difficulty": "Intermediate",
+    "Workouts": [
+      {
+        "Name": "Full Body Conditioning",
+        "WorkoutDescription": "Balanced full-body conditioning circuit.",
+        "Category": "FullBody",
+        "WorkoutDifficulty": "Intermediate",
+        "DurationInMinutes": 40,
+        "ImageUrl": "/images/workouts/fb-conditioning.jpg",
+        "IsPremium": false,
+        "Exercises": [
+          {
+            "ExerciseName": "Burpees",
+            "OrderIndex": 1,
+            "Sets": 4,
+            "Reps": "12",
+            "RestSeconds": 40
+          },
+          {
+            "ExerciseName": "Mountain Climbers",
+            "OrderIndex": 2,
+            "Sets": 4,
+            "Reps": "30s",
+            "RestSeconds": 30
+          },
+          {
+            "ExerciseName": "Walking Lunges",
+            "OrderIndex": 3,
+            "Sets": 3,
+            "Reps": "12 each leg",
+            "RestSeconds": 45
+          }
+        ]
+      },
+      {
+        "Name": "Upper Body Strength",
+        "WorkoutDescription": "General upper-body strength work.",
+        "Category": "Arms",
+        "WorkoutDifficulty": "Intermediate",
+        "DurationInMinutes": 35,
+        "ImageUrl": "/images/workouts/upper-strength.jpg",
+        "IsPremium": false,
+        "Exercises": [
+          {
+            "ExerciseName": "Bicep Curls",
+            "OrderIndex": 1,
+            "Sets": 4,
+            "Reps": "12",
+            "RestSeconds": 45
+          },
+          {
+            "ExerciseName": "Overhead Shoulder Press",
+            "OrderIndex": 2,
+            "Sets": 3,
+            "Reps": "10",
+            "RestSeconds": 60
+          },
+          {
+            "ExerciseName": "Pull-ups",
+            "OrderIndex": 3,
+            "Sets": 3,
+            "Reps": "8",
+            "RestSeconds": 75
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "ExternalPlanId": 900,
+    "PlanDescription": "High-intensity general-fitness program for advanced conditioning.",
+    "Difficulty": "Advanced",
+    "Workouts": [
+      {
+        "Name": "Advanced Full Body",
+        "WorkoutDescription": "Demanding full-body conditioning circuit.",
+        "Category": "FullBody",
+        "WorkoutDifficulty": "Advanced",
+        "DurationInMinutes": 50,
+        "ImageUrl": "/images/workouts/advanced-fb.jpg",
+        "IsPremium": true,
+        "Exercises": [
+          {
+            "ExerciseName": "Burpees",
+            "OrderIndex": 1,
+            "Sets": 5,
+            "Reps": "15",
+            "RestSeconds": 30
+          },
+          {
+            "ExerciseName": "Jump Squats",
+            "OrderIndex": 2,
+            "Sets": 4,
+            "Reps": "15",
+            "RestSeconds": 30
+          },
+          {
+            "ExerciseName": "Weighted Pull-ups",
+            "OrderIndex": 3,
+            "Sets": 4,
+            "Reps": "6",
+            "RestSeconds": 90
+          }
+        ]
+      },
+      {
+        "Name": "Advanced Upper Body",
+        "WorkoutDescription": "Advanced shoulder and pulling strength work.",
+        "Category": "Shoulders",
+        "WorkoutDifficulty": "Advanced",
+        "DurationInMinutes": 45,
+        "ImageUrl": "/images/workouts/advanced-upper.jpg",
+        "IsPremium": true,
+        "Exercises": [
+          {
+            "ExerciseName": "Handstand Push-ups",
+            "OrderIndex": 1,
+            "Sets": 4,
+            "Reps": "8",
+            "RestSeconds": 75
+          },
+          {
+            "ExerciseName": "Overhead Shoulder Press",
+            "OrderIndex": 2,
+            "Sets": 4,
+            "Reps": "10",
+            "RestSeconds": 60
+          },
+          {
+            "ExerciseName": "Weighted Pull-ups",
+            "OrderIndex": 3,
+            "Sets": 3,
+            "Reps": "6",
+            "RestSeconds": 90
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "ExternalPlanId": 1000,
+    "PlanDescription": "Light mobility and flexibility program for beginners.",
+    "Difficulty": "Beginner",
+    "Workouts": [
+      {
+        "Name": "Beginner Mobility Flow",
+        "WorkoutDescription": "Gentle full-body mobility sequence.",
+        "Category": "FullBody",
+        "WorkoutDifficulty": "Beginner",
+        "DurationInMinutes": 25,
+        "ImageUrl": "/images/workouts/beginner-mobility.jpg",
+        "IsPremium": false,
+        "Exercises": [
+          {
+            "ExerciseName": "Lunges",
+            "OrderIndex": 1,
+            "Sets": 3,
+            "Reps": "10 each leg",
+            "RestSeconds": 30
+          },
+          {
+            "ExerciseName": "Glute Bridges",
+            "OrderIndex": 2,
+            "Sets": 3,
+            "Reps": "15",
+            "RestSeconds": 30
+          },
+          {
+            "ExerciseName": "Plank",
+            "OrderIndex": 3,
+            "Sets": 3,
+            "Reps": "30s",
+            "RestSeconds": 30
+          }
+        ]
+      },
+      {
+        "Name": "Core Stability Basics",
+        "WorkoutDescription": "Beginner core stability circuit.",
+        "Category": "Stomach",
+        "WorkoutDifficulty": "Beginner",
+        "DurationInMinutes": 20,
+        "ImageUrl": "/images/workouts/core-stability.jpg",
+        "IsPremium": false,
+        "Exercises": [
+          {
+            "ExerciseName": "Plank",
+            "OrderIndex": 1,
+            "Sets": 3,
+            "Reps": "30s",
+            "RestSeconds": 30
+          },
+          {
+            "ExerciseName": "Shoulder Taps",
+            "OrderIndex": 2,
+            "Sets": 3,
+            "Reps": "20",
+            "RestSeconds": 30
+          },
+          {
+            "ExerciseName": "Glute Bridges",
+            "OrderIndex": 3,
+            "Sets": 3,
+            "Reps": "15",
+            "RestSeconds": 30
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "ExternalPlanId": 1100,
+    "PlanDescription": "Moderate mobility and core program for flexibility gains.",
+    "Difficulty": "Intermediate",
+    "Workouts": [
+      {
+        "Name": "Mobility & Core Flow",
+        "WorkoutDescription": "Rotational and stability-focused core sequence.",
+        "Category": "Stomach",
+        "WorkoutDifficulty": "Intermediate",
+        "DurationInMinutes": 30,
+        "ImageUrl": "/images/workouts/mobility-core.jpg",
+        "IsPremium": false,
+        "Exercises": [
+          {
+            "ExerciseName": "Russian Twists",
+            "OrderIndex": 1,
+            "Sets": 3,
+            "Reps": "20",
+            "RestSeconds": 30
+          },
+          {
+            "ExerciseName": "Mountain Climbers",
+            "OrderIndex": 2,
+            "Sets": 3,
+            "Reps": "30s",
+            "RestSeconds": 30
+          },
+          {
+            "ExerciseName": "Plank",
+            "OrderIndex": 3,
+            "Sets": 3,
+            "Reps": "45s",
+            "RestSeconds": 30
+          }
+        ]
+      },
+      {
+        "Name": "Dynamic Stretch Circuit",
+        "WorkoutDescription": "Dynamic full-body flexibility circuit.",
+        "Category": "FullBody",
+        "WorkoutDifficulty": "Intermediate",
+        "DurationInMinutes": 30,
+        "ImageUrl": "/images/workouts/dynamic-stretch.jpg",
+        "IsPremium": false,
+        "Exercises": [
+          {
+            "ExerciseName": "Walking Lunges",
+            "OrderIndex": 1,
+            "Sets": 3,
+            "Reps": "12 each leg",
+            "RestSeconds": 30
+          },
+          {
+            "ExerciseName": "Mountain Climbers",
+            "OrderIndex": 2,
+            "Sets": 3,
+            "Reps": "30s",
+            "RestSeconds": 30
+          },
+          {
+            "ExerciseName": "Russian Twists",
+            "OrderIndex": 3,
+            "Sets": 3,
+            "Reps": "20",
+            "RestSeconds": 30
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "ExternalPlanId": 1200,
+    "PlanDescription": "High-intensity mobility and core control program.",
+    "Difficulty": "Advanced",
+    "Workouts": [
+      {
+        "Name": "Advanced Mobility Flow",
+        "WorkoutDescription": "Advanced balance and mobility sequence.",
+        "Category": "FullBody",
+        "WorkoutDifficulty": "Advanced",
+        "DurationInMinutes": 35,
+        "ImageUrl": "/images/workouts/advanced-mobility.jpg",
+        "IsPremium": true,
+        "Exercises": [
+          {
+            "ExerciseName": "Pistol Squats",
+            "OrderIndex": 1,
+            "Sets": 3,
+            "Reps": "6 each leg",
+            "RestSeconds": 45
+          },
+          {
+            "ExerciseName": "Hanging Leg Raises",
+            "OrderIndex": 2,
+            "Sets": 3,
+            "Reps": "10",
+            "RestSeconds": 45
+          },
+          {
+            "ExerciseName": "Handstand Push-ups",
+            "OrderIndex": 3,
+            "Sets": 3,
+            "Reps": "8",
+            "RestSeconds": 60
+          }
+        ]
+      },
+      {
+        "Name": "Deep Core Control",
+        "WorkoutDescription": "Advanced core strength and control work.",
+        "Category": "Stomach",
+        "WorkoutDifficulty": "Advanced",
+        "DurationInMinutes": 30,
+        "ImageUrl": "/images/workouts/deep-core.jpg",
+        "IsPremium": true,
+        "Exercises": [
+          {
+            "ExerciseName": "Hanging Leg Raises",
+            "OrderIndex": 1,
+            "Sets": 4,
+            "Reps": "12",
+            "RestSeconds": 45
+          },
+          {
+            "ExerciseName": "Russian Twists",
+            "OrderIndex": 2,
+            "Sets": 4,
+            "Reps": "25",
+            "RestSeconds": 30
+          },
+          {
+            "ExerciseName": "Plank",
+            "OrderIndex": 3,
+            "Sets": 3,
+            "Reps": "60s",
+            "RestSeconds": 30
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "ExternalPlanId": 1300,
+    "PlanDescription": "Light introductory program for learning basic movement patterns.",
+    "Difficulty": "Beginner",
+    "Workouts": [
+      {
+        "Name": "Intro to Bodyweight",
+        "WorkoutDescription": "Foundational bodyweight movement practice.",
+        "Category": "FullBody",
+        "WorkoutDifficulty": "Beginner",
+        "DurationInMinutes": 20,
+        "ImageUrl": "/images/workouts/intro-bodyweight.jpg",
+        "IsPremium": false,
+        "Exercises": [
+          {
+            "ExerciseName": "Squats",
+            "OrderIndex": 1,
+            "Sets": 2,
+            "Reps": "10",
+            "RestSeconds": 45
+          },
+          {
+            "ExerciseName": "Push-ups",
+            "OrderIndex": 2,
+            "Sets": 2,
+            "Reps": "8",
+            "RestSeconds": 45
+          },
+          {
+            "ExerciseName": "Plank",
+            "OrderIndex": 3,
+            "Sets": 2,
+            "Reps": "20s",
+            "RestSeconds": 30
+          }
+        ]
+      },
+      {
+        "Name": "Intro to Core",
+        "WorkoutDescription": "Foundational core engagement practice.",
+        "Category": "Stomach",
+        "WorkoutDifficulty": "Beginner",
+        "DurationInMinutes": 20,
+        "ImageUrl": "/images/workouts/intro-core.jpg",
+        "IsPremium": false,
+        "Exercises": [
+          {
+            "ExerciseName": "Plank",
+            "OrderIndex": 1,
+            "Sets": 2,
+            "Reps": "20s",
+            "RestSeconds": 30
+          },
+          {
+            "ExerciseName": "Glute Bridges",
+            "OrderIndex": 2,
+            "Sets": 2,
+            "Reps": "12",
+            "RestSeconds": 30
+          },
+          {
+            "ExerciseName": "Shoulder Taps",
+            "OrderIndex": 3,
+            "Sets": 2,
+            "Reps": "15",
+            "RestSeconds": 30
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "ExternalPlanId": 1400,
+    "PlanDescription": "Moderate program building on basic movement foundations.",
+    "Difficulty": "Intermediate",
+    "Workouts": [
+      {
+        "Name": "Basics Plus Strength",
+        "WorkoutDescription": "Building strength on top of basic patterns.",
+        "Category": "FullBody",
+        "WorkoutDifficulty": "Intermediate",
+        "DurationInMinutes": 30,
+        "ImageUrl": "/images/workouts/basics-plus-strength.jpg",
+        "IsPremium": false,
+        "Exercises": [
+          {
+            "ExerciseName": "Bodyweight Rows",
+            "OrderIndex": 1,
+            "Sets": 3,
+            "Reps": "10",
+            "RestSeconds": 45
+          },
+          {
+            "ExerciseName": "Squats",
+            "OrderIndex": 2,
+            "Sets": 3,
+            "Reps": "15",
+            "RestSeconds": 45
+          },
+          {
+            "ExerciseName": "Push-ups",
+            "OrderIndex": 3,
+            "Sets": 3,
+            "Reps": "12",
+            "RestSeconds": 45
+          }
+        ]
+      },
+      {
+        "Name": "Basics Plus Legs",
+        "WorkoutDescription": "Building lower-body strength on basic patterns.",
+        "Category": "Legs",
+        "WorkoutDifficulty": "Intermediate",
+        "DurationInMinutes": 30,
+        "ImageUrl": "/images/workouts/basics-plus-legs.jpg",
+        "IsPremium": false,
+        "Exercises": [
+          {
+            "ExerciseName": "Walking Lunges",
+            "OrderIndex": 1,
+            "Sets": 3,
+            "Reps": "12 each leg",
+            "RestSeconds": 45
+          },
+          {
+            "ExerciseName": "Glute Bridges",
+            "OrderIndex": 2,
+            "Sets": 3,
+            "Reps": "15",
+            "RestSeconds": 30
+          },
+          {
+            "ExerciseName": "Lunges",
+            "OrderIndex": 3,
+            "Sets": 3,
+            "Reps": "12 each leg",
+            "RestSeconds": 30
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "ExternalPlanId": 1500,
+    "PlanDescription": "High-intensity program for mastering foundational movements.",
+    "Difficulty": "Advanced",
+    "Workouts": [
+      {
+        "Name": "Foundations Advanced",
+        "WorkoutDescription": "Advanced application of foundational movement patterns.",
+        "Category": "FullBody",
+        "WorkoutDifficulty": "Advanced",
+        "DurationInMinutes": 40,
+        "ImageUrl": "/images/workouts/foundations-advanced.jpg",
+        "IsPremium": true,
+        "Exercises": [
+          {
+            "ExerciseName": "Burpees",
+            "OrderIndex": 1,
+            "Sets": 4,
+            "Reps": "12",
+            "RestSeconds": 40
+          },
+          {
+            "ExerciseName": "Jump Squats",
+            "OrderIndex": 2,
+            "Sets": 4,
+            "Reps": "15",
+            "RestSeconds": 30
+          },
+          {
+            "ExerciseName": "Mountain Climbers",
+            "OrderIndex": 3,
+            "Sets": 4,
+            "Reps": "30s",
+            "RestSeconds": 30
+          }
+        ]
+      },
+      {
+        "Name": "Foundations Leg Strength",
+        "WorkoutDescription": "Advanced lower-body foundational strength work.",
+        "Category": "Legs",
+        "WorkoutDifficulty": "Advanced",
+        "DurationInMinutes": 40,
+        "ImageUrl": "/images/workouts/foundations-legs.jpg",
+        "IsPremium": true,
+        "Exercises": [
+          {
+            "ExerciseName": "Jump Squats",
+            "OrderIndex": 1,
+            "Sets": 4,
+            "Reps": "15",
+            "RestSeconds": 30
+          },
+          {
+            "ExerciseName": "Pistol Squats",
+            "OrderIndex": 2,
+            "Sets": 3,
+            "Reps": "6 each leg",
+            "RestSeconds": 45
+          },
+          {
+            "ExerciseName": "Walking Lunges",
+            "OrderIndex": 3,
+            "Sets": 3,
+            "Reps": "12 each leg",
+            "RestSeconds": 30
+          }
+        ]
+      }
+    ]
+  }
+]

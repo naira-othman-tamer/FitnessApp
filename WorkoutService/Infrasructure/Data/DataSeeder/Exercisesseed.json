@@ -1,0 +1,178 @@
+[
+  {
+    "Name": "Push-ups",
+    "Description": "A calisthenic exercise targeting chest and triceps.",
+    "VideoUrl": "/videos/exercises/pushup.mp4",
+    "TargetMuscles": [ "Chest", "Triceps" ],
+    "EquipmentNeeded": [ "Bodyweight" ],
+    "Difficulty": "Beginner"
+  },
+  {
+    "Name": "Squats",
+    "Description": "Lower body compound movement targeting quads and glutes.",
+    "VideoUrl": "/videos/exercises/squat.mp4",
+    "TargetMuscles": [ "Quadriceps", "Glutes" ],
+    "EquipmentNeeded": [ "Bodyweight" ],
+    "Difficulty": "Beginner"
+  },
+  {
+    "Name": "Plank",
+    "Description": "Isometric core hold for stability and endurance.",
+    "VideoUrl": "/videos/exercises/plank.mp4",
+    "TargetMuscles": [ "Core", "Abs" ],
+    "EquipmentNeeded": [ "Bodyweight" ],
+    "Difficulty": "Beginner"
+  },
+  {
+    "Name": "Lunges",
+    "Description": "Single-leg movement targeting quads, glutes, and balance.",
+    "VideoUrl": "/videos/exercises/lunge.mp4",
+    "TargetMuscles": [ "Quadriceps", "Glutes" ],
+    "EquipmentNeeded": [ "Bodyweight" ],
+    "Difficulty": "Beginner"
+  },
+  {
+    "Name": "Bodyweight Rows",
+    "Description": "Pulling movement using bodyweight to target the back.",
+    "VideoUrl": "/videos/exercises/bodyweight-row.mp4",
+    "TargetMuscles": [ "Back", "Biceps" ],
+    "EquipmentNeeded": [ "Bar", "Suspension Trainer" ],
+    "Difficulty": "Beginner"
+  },
+  {
+    "Name": "Bicep Curls",
+    "Description": "Isolation movement targeting the biceps.",
+    "VideoUrl": "/videos/exercises/bicep-curl.mp4",
+    "TargetMuscles": [ "Biceps" ],
+    "EquipmentNeeded": [ "Dumbbells" ],
+    "Difficulty": "Beginner"
+  },
+  {
+    "Name": "Shoulder Taps",
+    "Description": "Plank variation that challenges shoulder stability.",
+    "VideoUrl": "/videos/exercises/shoulder-taps.mp4",
+    "TargetMuscles": [ "Shoulders", "Core" ],
+    "EquipmentNeeded": [ "Bodyweight" ],
+    "Difficulty": "Beginner"
+  },
+  {
+    "Name": "Glute Bridges",
+    "Description": "Hip extension movement targeting glutes and hamstrings.",
+    "VideoUrl": "/videos/exercises/glute-bridge.mp4",
+    "TargetMuscles": [ "Glutes", "Hamstrings" ],
+    "EquipmentNeeded": [ "Bodyweight" ],
+    "Difficulty": "Beginner"
+  },
+  {
+    "Name": "Burpees",
+    "Description": "Full-body explosive movement combining a squat, plank, and jump.",
+    "VideoUrl": "/videos/exercises/burpee.mp4",
+    "TargetMuscles": [ "Full Body" ],
+    "EquipmentNeeded": [ "Bodyweight" ],
+    "Difficulty": "Intermediate"
+  },
+  {
+    "Name": "Mountain Climbers",
+    "Description": "Dynamic core and cardio movement in a plank position.",
+    "VideoUrl": "/videos/exercises/mountain-climbers.mp4",
+    "TargetMuscles": [ "Core", "Shoulders" ],
+    "EquipmentNeeded": [ "Bodyweight" ],
+    "Difficulty": "Intermediate"
+  },
+  {
+    "Name": "Deadlifts",
+    "Description": "Hip-hinge compound lift targeting the posterior chain.",
+    "VideoUrl": "/videos/exercises/deadlift.mp4",
+    "TargetMuscles": [ "Back", "Hamstrings", "Glutes" ],
+    "EquipmentNeeded": [ "Barbell" ],
+    "Difficulty": "Intermediate"
+  },
+  {
+    "Name": "Bench Press",
+    "Description": "Horizontal pressing movement targeting the chest.",
+    "VideoUrl": "/videos/exercises/bench-press.mp4",
+    "TargetMuscles": [ "Chest", "Triceps" ],
+    "EquipmentNeeded": [ "Barbell", "Bench" ],
+    "Difficulty": "Intermediate"
+  },
+  {
+    "Name": "Pull-ups",
+    "Description": "Vertical pulling movement targeting the back and biceps.",
+    "VideoUrl": "/videos/exercises/pullup.mp4",
+    "TargetMuscles": [ "Back", "Biceps" ],
+    "EquipmentNeeded": [ "Pull-up Bar" ],
+    "Difficulty": "Intermediate"
+  },
+  {
+    "Name": "Russian Twists",
+    "Description": "Rotational core movement targeting the obliques.",
+    "VideoUrl": "/videos/exercises/russian-twist.mp4",
+    "TargetMuscles": [ "Obliques", "Core" ],
+    "EquipmentNeeded": [ "Bodyweight", "Medicine Ball" ],
+    "Difficulty": "Intermediate"
+  },
+  {
+    "Name": "Overhead Shoulder Press",
+    "Description": "Vertical pressing movement targeting the shoulders.",
+    "VideoUrl": "/videos/exercises/shoulder-press.mp4",
+    "TargetMuscles": [ "Shoulders", "Triceps" ],
+    "EquipmentNeeded": [ "Dumbbells" ],
+    "Difficulty": "Intermediate"
+  },
+  {
+    "Name": "Walking Lunges",
+    "Description": "Dynamic lunge variation performed across a distance.",
+    "VideoUrl": "/videos/exercises/walking-lunge.mp4",
+    "TargetMuscles": [ "Quadriceps", "Glutes" ],
+    "EquipmentNeeded": [ "Bodyweight", "Dumbbells" ],
+    "Difficulty": "Intermediate"
+  },
+  {
+    "Name": "Jump Squats",
+    "Description": "Explosive squat variation building lower-body power.",
+    "VideoUrl": "/videos/exercises/jump-squat.mp4",
+    "TargetMuscles": [ "Quadriceps", "Glutes", "Calves" ],
+    "EquipmentNeeded": [ "Bodyweight" ],
+    "Difficulty": "Advanced"
+  },
+  {
+    "Name": "Pistol Squats",
+    "Description": "Single-leg squat requiring strength and balance.",
+    "VideoUrl": "/videos/exercises/pistol-squat.mp4",
+    "TargetMuscles": [ "Quadriceps", "Glutes", "Core" ],
+    "EquipmentNeeded": [ "Bodyweight" ],
+    "Difficulty": "Advanced"
+  },
+  {
+    "Name": "Handstand Push-ups",
+    "Description": "Advanced vertical pressing movement against a wall.",
+    "VideoUrl": "/videos/exercises/handstand-pushup.mp4",
+    "TargetMuscles": [ "Shoulders", "Triceps" ],
+    "EquipmentNeeded": [ "Bodyweight", "Wall" ],
+    "Difficulty": "Advanced"
+  },
+  {
+    "Name": "Weighted Pull-ups",
+    "Description": "Pull-up variation with added external resistance.",
+    "VideoUrl": "/videos/exercises/weighted-pullup.mp4",
+    "TargetMuscles": [ "Back", "Biceps" ],
+    "EquipmentNeeded": [ "Pull-up Bar", "Weight Belt" ],
+    "Difficulty": "Advanced"
+  },
+  {
+    "Name": "Barbell Bench Press",
+    "Description": "Heavy barbell variation of the bench press.",
+    "VideoUrl": "/videos/exercises/barbell-bench.mp4",
+    "TargetMuscles": [ "Chest", "Triceps", "Shoulders" ],
+    "EquipmentNeeded": [ "Barbell", "Bench" ],
+    "Difficulty": "Advanced"
+  },
+  {
+    "Name": "Hanging Leg Raises",
+    "Description": "Advanced core movement performed while hanging from a bar.",
+    "VideoUrl": "/videos/exercises/hanging-leg-raise.mp4",
+    "TargetMuscles": [ "Core", "Hip Flexors" ],
+    "EquipmentNeeded": [ "Pull-up Bar" ],
+    "Difficulty": "Advanced"
+  }
+]

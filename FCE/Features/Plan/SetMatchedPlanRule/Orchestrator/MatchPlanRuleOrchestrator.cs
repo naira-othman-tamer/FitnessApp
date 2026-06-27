@@ -19,7 +19,7 @@ namespace FCE.Features.Plan.SetMatchedPlanRule.Orchestrator
         public async Task<bool> Handle(MatchPlanRuleOrchestrator request, CancellationToken cs)
         {
             Goal userGoal = await _mediator.Send(new GetUserGoalQuery(request.userId), cs);
-            CalorieIntensityTier userTier = await _mediator.Send(new GetUserCalorieTierQuery(request.userId), cs);
+            CalorieTarget userTier = await _mediator.Send(new GetUserCalorieTierQuery(request.userId), cs);
             int matchedPlanExternalId = await _mediator.Send(new GetPlanByGoalTierQuery(userGoal, userTier), cs);
 
             if (await _mediator.Send(new CheckUserHasCurrentActivePlanQuery(request.userId), cs))

@@ -53,7 +53,7 @@ namespace FCE.Migrations
                     b.ToTable("CalculatedMetrics", (string)null);
                 });
 
-            modelBuilder.Entity("FCE.Domain.Entities.PlanRule", b =>
+            modelBuilder.Entity("FCE.Domain.Entities.TargetPlan", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
