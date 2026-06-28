@@ -1,5 +1,5 @@
 ﻿using FCE.Domain.Aggregates;
-using FCE.Domain.ValueObject;
+using FCE.Domain.Enums;
 using FCE.Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -7,9 +7,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FCE.Features.Metrics.GetUserCurrentMetrics
 {
-    public record GetUserMetricsQuery(Guid userId) : IRequest<MetabolicCalculator>;
+    public record GetUserMetricsQuery(Guid userId) : IRequest<userMetricsDTO>;//MetabolicCalculator>;
 
-    public class GetUserMetricsQueryHandler : IRequestHandler<GetUserMetricsQuery, MetabolicCalculator>
+    public record userMetricsDTO
+    (
+        double userBMR,
+        double userTDEE,
+        double userCalorieTarget,
+        BMRStatus userTarget
+    );
+
+    public class GetUserMetricsQueryHandler : IRequestHandler<GetUserMetricsQuery, userMetricsDTO> //, MetabolicCalculator>
     {
         private readonly GeneralRepository<CalculatedMetrics> _metricsRepo;
 
@@ -18,25 +26,34 @@ namespace FCE.Features.Metrics.GetUserCurrentMetrics
             _metricsRepo = metricsRepo;
         }
 
-        public async Task<MetabolicCalculator> Handle(GetUserMetricsQuery request, CancellationToken cancellationToken)
+        public async Task<userMetricsDTO> Handle(GetUserMetricsQuery request, CancellationToken cancellationToken)
         {
             var usermetrics = await _metricsRepo.Get(u => u.UserId == request.userId)
                 .Select(m => m.Result)
                 .FirstOrDefaultAsync(cancellationToken);
 
-            return usermetrics;
+            var result = new userMetricsDTO
+                (
+                usermetrics.BMR,
+                usermetrics.TDEE,
+                usermetrics.CalorieTarget,
+                usermetrics.Tier
+                );
+
+            return result;
         }
     }
 
     public static class GetMetricsEndPoint
+
     {
         public static void GetUserMetricsEndpoint(this IEndpointRouteBuilder builder)
         {
             builder.MapGet("/{userId}", async ([FromQuery] Guid userId,
                [FromServices] IMediator mediator) =>
             {
-                var id = await mediator.Send(new GetUserMetricsQuery(userId));
-                return Results.Ok(id);
+                var userResult = await mediator.Send(new GetUserMetricsQuery(userId));
+                return Results.Ok(userResult);
             });
         }
     }

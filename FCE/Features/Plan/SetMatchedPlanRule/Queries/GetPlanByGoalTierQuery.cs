@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FCE.Features.Plan.SetMatchedPlanRule.Queries
 {
-    public record GetPlanByGoalTierQuery(Goal goal, CalorieTarget tier) : IRequest<int>;
+    public record GetPlanByGoalTierQuery(Goal goal, BMRStatus tier) : IRequest<int>;
 
     public class GetPlanByGoalTierQueryHandler : IRequestHandler<GetPlanByGoalTierQuery, int>
     {

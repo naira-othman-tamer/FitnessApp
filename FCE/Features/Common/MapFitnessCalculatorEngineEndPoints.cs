@@ -1,4 +1,5 @@
 ﻿using FCE.Features.Metrics.GetUserCurrentMetrics;
+using FCE.Features.Metrics.RecalculateBioMetrics;
 using FCE.Features.Metrics.SetUserCalculatedMetrics.Orchestrator;
 using FCE.Features.Plan.GetUserMatchedPlan;
 using FCE.Features.Plan.SetMatchedPlanRule.Orchestrator;
@@ -18,6 +19,7 @@ namespace FCE.Features.Common
             var metricsGroup = builder.MapGroup("metrics");
             metricsGroup.SubmitCalculateMetricsEndPoint();
             metricsGroup.GetUserMetricsEndpoint();
+            metricsGroup.UpdateCalculateMetricsEndPoint();
 
             var planGroup = builder.MapGroup("plan");
             planGroup.SetMatchedPlanRuleEndPoint();

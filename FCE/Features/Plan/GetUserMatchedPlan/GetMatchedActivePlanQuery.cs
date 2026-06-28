@@ -7,9 +7,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FCE.Features.Plan.GetUserMatchedPlan
 {
-    public record GetMatchedActivePlanQuery(Guid userId) : IRequest<int>;
+    public record GetMatchedActivePlanQuery(Guid userId) : IRequest<GetMatchedPlanDto>;
 
-    public class GetMatchedActivePlanQueryHandler : IRequestHandler<GetMatchedActivePlanQuery, int>
+    public record GetMatchedPlanDto
+        (
+        int TargetPlanId,
+        int ExternalPlanId
+        //string TargetPlanName
+        );
+    public class GetMatchedActivePlanQueryHandler : IRequestHandler<GetMatchedActivePlanQuery, GetMatchedPlanDto>
     {
         private readonly GeneralRepository<UserAssignedPlan> _userAssignedPlanRepository;
 
@@ -18,14 +24,18 @@ namespace FCE.Features.Plan.GetUserMatchedPlan
             _userAssignedPlanRepository = userAssignedPlanRepository;
         }
 
-        public async Task<int> Handle(GetMatchedActivePlanQuery request, CancellationToken cancellationToken)
+        public async Task<GetMatchedPlanDto> Handle(GetMatchedActivePlanQuery request, CancellationToken cancellationToken)
         {
-            var ExternalplanId = await _userAssignedPlanRepository
+            var result = await _userAssignedPlanRepository
                 .Get(u=> u.userId == request.userId && u.IsActive==true)
-                .Select(p=>p.ExternalPlanId)
+                .Select(p=>new GetMatchedPlanDto
+                (
+                    p.Id,
+                    p.ExternalPlanId
+                ))
                 .FirstOrDefaultAsync(cancellationToken);
-        
-            return ExternalplanId;
+
+            return result;
         }
     }
 
@@ -40,6 +50,5 @@ namespace FCE.Features.Plan.GetUserMatchedPlan
                 return Results.Ok(id);
             });
         }
-
     }
 }

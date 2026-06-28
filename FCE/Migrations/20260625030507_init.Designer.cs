@@ -241,9 +241,9 @@ namespace FCE.Migrations
                                 .HasColumnType("float")
                                 .HasColumnName("BMR");
 
-                            b1.Property<double>("CalorieTarget")
+                            b1.Property<double>("BMRStatus")
                                 .HasColumnType("float")
-                                .HasColumnName("CalorieTarget");
+                                .HasColumnName("BMRStatus");
 
                             b1.Property<double>("TDEE")
                                 .HasColumnType("float")

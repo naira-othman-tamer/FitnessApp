@@ -4,19 +4,20 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FCE.Domain.Entities
 {
+    //FitnessProgram
     public class TargetPlan : BaseEntity //stage 3 [Stores derived fitness plan outputs]
     {
         public Goal goal { get; private set; }
-       public CalorieTarget calorieIntake { get; private set; }
+       public BMRStatus calorieIntake { get; private set; } //CalroieAllocation
         //public double? calorieMin { get; private set; }
         //public double? calorieMax { get; private set; }
-        public int ExternalPlanId { get; private set; }
-        public string? PlanName { get; private set; }
+        public int ExternalPlanId { get; private set; } //SharedProgramId
+        public string? PlanName { get; private set; } //ProgramName
        // public int WorkoutsPerWeek { get; private  set; }
 
         public static TargetPlan Create(
        Goal goal,
-       CalorieTarget tier,
+       BMRStatus tier,
        int externalPlanId,
        string planName)
        //int workoutsPerWeek)

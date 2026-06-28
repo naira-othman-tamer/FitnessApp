@@ -25,6 +25,7 @@ namespace FCE.Features.Stats.SubmitFitnessStats
         }
         public async Task<int> Handle(SubmitStateCommand request, CancellationToken cancellationToken)
         {
+            
             var userFitnessStats = new UserFitnessStats
             {
                 userId = request.userId,

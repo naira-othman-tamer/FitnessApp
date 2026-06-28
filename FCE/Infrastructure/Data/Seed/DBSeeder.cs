@@ -20,10 +20,10 @@ namespace FCE.Infrastructure.Data.Seed
 
             var planRules = records.Select(r => TargetPlan.Create(
                 Enum.Parse<Goal>(r.Goal),
-                Enum.Parse<CalorieTarget>(r.CalorieIntensityTier),
+                Enum.Parse<BMRStatus>(r.CalorieIntensityTier),
                 r.ExternalPlanId,
-                r.PlanName,
-                r.WorkoutsPerWeek
+                r.PlanName
+                //r.WorkoutsPerWeek
             )).ToList();
 
             await context.PlanRules.AddRangeAsync(planRules);
@@ -34,8 +34,8 @@ namespace FCE.Infrastructure.Data.Seed
             string Goal,
             string CalorieIntensityTier,
             int ExternalPlanId,
-            string PlanName,
-            int WorkoutsPerWeek
+            string PlanName
+            //int WorkoutsPerWeek
         );
     }
 }

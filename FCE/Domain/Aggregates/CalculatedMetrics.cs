@@ -9,48 +9,29 @@ namespace FCE.Domain.Aggregates
     public class CalculatedMetrics : BaseEntity
     {
         public Guid UserId { get; set; }
-        //public double BMR { get; private set; }
-        //public double TDEE { get; private set; }
-        //public double CalorieTarget { get; private set; }
-        public MetabolicCalculator Result { get; private set; } 
-       // public CalorieTarget Status { get; private set; }
+        public double BMR { get; private set; }
+        public double TDEE { get; private set; }
+        public BMRStatus BMRStatus { get; private set; }
+        public BMRRange BMRRange { get; private set; }
+
+        //public MetabolicCalculator Result { get; private set; }
 
         private CalculatedMetrics() { }
 
-        public static CalculatedMetrics Calculate(Guid userId,PhysicalStats physicalStats,ActivityLevel activityLevel,Goal goal)
-        {
-            var bmr = CalculateBmr(physicalStats);  //from value object
-            var tdee = CalculateTdee(bmr,activityLevel);
-            var calorieTarget = CalculateCalorieTarget(tdee, goal);
-            var tier = ClassifyTier(calorieTarget);
-
-            return new CalculatedMetrics
-            {
-                UserId = userId,
-                Result = new MetabolicCalculator(
-                    Math.Round(bmr, 2),
-                    Math.Round(tdee, 2),
-                    Math.Round(calorieTarget, 2),
-                    tier
-                )
-            };
-        }
         public static CalculatedMetrics Calculate(UserFitnessStats stats)
         {
-            var bmr = CalculateBmr(stats.PhysicalStats);  //from value object
+            var bmr = CalculateBmr(stats.PhysicalStats); 
             var tdee = CalculateTdee(bmr, stats.activityLevel);
             var calorieTarget = CalculateCalorieTarget(tdee, stats.goal);
-            var tier = ClassifyTier(calorieTarget);
+            var BMRRange = GetBMRRange(stats.PhysicalStats.Gender);
 
             return new CalculatedMetrics
             {
                 UserId = stats.userId,
-                Result = new MetabolicCalculator(
-                    Math.Round(bmr, 2),
-                    Math.Round(tdee, 2),
-                    Math.Round(calorieTarget, 2),
-                    tier
-                )
+                BMR = Math.Round(bmr, 2),
+                TDEE = Math.Round(tdee, 2),
+                BMRRange = GetBMRRange(stats.PhysicalStats.Gender),
+                BMRStatus = GetBMRStatus(bmr, BMRRange)
             };
         }
 
@@ -82,13 +63,22 @@ namespace FCE.Domain.Aggregates
                 _ => throw new ArgumentOutOfRangeException()
             };
 
-        private static CalorieTarget ClassifyTier(double calorieTarget) =>
-            calorieTarget switch
-            {
-                <= 1800 => CalorieTarget.Low,
-                > 1800 and <= 2500 => CalorieTarget.Moderate,
-                _ => CalorieTarget.High
-            };
+        private static BMRRange GetBMRRange(Gender gender) =>
+       gender switch
+       {
+           Gender.Male => new MaleBMRRange(),
+           Gender.Female => new FemaleBMRRange(),
+           _ => throw new ArgumentOutOfRangeException(nameof(gender))
+
+       };
+
+        private static BMRStatus GetBMRStatus(double bmr,BMRRange range)
+        {
+            if (bmr >= range.Min && bmr <= range.Max)
+                return BMRStatus.InRange;
+
+            return BMRStatus.OutOfRange;
+        }
     }
 
     public class CalculatedMetricsConfiguration : IEntityTypeConfiguration<CalculatedMetrics>
@@ -104,24 +94,28 @@ namespace FCE.Domain.Aggregates
             builder.Property(x => x.UserId)
                    .IsRequired();
 
-            builder.OwnsOne(x => x.Result, r =>
+            builder.Property(x => x.BMR)
+                   .HasColumnName("BMR")
+                   .IsRequired();
+
+            builder.Property(x => x.TDEE)
+                   .HasColumnName("TDEE")
+                   .IsRequired();
+
+            builder.Property(x => x.BMRStatus)
+                   .HasColumnName("BMRStatus")
+                   .HasConversion<string>()
+                   .HasMaxLength(20)
+                   .IsRequired();
+
+            builder.OwnsOne(x => x.BMRRange, r =>
             {
-                r.Property(x => x.BMR)
-                 .HasColumnName("BMR")
+                r.Property(x => x.Min)
+                 .HasColumnName("BMRRangeMin")
                  .IsRequired();
 
-                r.Property(x => x.TDEE)
-                 .HasColumnName("TDEE")
-                 .IsRequired();
-
-                r.Property(x => x.CalorieTarget)
-                 .HasColumnName("CalorieTarget")
-                 .IsRequired();
-
-                r.Property(x => x.Tier)
-                 .HasColumnName("CalorieTier")
-                 .HasConversion<string>()
-                 .HasMaxLength(20)
+                r.Property(x => x.Max)
+                 .HasColumnName("BMRRangeMax")
                  .IsRequired();
             });
         }
