@@ -1,5 +1,6 @@
 ﻿using FCE.Domain.Aggregates;
 using FCE.Domain.Enums;
+using FCE.Domain.ValueObject;
 using FCE.Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +14,7 @@ namespace FCE.Features.Metrics.GetUserCurrentMetrics
     (
         double userBMR,
         double userTDEE,
-        double userCalorieTarget,
+        BMRRange range,
         BMRStatus userTarget
     );
 
@@ -29,18 +30,16 @@ namespace FCE.Features.Metrics.GetUserCurrentMetrics
         public async Task<userMetricsDTO> Handle(GetUserMetricsQuery request, CancellationToken cancellationToken)
         {
             var usermetrics = await _metricsRepo.Get(u => u.UserId == request.userId)
-                .Select(m => m.Result)
+                .Select(m => new userMetricsDTO
+                (
+                    m.BMR,
+                    m.TDEE,
+                    m.BMRRange,
+                    m.BMRStatus
+                ))
                 .FirstOrDefaultAsync(cancellationToken);
 
-            var result = new userMetricsDTO
-                (
-                usermetrics.BMR,
-                usermetrics.TDEE,
-                usermetrics.CalorieTarget,
-                usermetrics.Tier
-                );
-
-            return result;
+            return usermetrics;
         }
     }
 

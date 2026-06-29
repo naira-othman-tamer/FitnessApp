@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WorkoutService.Infrasructure.Data.DataSeeder;
+using Workout.Infrastructure.Data.Seed;
 using WorkoutService.Infrastructure.Data;
 
 namespace WorkoutService.Configs.Extensions

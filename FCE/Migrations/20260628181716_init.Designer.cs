@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FCE.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20260625030507_init")]
+    [Migration("20260628181716_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -33,6 +33,20 @@ namespace FCE.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<double>("BMR")
+                        .HasColumnType("float")
+                        .HasColumnName("BMR");
+
+                    b.Property<string>("BMRStatus")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
+                        .HasColumnName("BMRStatus");
+
+                    b.Property<double>("CalorieTarget")
+                        .HasColumnType("float")
+                        .HasColumnName("CalorieTarget");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -41,6 +55,10 @@ namespace FCE.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
+
+                    b.Property<double>("TDEE")
+                        .HasColumnType("float")
+                        .HasColumnName("TDEE");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -54,6 +72,55 @@ namespace FCE.Migrations
                         .IsUnique();
 
                     b.ToTable("CalculatedMetrics", (string)null);
+                });
+
+            modelBuilder.Entity("FCE.Domain.Aggregates.UserFitnessStats", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("WorkoutDays")
+                        .HasColumnType("int");
+
+                    b.Property<string>("activityLevel")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("goal")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<Guid>("userId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("userId")
+                        .IsUnique();
+
+                    b.ToTable("UserFitnessStats", (string)null);
                 });
 
             modelBuilder.Entity("FCE.Domain.Entities.TargetPlan", b =>
@@ -85,10 +152,7 @@ namespace FCE.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("WorkoutsPerWeek")
-                        .HasColumnType("int");
-
-                    b.Property<string>("calorieIntensityTier")
+                    b.Property<string>("calorieIntake")
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
@@ -100,7 +164,7 @@ namespace FCE.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("goal", "calorieIntensityTier")
+                    b.HasIndex("goal", "calorieIntake")
                         .IsUnique();
 
                     b.ToTable("PlanRules", (string)null);
@@ -120,58 +184,27 @@ namespace FCE.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ExternalPlanId")
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("NutritionPlan")
                         .HasMaxLength(100)
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsActive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("userId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("WorkoutPlan")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
-                    b.HasKey("Id");
-
-                    b.ToTable("UserAssignedPlans", (string)null);
-                });
-
-            modelBuilder.Entity("FCE.Domain.Entities.UserFitnessStats", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsActive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("activityLevel")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<double>("calorieIntake")
+                        .HasColumnType("float");
 
                     b.Property<string>("goal")
                         .IsRequired()
@@ -183,10 +216,9 @@ namespace FCE.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("userId")
-                        .IsUnique();
+                    b.HasIndex("userId");
 
-                    b.ToTable("UserFitnessStats", (string)null);
+                    b.ToTable("UserAssignedPlans", (string)null);
                 });
 
             modelBuilder.Entity("FCE.Domain.Entities.UserPlanHistory", b =>
@@ -205,10 +237,6 @@ namespace FCE.Migrations
 
                     b.Property<DateTime?>("EndedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("ExternalPlanId")
-                        .HasMaxLength(100)
-                        .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -232,28 +260,18 @@ namespace FCE.Migrations
 
             modelBuilder.Entity("FCE.Domain.Aggregates.CalculatedMetrics", b =>
                 {
-                    b.OwnsOne("FCE.Domain.ValueObject.MetabolicCalculator", "Result", b1 =>
+                    b.OwnsOne("FCE.Domain.ValueObject.BMRRange", "BMRRange", b1 =>
                         {
                             b1.Property<int>("CalculatedMetricsId")
                                 .HasColumnType("int");
 
-                            b1.Property<double>("BMR")
+                            b1.Property<double>("Max")
                                 .HasColumnType("float")
-                                .HasColumnName("BMR");
+                                .HasColumnName("BMRRangeMax");
 
-                            b1.Property<double>("BMRStatus")
+                            b1.Property<double>("Min")
                                 .HasColumnType("float")
-                                .HasColumnName("BMRStatus");
-
-                            b1.Property<double>("TDEE")
-                                .HasColumnType("float")
-                                .HasColumnName("TDEE");
-
-                            b1.Property<string>("Tier")
-                                .IsRequired()
-                                .HasMaxLength(20)
-                                .HasColumnType("nvarchar(20)")
-                                .HasColumnName("CalorieTier");
+                                .HasColumnName("BMRRangeMin");
 
                             b1.HasKey("CalculatedMetricsId");
 
@@ -263,11 +281,11 @@ namespace FCE.Migrations
                                 .HasForeignKey("CalculatedMetricsId");
                         });
 
-                    b.Navigation("Result")
+                    b.Navigation("BMRRange")
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("FCE.Domain.Entities.UserFitnessStats", b =>
+            modelBuilder.Entity("FCE.Domain.Aggregates.UserFitnessStats", b =>
                 {
                     b.OwnsOne("FCE.Domain.ValueObject.PhysicalStats", "PhysicalStats", b1 =>
                         {

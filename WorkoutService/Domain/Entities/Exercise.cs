@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WorkoutService.Domain.Enums;
 
@@ -8,10 +9,10 @@ namespace WorkoutService.Domain.Entities
     {
         public string Name { get; set; } = default!;
        public string? Description { get; set; } 
-       public string? VideoUrl {  get; set; }
-       public ICollection<string> TargetMuscles { get; set; }=new List<string>();
-       public ICollection<string> EquipmentNeeded { get; set; }=new List<string>();
-       public Difficulty ExerciseDifficulty { get; set; }
+       public string? ImageURL {  get; set; }
+       public ICollection<string> TargetMuscles { get; set; }=new List<string>(); 
+       public ICollection<EquipmentNeeded> EquipmentNeeded { get; set; } =  new List<EquipmentNeeded>();
+       public Difficulty Difficulty { get; set; }
     }
 
     public class ExerciseConfiguration : IEntityTypeConfiguration<Exercise>
@@ -20,26 +21,42 @@ namespace WorkoutService.Domain.Entities
         {
             builder.ToTable("Exercises");
 
-            builder.Property(e => e.Name)
-                .IsRequired()
-                .HasMaxLength(100);
+            builder.HasKey(x => x.Id);
 
-            builder.Property(e => e.Description)
-                .HasMaxLength(1000);
+            builder.Property(x => x.Name)
+                   .HasMaxLength(150)
+                   .IsRequired();
 
-            builder.Property(e => e.VideoUrl)
-                .HasMaxLength(500);
+            builder.Property(x => x.Description)
+                   .HasMaxLength(1000)
+                   .IsRequired(false);
 
-            builder.Property(e => e.TargetMuscles)
-                .HasColumnType("nvarchar(max)");
+            builder.Property(x => x.ImageURL)
+                   .HasMaxLength(300)
+                   .IsRequired(false);
 
-            builder.Property(e => e.EquipmentNeeded)
-                .HasColumnType("nvarchar(max)");
+            builder.Property(x => x.Difficulty)
+                   .HasConversion<string>()
+                   .HasMaxLength(20)
+                   .IsRequired();
 
-            builder.Property(e => e.ExerciseDifficulty)
-                .HasConversion<string>()
-                .HasMaxLength(20)
-                .IsRequired();
+            // List<string> <-> "Chest,Triceps"
+            builder.Property(x => x.TargetMuscles)
+                   .HasConversion(
+                       v => string.Join(',', v),
+                       v => v.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToList())
+                   .HasMaxLength(500);
+
+            // List<EquipmentNeeded> <-> "Machine,Dumbbells" (stored as names, not ints)
+            builder.Property(x => x.EquipmentNeeded)
+                   .HasConversion(
+                       v => string.Join(',', v.Select(e => e.ToString())),
+                       v => v.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                             .Select(s => Enum.Parse<EquipmentNeeded>(s))
+                             .ToList())
+                   .HasMaxLength(200);
         }
     }
 }
+
+

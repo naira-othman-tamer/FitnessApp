@@ -6,11 +6,29 @@ namespace WorkoutService.Domain.Entities
 {
     public class WorkoutPlan : BaseEntity
     {
-        public int ExternalPlanId { get; set; }
-        //public string? WorkoutPlanName { get; set; }
-        public string? PlanDescription { get; set; }
-        public Difficulty? Difficulty { get; set; }
-        public ICollection<Workout> Workouts { get; set; } = new List<Workout>();
+        public string Name { get; set; } = default!;
+        public string? WorkoutDescription { get; set; }
+        public string? ImageUrl { get; set; }
+        public bool IsPremium { get; set; } = false;
+        public Goal Goal { get; private set; }
+        public int WorkoutDaysPerWeek { get; private set; }
+        //public int DurationInMinutes { get; set; }
+        //public double CaloriesBurn { get; set; }
+        public ICollection<WorkoutPlanDay> WorkoutPlanDays { get; set; } = new List<WorkoutPlanDay>();
+
+        private WorkoutPlan() { }
+
+        public static WorkoutPlan Create(string name, Goal goal, int workoutDaysPerWeek,
+            bool isPremium = false, string? description = null, string? imageUrl = null)
+            => new WorkoutPlan
+            {
+                Name = name,
+                Goal = goal,
+                WorkoutDaysPerWeek = workoutDaysPerWeek,
+                IsPremium = isPremium,
+                WorkoutDescription = description,
+                ImageUrl = imageUrl
+            };
 
     }
 
@@ -20,16 +38,39 @@ namespace WorkoutService.Domain.Entities
         {
             builder.ToTable("WorkoutPlans");
 
-            builder.HasIndex(p => p.ExternalPlanId).IsUnique();
+            builder.HasKey(x => x.Id);
 
-            builder.Property(p => p.PlanDescription)
-                .HasMaxLength(500);
+            builder.HasIndex(x => new { x.Goal, x.WorkoutDaysPerWeek }); // matching lookup, not unique — multiple plans can share Goal+Days
 
-            builder.Property(p => p.Difficulty)
-                .HasConversion<string>()
-                .HasMaxLength(20);
+            builder.Property(x => x.Name)
+                   .HasMaxLength(150)
+                   .IsRequired();
+
+            builder.Property(x => x.WorkoutDescription)
+                   .HasMaxLength(1000)
+                   .IsRequired(false);
+
+            builder.Property(x => x.ImageUrl)
+                   .HasMaxLength(300)
+                   .IsRequired(false);
+
+            builder.Property(x => x.IsPremium)
+                   .HasDefaultValue(false)
+                   .IsRequired();
+
+            builder.Property(x => x.Goal)
+                   .HasConversion<string>()
+                   .HasMaxLength(50)
+                   .IsRequired();
+
+            builder.Property(x => x.WorkoutDaysPerWeek)
+                   .IsRequired();
+
+            builder.HasMany(x => x.WorkoutPlanDays)
+                   .WithOne()
+                   .HasForeignKey(d => d.WorkoutPlanId)
+                   .OnDelete(DeleteBehavior.Cascade); // deleting a plan removes its days
         }
     }
-
-
 }
+

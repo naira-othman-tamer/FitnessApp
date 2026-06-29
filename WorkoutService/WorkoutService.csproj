@@ -40,4 +40,14 @@
     <Folder Include="Features\Workout\GetWorkoutExercises\" />
   </ItemGroup>
 
+	<ItemGroup>
+		<Content Update="Infrastructure\Data\Seed\Exercises.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Update="Infrastructure\Data\Seed\WorkoutPlans.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
+	
 </Project>

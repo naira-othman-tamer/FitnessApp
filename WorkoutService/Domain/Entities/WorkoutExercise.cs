@@ -6,8 +6,10 @@ namespace WorkoutService.Domain.Entities
 {
     public class WorkoutExercise : BaseEntity
     {
-        public int WorkoutId { get; set; }
+        public int WorkoutPlanDayId { get; set; }
+        public WorkoutPlanDay WorkoutPlanDay { get; set; } = default!;
         public int ExerciseId { get; set; }
+        public Exercise Exercise { get; set; } = default!;
         public int OrderIndex { get; set; }
         public ExercisePrescription Prescription { get; set; } = default!;
     }
@@ -18,26 +20,31 @@ namespace WorkoutService.Domain.Entities
         {
             builder.ToTable("WorkoutExercises");
 
-            // Same-aggregate relationship: real FK + cascade delete
-            builder.HasOne<Workout>()
-                .WithMany(w => w.Exercise)
-                .HasForeignKey(we => we.WorkoutId)
-                .OnDelete(DeleteBehavior.Cascade);
+            builder.HasKey(x => x.Id);
 
-            // Cross-aggregate reference: ID only, no navigation, no cascade
-            builder.HasOne<Exercise>()
-                .WithMany()
-                .HasForeignKey(we => we.ExerciseId)
-                .OnDelete(DeleteBehavior.Restrict);
+            builder.HasIndex(x => new { x.WorkoutPlanDayId, x.OrderIndex }); // ordered reads per day
 
-            builder.HasIndex(we => new { we.WorkoutId, we.OrderIndex });
+            builder.Property(x => x.WorkoutPlanDayId)
+                   .IsRequired();
 
-            builder.OwnsOne(we => we.Prescription, p =>
+            builder.Property(x => x.ExerciseId)
+                   .IsRequired();
+
+            builder.HasOne(x => x.Exercise)
+                   .WithMany()
+                   .HasForeignKey(x => x.ExerciseId)
+                   .OnDelete(DeleteBehavior.Restrict); // don't cascade-delete plan rows if an exercise is removed
+
+            builder.Property(x => x.OrderIndex)
+                   .IsRequired();
+
+            builder.OwnsOne(x => x.Prescription, p =>
             {
-                p.Property(x => x.Sets).HasColumnName("SetsDefault");
-                p.Property(x => x.Reps).HasColumnName("RepsDefault").HasMaxLength(20).IsRequired();
-                p.Property(x => x.RestTimeInSeconds).HasColumnName("RestTimeInSeconds");
+                p.Property(x => x.Sets).HasColumnName("Sets").IsRequired();
+                p.Property(x => x.Reps).HasColumnName("Reps").IsRequired();
+                p.Property(x => x.RestTimeInSeconds).HasColumnName("RestSeconds").IsRequired();
             });
         }
     }
 }
+

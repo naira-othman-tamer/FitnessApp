@@ -6,25 +6,22 @@ namespace WorkoutService.Domain.Entities
 {
     public class WorkoutSession : BaseEntity
     {
-        //SessionId (unique token), UserId, WorkoutId, StartedAt, CompletedAt?, Status
         public string SessionId { get; set; } = default!;
         public Guid UserId { get; set; }
-        public int WorkoutId { get; set; }
-        public DateTime StartedAt { get; set; } = DateTime.Now;
+        public int WorkoutPlanDayId { get; set; } // which day's workout this session is for
+        public DateTime StartedAt { get; set; } = DateTime.UtcNow;
         public DateTime? CompletedAt { get; set; }
-        public SessionStatus sessionStatus { get; set; } = SessionStatus.Active;
+        public SessionStatus Status { get; set; } = SessionStatus.Active;
 
         private WorkoutSession() { }
 
-        public static WorkoutSession Start(Guid userId, int workoutId)
-        {
-            return new WorkoutSession
+        public static WorkoutSession Start(Guid userId, int workoutPlanDayId)
+            => new WorkoutSession
             {
                 SessionId = Guid.NewGuid().ToString(),
                 UserId = userId,
-                WorkoutId = workoutId
+                WorkoutPlanDayId = workoutPlanDayId
             };
-        }
     }
 
     public class WorkoutSessionConfiguration : IEntityTypeConfiguration<WorkoutSession>
@@ -33,22 +30,32 @@ namespace WorkoutService.Domain.Entities
         {
             builder.ToTable("WorkoutSessions");
 
-            builder.Property(s => s.SessionId)
-                .IsRequired()
-                .HasMaxLength(100);
+            builder.HasKey(x => x.Id);
 
-            builder.HasIndex(s => s.SessionId).IsUnique();
-            builder.HasIndex(s => s.UserId);
+            builder.HasIndex(x => x.SessionId).IsUnique(); // external lookup token, must be unique
 
-            builder.Property(s => s.sessionStatus)
-                .HasConversion<string>()
-                .HasMaxLength(20)
-                .IsRequired();
+            builder.HasIndex(x => x.UserId); // list "my sessions" lookups
 
-            builder.HasOne<Workout>()
-                .WithMany()
-                .HasForeignKey(s => s.WorkoutId)
-                .OnDelete(DeleteBehavior.Restrict);
+            builder.Property(x => x.SessionId)
+                   .HasMaxLength(50)
+                   .IsRequired();
+
+            builder.Property(x => x.UserId)
+                   .IsRequired();
+
+            builder.Property(x => x.WorkoutPlanDayId)
+                   .IsRequired();
+
+            builder.Property(x => x.StartedAt)
+                   .IsRequired();
+
+            builder.Property(x => x.CompletedAt)
+                   .IsRequired(false);
+
+            builder.Property(x => x.Status)
+                   .HasConversion<string>()
+                   .HasMaxLength(20)
+                   .IsRequired();
         }
     }
 }

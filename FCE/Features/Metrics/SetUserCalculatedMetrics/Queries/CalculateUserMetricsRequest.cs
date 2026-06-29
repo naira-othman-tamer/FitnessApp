@@ -23,11 +23,12 @@ namespace FCE.Features.Metrics.SetUserCalculatedMetrics.Queries
                 .Select(s => new {
                     s.PhysicalStats,
                     s.activityLevel,
-                    s.goal
+                    s.goal,
+                    
                 }).FirstOrDefaultAsync(cancellationToken);
 
             var metrics = CalculatedMetrics
-                .Calculate(request.userId,stats.PhysicalStats,stats.activityLevel,stats.goal);
+                .Calculate(request.userId,stats.PhysicalStats,stats.activityLevel,stats.goal,stats.PhysicalStats.Gender);
 
             return metrics;
         }

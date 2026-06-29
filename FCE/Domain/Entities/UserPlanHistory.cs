@@ -6,7 +6,7 @@ namespace FCE.Domain.Entities
     public class UserPlanHistory : BaseEntity
     {
         public Guid UserId { get; set; }
-        public int ExternalPlanId { get; set; }
+        //public int ExternalPlanId { get; set; }
         //public DateTime AssignedAt { get; set; } >> CreatedAt
         public DateTime? EndedAt { get; set; }
         public string? ResonForChange { get; set; }
@@ -20,13 +20,9 @@ namespace FCE.Domain.Entities
 
             builder.HasKey(x => x.Id);
 
-            builder.HasIndex(x => x.UserId);
+            builder.HasIndex(x => x.UserId); // non-unique — many history rows per user, by design
 
             builder.Property(x => x.UserId)
-                   .IsRequired();
-
-            builder.Property(x => x.ExternalPlanId)
-                   .HasMaxLength(100)
                    .IsRequired();
 
             builder.Property(x => x.ResonForChange)
@@ -38,3 +34,4 @@ namespace FCE.Domain.Entities
         }
     }
 }
+

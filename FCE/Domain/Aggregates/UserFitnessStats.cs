@@ -10,10 +10,10 @@ namespace FCE.Domain.Aggregates
     {
         public Guid userId { get; set; }
         public PhysicalStats PhysicalStats { get; set; }
-        public Goal goal { get; set; }
+        public Goal goal { get; set; } //>> sent to workout to select workoutExcersise 
         public ActivityLevel activityLevel { get; set; }
         public bool IsActive { get; set; } = true;
-
+        public int WorkoutDays { get; set; } //>> sent to workout to select workout plan
         //public int AssignedPlanId { get; set; }
     }
 
@@ -25,7 +25,7 @@ namespace FCE.Domain.Aggregates
 
             builder.HasKey(x => x.Id);
 
-            builder.HasIndex(x => x.userId).IsUnique();
+            builder.HasIndex(x => x.userId).IsUnique(); 
 
             builder.Property(x => x.userId)
                    .IsRequired();
@@ -40,23 +40,18 @@ namespace FCE.Domain.Aggregates
                    .HasMaxLength(50)
                    .IsRequired();
 
+            builder.Property(x => x.WorkoutDays)
+                   .IsRequired();
+
             builder.Property(x => x.IsActive)
-                   .HasDefaultValue(true);
+                   .HasDefaultValue(true)
+                   .IsRequired();
 
             builder.OwnsOne(x => x.PhysicalStats, p =>
             {
-                p.Property(x => x.Weight)
-                 .HasColumnName("Weight")
-                 .IsRequired();
-
-                p.Property(x => x.Height)
-                 .HasColumnName("Height")
-                 .IsRequired();
-
-                p.Property(x => x.Age)
-                 .HasColumnName("Age")
-                 .IsRequired();
-
+                p.Property(x => x.Weight).HasColumnName("Weight").IsRequired();
+                p.Property(x => x.Height).HasColumnName("Height").IsRequired();
+                p.Property(x => x.Age).HasColumnName("Age").IsRequired();
                 p.Property(x => x.Gender)
                  .HasColumnName("Gender")
                  .HasConversion<string>()

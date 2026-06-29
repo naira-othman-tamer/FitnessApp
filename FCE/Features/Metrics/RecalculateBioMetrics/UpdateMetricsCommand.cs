@@ -1,7 +1,6 @@
 ﻿using FCE.Domain.Aggregates;
 using FCE.Domain.ValueObject;
 using FCE.Features.Common.Helpers;
-using FCE.Features.Metrics.SetUserCalculatedMetrics.Orchestrator;
 using FCE.Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

@@ -4,7 +4,7 @@ using FCE.Infrastructure;
 using MediatR;
 
 namespace FCE.Features.Metrics.SetUserCalculatedMetrics.Commands
-{
+{ 
     public record SetMetricsCommand(CalculatedMetrics metrics) : ICommand<bool>;
 
     public class SetMetricsCommandHandler : IRequestHandler<SetMetricsCommand, bool>

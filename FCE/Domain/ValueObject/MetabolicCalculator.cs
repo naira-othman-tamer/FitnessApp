@@ -2,12 +2,12 @@
 
 namespace FCE.Domain.ValueObject
 {
-    public record MetabolicCalculator
-    (
-    double BMR,
-    double TDEE,
-    double CalorieTarget,
-    //BMRStatus BmrStatus
-    BMRRange BMRRange
-    );
+    //public record MetabolicCalculator
+    //(
+    //double BMR,
+    //double TDEE,
+    //double CalorieTarget,
+    ////BMRStatus BmrStatus
+    //BMRRange BMRRange
+    //);
 }

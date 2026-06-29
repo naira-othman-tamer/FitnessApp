@@ -21,7 +21,9 @@ namespace FCE.Migrations
                     BMR = table.Column<double>(type: "float", nullable: false),
                     TDEE = table.Column<double>(type: "float", nullable: false),
                     CalorieTarget = table.Column<double>(type: "float", nullable: false),
-                    CalorieTier = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    BMRStatus = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    BMRRangeMin = table.Column<double>(type: "float", nullable: false),
+                    BMRRangeMax = table.Column<double>(type: "float", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -39,10 +41,9 @@ namespace FCE.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     goal = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    calorieIntensityTier = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    calorieIntake = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     ExternalPlanId = table.Column<int>(type: "int", maxLength: 100, nullable: false),
                     PlanName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    WorkoutsPerWeek = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -60,7 +61,10 @@ namespace FCE.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     userId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ExternalPlanId = table.Column<int>(type: "int", maxLength: 100, nullable: false),
+                    goal = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    calorieIntake = table.Column<double>(type: "float", nullable: false),
+                    WorkoutPlan = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    NutritionPlan = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -86,6 +90,7 @@ namespace FCE.Migrations
                     goal = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     activityLevel = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
+                    WorkoutDays = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -103,7 +108,6 @@ namespace FCE.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ExternalPlanId = table.Column<int>(type: "int", maxLength: 100, nullable: false),
                     EndedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ResonForChange = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -123,10 +127,15 @@ namespace FCE.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_PlanRules_goal_calorieIntensityTier",
+                name: "IX_PlanRules_goal_calorieIntake",
                 table: "PlanRules",
-                columns: new[] { "goal", "calorieIntensityTier" },
+                columns: new[] { "goal", "calorieIntake" },
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserAssignedPlans_userId",
+                table: "UserAssignedPlans",
+                column: "userId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserFitnessStats_userId",
