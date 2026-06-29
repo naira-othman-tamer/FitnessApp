@@ -6,7 +6,7 @@ namespace FCE.Features.Common.Pipeline
 {
     public class TransactionBehavior<TRequest, TResponse>
     : IPipelineBehavior<TRequest, TResponse>
-    where TRequest : ICommand<TResponse>
+    where TRequest : ICommandRequest<TResponse>
     {
         private readonly UnitOfWork _unitOfWork;
 

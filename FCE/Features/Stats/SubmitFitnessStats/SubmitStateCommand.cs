@@ -14,7 +14,7 @@ namespace FCE.Features.Stats.SubmitFitnessStats
       PhysicalStats PhysicalStats,
       Goal goal,
       ActivityLevel activityLevel,
-      bool IsActive) : ICommand<int>; 
+      bool IsActive) : ICommandRequest<int>; 
 
    public class SubmitStateCommandHandler : IRequestHandler<SubmitStateCommand, int>
     {

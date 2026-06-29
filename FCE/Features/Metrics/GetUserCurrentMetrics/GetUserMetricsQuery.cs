@@ -15,7 +15,9 @@ namespace FCE.Features.Metrics.GetUserCurrentMetrics
         double userBMR,
         double userTDEE,
         BMRRange range,
-        BMRStatus userTarget
+        BMRStatus userTarget,
+        double CalorieTarget
+        
     );
 
     public class GetUserMetricsQueryHandler : IRequestHandler<GetUserMetricsQuery, userMetricsDTO> //, MetabolicCalculator>
@@ -35,7 +37,8 @@ namespace FCE.Features.Metrics.GetUserCurrentMetrics
                     m.BMR,
                     m.TDEE,
                     m.BMRRange,
-                    m.BMRStatus
+                    m.BMRStatus,
+                    m.CalorieTarget
                 ))
                 .FirstOrDefaultAsync(cancellationToken);
 

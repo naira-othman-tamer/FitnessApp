@@ -1,4 +1,4 @@
-﻿namespace FCE.Domain.Enums
+﻿namespace ContractMessages.Enums
 {
     public enum Goal 
     {

@@ -10,7 +10,7 @@ using System.Data;
 
 namespace FCE.Features.Metrics.RecalculateBioMetrics
 {
-    public record UpdateMetricsCommand(Guid userId, double weight) : ICommand<CalculatedMetrics>;
+    public record UpdateMetricsCommand(Guid userId, double weight) : ICommandRequest<CalculatedMetrics>;
 
     public class UpdateMetricsCommandHandler : IRequestHandler<UpdateMetricsCommand, CalculatedMetrics>
     {

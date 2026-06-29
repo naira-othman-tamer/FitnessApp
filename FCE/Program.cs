@@ -1,11 +1,12 @@
-
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using FCE.Configs;
 using FCE.Configs.Extensions;
 using FCE.Features.Common;
+using MassTransit;
 using System.Reflection;
 using System.Text.Json.Serialization;
+using ContractMessages.WorkoutPlanMatching;
 
 namespace FCE
 {
@@ -35,6 +36,24 @@ namespace FCE
                     new JsonStringEnumConverter());
             });
 
+            builder.Services.AddMassTransit(x =>
+            {
+                
+                x.AddRequestClient<IGetWorkoutPlanRequest>();
+
+                x.UsingRabbitMq((context, cfg) =>
+                {
+                    cfg.Host("rabbitmq://localhost", h =>
+                    {
+                        h.Username("guest");
+                        h.Password("guest");
+                    });
+
+                    cfg.ConfigureEndpoints(context);
+                });
+            });
+            builder.Services.AddScoped<IRequestClient<IGetWorkoutPlanRequest>>(sp =>
+                    sp.GetRequiredService<IBus>().CreateRequestClient<IGetWorkoutPlanRequest>());
             var app = builder.Build();
 
             await app.MigrateDatabaseAsync();

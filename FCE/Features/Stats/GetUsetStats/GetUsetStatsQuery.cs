@@ -1,6 +1,6 @@
-﻿using FCE.Domain.Aggregates;
+﻿using ContractMessages.Enums;
+using FCE.Domain.Aggregates;
 using FCE.Domain.Enums;
-using FCE.Features.Stats.SubmitFitnessStats;
 using FCE.Infrastructure;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +15,8 @@ namespace FCE.Features.Stats.GetUsetStats
         Goal userGoal,
         double userWeight,
         double userHeight,
-        short userAge
+        short userAge,
+        int WorkoutDays
         );
     public class GetUsetStatsQueryHandler : IRequestHandler<GetUsetStatsQuery, GetUserStatsDTO>
     {
@@ -36,7 +37,8 @@ namespace FCE.Features.Stats.GetUsetStats
                    s.goal,
                    s.PhysicalStats.Weight,
                    s.PhysicalStats.Height,
-                   s.PhysicalStats.Age
+                   s.PhysicalStats.Age,
+                   s.WorkoutDays
                 )).FirstOrDefaultAsync(cs);
 
             return userStats;

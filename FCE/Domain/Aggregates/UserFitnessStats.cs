@@ -1,4 +1,5 @@
-﻿using FCE.Domain.Entities;
+﻿using ContractMessages.Enums;
+using FCE.Domain.Entities;
 using FCE.Domain.Enums;
 using FCE.Domain.ValueObject;
 using Microsoft.EntityFrameworkCore;
