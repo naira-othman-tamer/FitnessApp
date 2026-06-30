@@ -31,12 +31,6 @@
 	
 
 	<ItemGroup>
-	  <Folder Include="Features\Plan\GetActiveAssignedUserPlan\" />
-	</ItemGroup>
-
-	
-
-	<ItemGroup>
 	  <ProjectReference Include="..\ContractMessages\ContractMessages.csproj" />
 	</ItemGroup>
 

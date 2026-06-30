@@ -1,4 +1,5 @@
-﻿using FCE.Domain.Aggregates;
+﻿using ContractMessages.Enums;
+using FCE.Domain.Aggregates;
 using FCE.Domain.Enums;
 using FCE.Domain.ValueObject;
 using FCE.Features.Common.Helpers;

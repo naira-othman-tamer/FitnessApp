@@ -58,6 +58,5 @@ namespace FCE.Features.Stats.GetUsetStats
                 return Results.Ok(userStats);
             });
         }
-
     }
 }
