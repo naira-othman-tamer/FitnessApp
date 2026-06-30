@@ -4,3 +4,33 @@ services:
     build:
       context: .
       dockerfile: FitnessApp/Dockerfile
+  fce:
+    image: ${DOCKER_REGISTRY-}fce
+    build:
+      context: .
+      dockerfile: Fce/Dockerfile
+  authenticationservice:
+    image: ${DOCKER_REGISTRY-}authenticationservice
+    build:
+      context: .
+      dockerfile: AuthenticationService/Dockerfile
+  profileservice:
+    image: ${DOCKER_REGISTRY-}profileservice
+    build:
+      context: .
+      dockerfile: ProfileService/Dockerfile
+  nutritionservice:
+    image: ${DOCKER_REGISTRY-}nutritionservice
+    build:
+      context: .
+      dockerfile: NutritionService/Dockerfile
+  progresstrackingservice:
+    image: ${DOCKER_REGISTRY-}progresstrackingservice
+    build:
+      context: .
+      dockerfile: ProgressTrackingService/Dockerfile
+  workoutservice:
+    image: ${DOCKER_REGISTRY-}workoutservice
+    build:
+      context: .
+      dockerfile: WorkoutService/Dockerfile
