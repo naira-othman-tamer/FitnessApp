@@ -1,17 +1,16 @@
 ﻿using ContractMessages.Enums;
 using ContractMessages.WorkoutPlanMatching;
+using FCE.Features.Common.Helpers;
 using FCE.Features.Metrics.GetUserCurrentMetrics;
 using FCE.Features.Stats.GetUsetStats;
 using MassTransit;
-using MassTransit.Initializers;
 using MediatR;
-using static MassTransit.Transports.ReceiveEndpoint;
 
 namespace FCE.Features.Plan.AssignUserPlan
 {
-    public record AssignPlanOrchestrator(Guid userId) : IRequest<bool>;
+    public record AssignPlanOrchestrator(Guid userId) : IRequest<RequestResult<bool>>;
 
-    public class AssignPlanOrchestratorHandler : IRequestHandler<AssignPlanOrchestrator, bool>
+    public class AssignPlanOrchestratorHandler : IRequestHandler<AssignPlanOrchestrator, RequestResult<bool>>
     {
         private readonly IMediator _mediator;
         private readonly IRequestClient<IGetWorkoutPlanRequest> _workoutPlanClient;
@@ -22,7 +21,7 @@ namespace FCE.Features.Plan.AssignUserPlan
             _workoutPlanClient = workoutPlanClient;
         }
 
-        public async Task<bool> Handle(AssignPlanOrchestrator request, CancellationToken cancellationToken)
+        public async Task<RequestResult<bool>> Handle(AssignPlanOrchestrator request, CancellationToken cancellationToken)
         {
             var stats = await _mediator
                 .Send(new GetUsetStatsQuery(request.userId), cancellationToken);
@@ -34,25 +33,23 @@ namespace FCE.Features.Plan.AssignUserPlan
             var workoutResponse = await _workoutPlanClient.GetResponse<IGetWorkoutPlanResponse>(
               new
               {
-                  Goal = stats.userGoal,
-                  WorkoutDaysPerWeek = stats.WorkoutDays  
+                  Goal = stats.Data.userGoal,
+                  WorkoutDaysPerWeek = stats.Data.WorkoutDays  
               },
               cancellationToken
           );
             string workoutPlanName = workoutResponse.Message.Name;
 
-            await _mediator.Send(new AssignUserPlanCommand
+            await _mediator.Send(new SetUserPlanCommand
                 (
                 request.userId,
-                stats.userGoal,
-                metrics.CalorieTarget,
+                stats.Data.userGoal,
+                metrics.Data.CalorieTarget,
                 workoutPlanName,
                 ""
                 ), cancellationToken);
 
-
-
-            return true;
+            return RequestResult<bool>.Success(true);
         }
     }
 }

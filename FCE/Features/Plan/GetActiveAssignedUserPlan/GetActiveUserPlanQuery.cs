@@ -1,4 +1,5 @@
 ﻿using FCE.Domain.Entities;
+using FCE.Features.Common.Helpers;
 using FCE.Features.Stats.GetUsetStats;
 using FCE.Infrastructure;
 using MediatR;
@@ -6,11 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FCE.Features.Plan.GetActiveAssignedUserPlan
 {
-    public record GetActiveUserPlanQuery(Guid userId) : IRequest<ActivePlanDto>;
+    public record GetActiveUserPlanQuery(Guid userId) : IRequest<RequestResult<ActivePlanDto>>;
 
     public record ActivePlanDto(int planId , string WorkoutPlan="" , string NutritionPlan ="");
 
-    public class GetActiveUserPlanQueryHandler : IRequestHandler<GetActiveUserPlanQuery, ActivePlanDto>
+    public class GetActiveUserPlanQueryHandler : IRequestHandler<GetActiveUserPlanQuery, RequestResult<ActivePlanDto>>
     {
         private readonly GeneralRepository<UserAssignedPlan> _planRepo;
 
@@ -19,7 +20,7 @@ namespace FCE.Features.Plan.GetActiveAssignedUserPlan
             _planRepo = planRepo;
         }
 
-        public async Task<ActivePlanDto> Handle(GetActiveUserPlanQuery request, CancellationToken cancellationToken)
+        public async Task<RequestResult<ActivePlanDto>> Handle(GetActiveUserPlanQuery request, CancellationToken cancellationToken)
         {
             var plan = await _planRepo
                 .Get(u => u.userId == request.userId && u.IsActive==true)
@@ -30,7 +31,7 @@ namespace FCE.Features.Plan.GetActiveAssignedUserPlan
                     p.NutritionPlan
                  )).FirstOrDefaultAsync(cancellationToken);
 
-            return plan;
+            return RequestResult<ActivePlanDto>.Success(plan);
         }
     }
 

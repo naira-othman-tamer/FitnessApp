@@ -5,9 +5,9 @@ using MediatR;
 
 namespace FCE.Features.Metrics.SetUserCalculatedMetrics.Commands
 { 
-    public record SetMetricsCommand(CalculatedMetrics metrics) : ICommandRequest<bool>;
+    public record SetMetricsCommand(CalculatedMetrics metrics) : ICommandRequest<RequestResult<bool>>;
 
-    public class SetMetricsCommandHandler : IRequestHandler<SetMetricsCommand, bool>
+    public class SetMetricsCommandHandler : IRequestHandler<SetMetricsCommand, RequestResult<bool>>
     {
         private readonly GeneralRepository<CalculatedMetrics> _metricsRepo;
 
@@ -16,11 +16,11 @@ namespace FCE.Features.Metrics.SetUserCalculatedMetrics.Commands
             _metricsRepo = metricsRepo;
         }
 
-        public async Task<bool> Handle(SetMetricsCommand request, CancellationToken cancellationToken)
+        public async Task<RequestResult<bool>> Handle(SetMetricsCommand request, CancellationToken cancellationToken)
         {
             _metricsRepo.Add(request.metrics);
             await _metricsRepo.SaveChangesAsync();
-            return true;
+            return RequestResult<bool>.Success(true);
         }
     }
 }
