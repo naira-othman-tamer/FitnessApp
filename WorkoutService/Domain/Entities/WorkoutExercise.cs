@@ -6,12 +6,31 @@ namespace WorkoutService.Domain.Entities
 {
     public class WorkoutExercise : BaseEntity
     {
-        public int WorkoutPlanDayId { get; set; }
-        public WorkoutPlanDay WorkoutPlanDay { get; set; } = default!;
-        public int ExerciseId { get; set; }
-        public Exercise Exercise { get; set; } = default!;
-        public int OrderIndex { get; set; }
-        public ExercisePrescription Prescription { get; set; } = default!;
+        public int WorkoutId { get; private set; }
+        public int ExerciseId { get; private set; }
+        public Exercise Exercise { get; private set; } = default!;
+        public int OrderIndex { get; private set; }
+        public ExercisePrescription Prescription { get; private set; } = default!;
+
+        private WorkoutExercise() { }
+
+        public static WorkoutExercise Create(
+            int workoutId,
+            int exerciseId,
+            int orderIndex,
+            ExercisePrescription prescription)
+        {
+            if (orderIndex < 0)
+                throw new ArgumentException("OrderIndex cannot be negative.");
+
+            return new WorkoutExercise
+            {
+                WorkoutId = workoutId,
+                ExerciseId = exerciseId,
+                OrderIndex = orderIndex,
+                Prescription = prescription
+            };
+        }
     }
 
     public class WorkoutExerciseConfiguration : IEntityTypeConfiguration<WorkoutExercise>
@@ -22,9 +41,14 @@ namespace WorkoutService.Domain.Entities
 
             builder.HasKey(x => x.Id);
 
-            builder.HasIndex(x => new { x.WorkoutPlanDayId, x.OrderIndex }); // ordered reads per day
+            builder.HasQueryFilter(x => !x.IsDeleted);
 
-            builder.Property(x => x.WorkoutPlanDayId)
+            builder.HasIndex(x => x.WorkoutId);
+
+            builder.HasIndex(x => new { x.WorkoutId, x.OrderIndex })
+                   .IsUnique(); // no two exercises share the same slot within a workout
+
+            builder.Property(x => x.WorkoutId)
                    .IsRequired();
 
             builder.Property(x => x.ExerciseId)
@@ -33,7 +57,8 @@ namespace WorkoutService.Domain.Entities
             builder.HasOne(x => x.Exercise)
                    .WithMany()
                    .HasForeignKey(x => x.ExerciseId)
-                   .OnDelete(DeleteBehavior.Restrict); // don't cascade-delete plan rows if an exercise is removed
+                   .OnDelete(DeleteBehavior.Restrict);
+            // don't cascade-delete workout rows if an Exercise master record is removed
 
             builder.Property(x => x.OrderIndex)
                    .IsRequired();

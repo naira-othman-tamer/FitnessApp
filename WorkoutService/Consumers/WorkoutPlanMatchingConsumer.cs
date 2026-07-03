@@ -3,6 +3,7 @@ using MassTransit;
 //using MassTransit.Mediator;
 using MediatR;
 using WorkoutService.Features.Plan;
+using WorkoutService.Features.Plan.MatchUserWorkoutPlan;
 
 
 namespace WorkoutService.Consumers

@@ -1,13 +1,14 @@
 ﻿using ContractMessages.Enums;
 using FCE.Domain.Aggregates;
 using FCE.Domain.Enums;
+using FCE.Features.Common.Helpers;
 using FCE.Infrastructure;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace FCE.Features.Stats.GetUsetStats
 {
-    public record GetUsetStatsQuery(Guid userId) : IRequest<GetUserStatsDTO>;
+    public record GetUsetStatsQuery(Guid userId) : IRequest<RequestResult<GetUserStatsDTO>>;
 
     public record GetUserStatsDTO
         (
@@ -18,7 +19,7 @@ namespace FCE.Features.Stats.GetUsetStats
         short userAge,
         int WorkoutDays
         );
-    public class GetUsetStatsQueryHandler : IRequestHandler<GetUsetStatsQuery, GetUserStatsDTO>
+    public class GetUsetStatsQueryHandler : IRequestHandler<GetUsetStatsQuery, RequestResult<GetUserStatsDTO>>
     {
         private readonly GeneralRepository<UserFitnessStats> _statsRepository;
 
@@ -27,7 +28,7 @@ namespace FCE.Features.Stats.GetUsetStats
             _statsRepository = statsRepository;
         }
 
-        public async Task<GetUserStatsDTO> Handle(GetUsetStatsQuery request, CancellationToken cs)
+        public async Task<RequestResult<GetUserStatsDTO>> Handle(GetUsetStatsQuery request, CancellationToken cs)
         {
             var userStats = await _statsRepository
                 .Get(s => s.userId == request.userId)
@@ -41,7 +42,7 @@ namespace FCE.Features.Stats.GetUsetStats
                    s.WorkoutDays
                 )).FirstOrDefaultAsync(cs);
 
-            return userStats;
+            return RequestResult<GetUserStatsDTO>.Success(userStats);
         }
     }
 
@@ -58,6 +59,5 @@ namespace FCE.Features.Stats.GetUsetStats
                 return Results.Ok(userStats);
             });
         }
-
     }
 }

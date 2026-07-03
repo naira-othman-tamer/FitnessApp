@@ -6,8 +6,7 @@ namespace FCE.Domain.Entities
     public class UserPlanHistory : BaseEntity
     {
         public Guid UserId { get; set; }
-        //public int ExternalPlanId { get; set; }
-        //public DateTime AssignedAt { get; set; } >> CreatedAt
+        public int PlanId { get; set; } // Assuming this is the ID of the plan assigned to the user
         public DateTime? EndedAt { get; set; }
         public string? ResonForChange { get; set; }
     }

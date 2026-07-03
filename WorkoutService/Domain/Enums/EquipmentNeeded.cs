@@ -3,7 +3,12 @@
     public enum EquipmentNeeded
     {
         BodyWeight,
+        Dumbbells,
+        Barbell,
+        Kettlebell,
         Machine,
-        Dumbbells
+        ResistanceBand,
+        Cable,
+        Bench
     }
 }

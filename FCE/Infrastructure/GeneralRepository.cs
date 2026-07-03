@@ -77,7 +77,7 @@ namespace FCE.Infrastructure
             {
                 // 3- If the entity is already being tracked, use the existing tracked entity
                 entityEntry = _context.ChangeTracker.Entries<T>()
-                                                    .FirstOrDefault(e => e.Entity.Id == entity.Id);
+                                                    .FirstOrDefault(e => e.Entity.Id == entity.Id)!;
             }
             // 4- Mark only the specified properties as modified
             foreach (var prop in entityEntry.Properties)
@@ -86,7 +86,7 @@ namespace FCE.Infrastructure
                 {
                     // Set the current value of the property to the value from the provided entity
                     prop.CurrentValue = entity.GetType()
-                                              .GetProperty(prop.Metadata.Name)
+                                              .GetProperty(prop.Metadata.Name)!
                                               .GetValue(entity);
                     prop.IsModified = true;
                 }
@@ -103,9 +103,9 @@ namespace FCE.Infrastructure
         public bool SoftDeleteById(int id)
         {
             var entity = GetById(id);
-            if (entity is null)
-                return false;
-            SoftDelete(entity.FirstOrDefault());
+            //if (entity is null)
+            //    return false;
+            SoftDelete(entity.FirstOrDefault()!);
             return true;
         }
         #endregion

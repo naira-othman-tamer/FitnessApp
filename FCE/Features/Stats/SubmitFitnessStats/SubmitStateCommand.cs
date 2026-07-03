@@ -1,4 +1,5 @@
-﻿using FCE.Domain.Aggregates;
+﻿using ContractMessages.Enums;
+using FCE.Domain.Aggregates;
 using FCE.Domain.Enums;
 using FCE.Domain.ValueObject;
 using FCE.Features.Common.Helpers;
@@ -14,16 +15,16 @@ namespace FCE.Features.Stats.SubmitFitnessStats
       PhysicalStats PhysicalStats,
       Goal goal,
       ActivityLevel activityLevel,
-      bool IsActive) : ICommandRequest<int>; 
+      bool IsActive) : ICommandRequest<RequestResult<int>>; 
 
-   public class SubmitStateCommandHandler : IRequestHandler<SubmitStateCommand, int>
+   public class SubmitStateCommandHandler : IRequestHandler<SubmitStateCommand, RequestResult<int>>
     {
         private readonly GeneralRepository<UserFitnessStats> _userStatsRepo;
         public SubmitStateCommandHandler(GeneralRepository<UserFitnessStats> userStatsRepo)
         {
             _userStatsRepo = userStatsRepo;
         }
-        public async Task<int> Handle(SubmitStateCommand request, CancellationToken cancellationToken)
+        public async Task<RequestResult<int>> Handle(SubmitStateCommand request, CancellationToken cancellationToken)
         {
             
             var userFitnessStats = new UserFitnessStats
@@ -36,7 +37,7 @@ namespace FCE.Features.Stats.SubmitFitnessStats
             };
             _userStatsRepo.Add(userFitnessStats);
             await _userStatsRepo.SaveChangesAsync();
-            return userFitnessStats.Id;
+            return RequestResult<int>.Success(userFitnessStats.Id);
         }
     }
 

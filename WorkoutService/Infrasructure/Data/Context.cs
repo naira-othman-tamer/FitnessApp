@@ -10,7 +10,7 @@ namespace WorkoutService.Infrastructure.Data
 
         public DbSet<WorkoutPlan> WorkoutPlans { get; set; }
         public DbSet<WorkoutExercise> WorkoutExercises{ get; set; }
-        public DbSet<WorkoutPlanDay> WorkoutPlanDays { get; set; }
+        public DbSet<PlanDay> WorkoutPlanDays { get; set; }
         public DbSet<Exercise> Exercises { get; set; }
         public DbSet<WorkoutSession> WorkoutSessions { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)

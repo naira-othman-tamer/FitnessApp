@@ -6,9 +6,14 @@ using MediatR;
 
 namespace FCE.Features.Plan.AssignUserPlan
 {
-    public record AssignUserPlanCommand(Guid userId, Goal userGoal, double IntakeClaorie,string WorkoutPlanName,string NutritionPlanName) : ICommandRequest<int>;
+    public record SetUserPlanCommand(
+        Guid userId,
+        Goal userGoal,
+        double IntakeClaorie,
+        string WorkoutPlanName,
+        string NutritionPlanName) : ICommandRequest<RequestResult<int>>;
 
-    public class AssignUserPlanCommandHandler : IRequestHandler<AssignUserPlanCommand, int>
+    public class AssignUserPlanCommandHandler : IRequestHandler<SetUserPlanCommand, RequestResult<int>>
     {
         private readonly GeneralRepository<UserAssignedPlan> _userPlanRepo;
 
@@ -17,7 +22,7 @@ namespace FCE.Features.Plan.AssignUserPlan
             _userPlanRepo = userPlanRepo;
         }
 
-        public async Task<int> Handle(AssignUserPlanCommand request, CancellationToken cancellationToken)
+        public async Task<RequestResult<int>> Handle(SetUserPlanCommand request, CancellationToken cancellationToken)
         {
            var plan = UserAssignedPlan
                 .Create(request.userId , request.userGoal ,request.IntakeClaorie, request.WorkoutPlanName , request.NutritionPlanName);
@@ -25,7 +30,7 @@ namespace FCE.Features.Plan.AssignUserPlan
             _userPlanRepo.Add(plan);
            await _userPlanRepo.SaveChangesAsync();
 
-           return plan.Id;
+           return RequestResult<int>.Success(plan.Id);
         }
     }
 }

@@ -10,7 +10,9 @@ namespace FCE.Domain.Entities
         public Guid userId { get; set; }
         public Goal goal { get; private set; }
         public double calorieIntake { get; private set; } //CalroieAllocation
+        public int WorkoutPlanId { get; private set; } // Assuming this is the ID of the workout plan assigned to the user
         public string? WorkoutPlan { get; private set; } 
+        public int NutritionPlanId { get; private set; } // Assuming this is the ID of the nutrition plan assigned to the user
         public string? NutritionPlan { get; private set; }                                       
         public bool IsActive { get; set; } = true;
 

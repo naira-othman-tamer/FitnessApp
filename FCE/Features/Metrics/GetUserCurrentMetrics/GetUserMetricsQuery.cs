@@ -1,6 +1,7 @@
 ﻿using FCE.Domain.Aggregates;
 using FCE.Domain.Enums;
 using FCE.Domain.ValueObject;
+using FCE.Features.Common.Helpers;
 using FCE.Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FCE.Features.Metrics.GetUserCurrentMetrics
 {
-    public record GetUserMetricsQuery(Guid userId) : IRequest<userMetricsDTO>;//MetabolicCalculator>;
+    public record GetUserMetricsQuery(Guid userId) : IRequest<RequestResult<userMetricsDTO>>;//MetabolicCalculator>;
 
     public record userMetricsDTO
     (
@@ -20,7 +21,7 @@ namespace FCE.Features.Metrics.GetUserCurrentMetrics
         
     );
 
-    public class GetUserMetricsQueryHandler : IRequestHandler<GetUserMetricsQuery, userMetricsDTO> //, MetabolicCalculator>
+    public class GetUserMetricsQueryHandler : IRequestHandler<GetUserMetricsQuery, RequestResult<userMetricsDTO>> //, MetabolicCalculator>
     {
         private readonly GeneralRepository<CalculatedMetrics> _metricsRepo;
 
@@ -29,7 +30,7 @@ namespace FCE.Features.Metrics.GetUserCurrentMetrics
             _metricsRepo = metricsRepo;
         }
 
-        public async Task<userMetricsDTO> Handle(GetUserMetricsQuery request, CancellationToken cancellationToken)
+        public async Task<RequestResult<userMetricsDTO>> Handle(GetUserMetricsQuery request, CancellationToken cancellationToken)
         {
             var usermetrics = await _metricsRepo.Get(u => u.UserId == request.userId)
                 .Select(m => new userMetricsDTO
@@ -42,7 +43,7 @@ namespace FCE.Features.Metrics.GetUserCurrentMetrics
                 ))
                 .FirstOrDefaultAsync(cancellationToken);
 
-            return usermetrics;
+            return RequestResult<userMetricsDTO>.Success(usermetrics);
         }
     }
 
