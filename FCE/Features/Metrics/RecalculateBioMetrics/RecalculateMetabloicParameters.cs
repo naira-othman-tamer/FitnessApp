@@ -11,24 +11,25 @@ using System.Data;
 
 namespace FCE.Features.Metrics.RecalculateBioMetrics
 {
-    public record UpdateMetricsCommand(Guid userId, double weight) : ICommandRequest<RequestResult<UserMetrics>>;
+    public record RecalculateMetabloicParametersCommand(Guid userId, double weight) : ICommandRequest<RequestResult<UserMetablocParametersDTO>>;
 
-    public record UserMetrics(
+    public record UserMetablocParametersDTO(
         double userBMR ,
         double userTDEE ,
         double userCalorieTarget ,
         BMRStatus userBMRStatus ,
         BMRRange userBMRRange );
-    public class UpdateMetricsCommandHandler : IRequestHandler<UpdateMetricsCommand, RequestResult<UserMetrics>>
+
+    public class RecalculateMetabloicParametersCommandHandler : IRequestHandler<RecalculateMetabloicParametersCommand, RequestResult<UserMetablocParametersDTO>>
     {
         private readonly GeneralRepository<UserFitnessStats> _statsRepo;
 
-        public UpdateMetricsCommandHandler(GeneralRepository<UserFitnessStats> statsRepo)
+        public RecalculateMetabloicParametersCommandHandler(GeneralRepository<UserFitnessStats> statsRepo)
         {
             _statsRepo = statsRepo;
         }
 
-        public async Task<RequestResult<UserMetrics>> Handle(UpdateMetricsCommand request, CancellationToken cancellationToken)
+        public async Task<RequestResult<UserMetablocParametersDTO>> Handle(RecalculateMetabloicParametersCommand request, CancellationToken cancellationToken)
         {
           
             var CurrentPhysicalStats = await _statsRepo
@@ -45,7 +46,7 @@ namespace FCE.Features.Metrics.RecalculateBioMetrics
             _statsRepo.UpdateInclude(UpdatedStats, nameof(PhysicalStats));
             await _statsRepo.SaveChangesAsync();
             var newMetrics = CalculatedMetrics.Calculate(UpdatedStats);
-            return RequestResult<UserMetrics>.Success(new UserMetrics
+            return RequestResult<UserMetablocParametersDTO>.Success(new UserMetablocParametersDTO
                 (
                 newMetrics.BMR,
                 newMetrics.TDEE,
@@ -61,7 +62,7 @@ namespace FCE.Features.Metrics.RecalculateBioMetrics
         public static void UpdateCalculateMetricsEndPoint(this IEndpointRouteBuilder builder)
         {
             builder.MapPost("/UpdateWeight", async (
-                [FromBody] UpdateMetricsCommand request,
+                [FromBody] RecalculateMetabloicParametersCommand request,
                 [FromServices] IMediator mediator) =>
             {
                 var result = await mediator.Send(request);

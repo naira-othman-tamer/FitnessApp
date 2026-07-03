@@ -29,14 +29,12 @@
 
   <ItemGroup>
     <Folder Include="Domain\Aggregates\" />
-    <Folder Include="Features\Excercise\" />
-    <Folder Include="Features\Workout\GetWorkoutsByCategory\" />
-    <Folder Include="Features\Excercise\GetExercises\" />
-    <Folder Include="Features\Workout\GetWorkouts\" />
-    <Folder Include="Features\Workout\GetWorkoutById\" />
     <Folder Include="Features\Excercise\GetExerciseById\" />
-    <Folder Include="Features\Workout\GetWorkoutPlanDetails\" />
-    <Folder Include="Features\Workout\GetWorkoutExercises\" />
+    <Folder Include="Features\Plan\GetAllWorkoutPlans\" />
+    <Folder Include="Features\Plan\GetWorkoutPlanById\" />
+    <Folder Include="Features\Excercise\GetExercises\" />
+    <Folder Include="Features\Excercise\GetWorkoutExercises\" />
+    <Folder Include="Features\Session\GetWorkoutSessoionById\" />
   </ItemGroup>
 
   <ItemGroup>

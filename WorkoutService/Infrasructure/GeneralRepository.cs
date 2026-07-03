@@ -22,9 +22,9 @@ namespace WorkoutService.Infrastructure
             return _dbSet.Where(x => !x.IsDeleted);
         }
 
-        public IQueryable<T> GetById(int id)
+        public async Task<T> GetByIdAsync(int id,CancellationToken cs)
         {
-            return _dbSet.Where(x => x.Id == id && !x.IsDeleted);
+            return await _dbSet.Where(x => x.Id == id && !x.IsDeleted).FirstOrDefaultAsync(cs);
         }
 
         public IQueryable<T> Get(Expression<Func<T, bool>> expression)
@@ -77,7 +77,7 @@ namespace WorkoutService.Infrastructure
             {
                 // 3- If the entity is already being tracked, use the existing tracked entity
                 entityEntry = _context.ChangeTracker.Entries<T>()
-                                                    .FirstOrDefault(e => e.Entity.Id == entity.Id);
+                                                    .FirstOrDefault(e => e.Entity.Id == entity.Id)!;
             }
             // 4- Mark only the specified properties as modified
             foreach (var prop in entityEntry.Properties)
@@ -86,7 +86,7 @@ namespace WorkoutService.Infrastructure
                 {
                     // Set the current value of the property to the value from the provided entity
                     prop.CurrentValue = entity.GetType()
-                                              .GetProperty(prop.Metadata.Name)
+                                              .GetProperty(prop.Metadata.Name)!
                                               .GetValue(entity);
                     prop.IsModified = true;
                 }
@@ -100,19 +100,19 @@ namespace WorkoutService.Infrastructure
             entity.DeletedAt = DateTime.UtcNow;
         }
 
-        public bool SoftDeleteById(int id)
+        public async Task<bool> SoftDeleteById(int id,CancellationToken cs)
         {
-            var entity = GetById(id);
+            var entity = await GetByIdAsync(id,cs);
             if (entity is null)
                 return false;
-            SoftDelete(entity.FirstOrDefault());
+            SoftDelete(entity);
             return true;
         }
         #endregion
 
-        public async Task SaveChangesAsync()
+        public async Task SaveChangesAsync(CancellationToken cs)
         {
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cs);
 
         }
     }

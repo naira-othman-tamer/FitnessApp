@@ -52,8 +52,10 @@ namespace FCE
                     cfg.ConfigureEndpoints(context);
                 });
             });
-            builder.Services.AddScoped<IRequestClient<IGetWorkoutPlanRequest>>(sp =>
-                    sp.GetRequiredService<IBus>().CreateRequestClient<IGetWorkoutPlanRequest>());
+
+            //builder.Services.AddScoped<IRequestClient<IGetWorkoutPlanRequest>>(sp =>
+            //        sp.GetRequiredService<IBus>().CreateRequestClient<IGetWorkoutPlanRequest>());
+
             var app = builder.Build();
 
             await app.MigrateDatabaseAsync();

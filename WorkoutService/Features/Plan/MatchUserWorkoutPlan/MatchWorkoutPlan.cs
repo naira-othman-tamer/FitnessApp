@@ -1,7 +1,7 @@
 ﻿using ContractMessages.Enums;
 using MediatR;
 
-namespace WorkoutService.Features.Plan
+namespace WorkoutService.Features.Plan.MatchUserWorkoutPlan
 {
     public record MatchWorkoutPlanOrchestrator(Goal userGoal , int workoutDays) : IRequest<MatchedWorkoutPlanDTO>;
 

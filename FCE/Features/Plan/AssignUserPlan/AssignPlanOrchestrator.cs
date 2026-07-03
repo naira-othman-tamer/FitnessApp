@@ -5,6 +5,7 @@ using FCE.Features.Metrics.GetUserCurrentMetrics;
 using FCE.Features.Stats.GetUsetStats;
 using MassTransit;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FCE.Features.Plan.AssignUserPlan
 {
@@ -50,6 +51,20 @@ namespace FCE.Features.Plan.AssignUserPlan
                 ), cancellationToken);
 
             return RequestResult<bool>.Success(true);
+        }
+    }
+
+    public static class AssignUserPlanEndPoint
+    {
+        public static void AssignUserPlanEndPointEndPoint(this IEndpointRouteBuilder builder)
+        {
+            builder.MapPost("", async (
+                [FromBody] AssignPlanOrchestrator request,
+                [FromServices] IMediator mediator) =>
+            {
+                var result = await mediator.Send(request);
+                return Results.Ok(result);
+            });
         }
     }
 }
