@@ -1,19 +1,21 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using NutritionService.Data;
+using NutritionService.Domain.Entities;
+using Repository.Layer.Interfaces;
 
 namespace NutritionService.Features.Nutrition.GetMealPlans;
 
 public sealed record GetMealPlansQuery : IRequest<OperationResult<IReadOnlyList<MealPlanSummaryDto>>>;
 public sealed record GetMealPlansByCaloriesQuery(double Calories) : IRequest<OperationResult<IReadOnlyList<MealPlanDetailsDto>>>;
 
-public sealed class GetMealPlansHandler(NutritionDbContext context) :
+public sealed class GetMealPlansHandler(IUnitOfWork<NutritionDbContext> unitOfWork) :
     IRequestHandler<GetMealPlansQuery, OperationResult<IReadOnlyList<MealPlanSummaryDto>>>,
     IRequestHandler<GetMealPlansByCaloriesQuery, OperationResult<IReadOnlyList<MealPlanDetailsDto>>>
 {
     public async Task<OperationResult<IReadOnlyList<MealPlanSummaryDto>>> Handle(GetMealPlansQuery request, CancellationToken cancellationToken)
     {
-        var plans = await context.MealPlans.AsNoTracking().OrderBy(x => x.TargetCalorieRangeMin)
+        var plans = await unitOfWork.Repository<MealPlan, Guid>().Query().OrderBy(x => x.TargetCalorieRangeMin)
             .Select(x => new MealPlanSummaryDto(x.Id, x.Name, x.Description, x.TargetCalorieRangeMin, x.TargetCalorieRangeMax)).ToListAsync(cancellationToken);
         return OperationResultFactory.Success<IReadOnlyList<MealPlanSummaryDto>>(plans);
     }
@@ -25,8 +27,8 @@ public sealed class GetMealPlansHandler(NutritionDbContext context) :
         return OperationResultFactory.Success<IReadOnlyList<MealPlanDetailsDto>>(plans.Select(x => x.ToDetails()).ToArray());
     }
 
-    internal async Task<List<Domain.Entities.MealPlan>> QueryPlans(double calories, CancellationToken cancellationToken) =>
-        await context.MealPlans.AsNoTracking().AsSplitQuery().Include(x => x.Items).ThenInclude(x => x.Meal).ThenInclude(x => x.Tags)
+    internal async Task<List<MealPlan>> QueryPlans(double calories, CancellationToken cancellationToken) =>
+        await unitOfWork.Repository<MealPlan, Guid>().Query().AsSplitQuery().Include(x => x.Items).ThenInclude(x => x.Meal).ThenInclude(x => x.Tags)
             .Include(x => x.Items).ThenInclude(x => x.Meal).ThenInclude(x => x.Allergens)
             .Where(x => x.TargetCalorieRangeMin <= calories && x.TargetCalorieRangeMax >= calories)
             .OrderBy(x => x.TargetCalorieRangeMin).ToListAsync(cancellationToken);
