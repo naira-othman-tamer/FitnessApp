@@ -43,7 +43,8 @@ namespace FCE
 
                 x.UsingRabbitMq((context, cfg) =>
                 {
-                    cfg.Host("rabbitmq://localhost", h =>
+                    var rabbitHost = builder.Configuration["RabbitMq:Host"] ?? "localhost";
+                    cfg.Host($"rabbitmq://{rabbitHost}", h =>
                     {
                         h.Username("guest");
                         h.Password("guest");
