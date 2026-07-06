@@ -6,7 +6,7 @@ using WorkoutService.Features.Plan;
 using WorkoutService.Features.Plan.MatchUserWorkoutPlan;
 
 
-namespace WorkoutService.Consumers
+namespace WorkoutService.Integrations.Consumers
 {
     public class WorkoutPlanMatchingConsumer : IConsumer<IGetWorkoutPlanRequest>
     {

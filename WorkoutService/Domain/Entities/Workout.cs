@@ -7,16 +7,16 @@ namespace WorkoutService.Domain.Entities
     public class Workout : BaseEntity
     {
         public string Name { get; private set; } = default!;
-        public WorkoutCategory Category { get; private set; }
-        public Difficulty Difficulty { get; private set; }
-        public int DurationInMinutes { get; private set; }
-        public int CaloriesBurn { get; private set; }
-        public string? ImageUrl { get; private set; }
-        public bool IsPremium { get; private set; }
+        public WorkoutCategory Category { get; set; }
+        //public Difficulty Difficulty { get; set; }
+        public int DurationInMinutes { get; set; }
+        public int CaloriesBurn { get; set; }
+        public string? ImageUrl { get; set; }
+        public bool IsPremium { get; set; }
 
-        public ICollection<WorkoutExercise> WorkoutExercises { get; private set; } = new List<WorkoutExercise>();
+        public ICollection<WorkoutExercise> WorkoutExercises { get; set; } = new List<WorkoutExercise>();
 
-        private Workout() { }
+        public Workout() { }
 
         public static Workout Create(
             string name,
@@ -37,7 +37,7 @@ namespace WorkoutService.Domain.Entities
             return new Workout
             {
                 Name = name,
-                Difficulty = difficulty,
+               // Difficulty = difficulty,
                 DurationInMinutes = durationInMinutes,
                 CaloriesBurn = caloriesBurn,
                 Category = category ?? WorkoutCategory.Unknown,
@@ -68,16 +68,16 @@ namespace WorkoutService.Domain.Entities
                    .HasMaxLength(30)
                    .IsRequired();
 
-            builder.Property(x => x.Difficulty)
-                   .HasConversion<string>()
-                   .HasMaxLength(20)
-                   .IsRequired();
+            //builder.Property(x => x.Difficulty)
+            //       .HasConversion<string>()
+            //       .HasMaxLength(20)
+            //       .IsRequired();
 
             builder.Property(x => x.DurationInMinutes)
                    .IsRequired();
 
             builder.Property(x => x.CaloriesBurn)
-                   .IsRequired();
+                   .IsRequired(false);
 
             builder.Property(x => x.ImageUrl)
                    .HasMaxLength(300);

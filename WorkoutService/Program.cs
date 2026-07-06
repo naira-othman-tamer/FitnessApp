@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Text.Json.Serialization;
 using WorkoutService.Configs;
 using WorkoutService.Configs.Extensions;
-using WorkoutService.Consumers;
+using WorkoutService.Integrations.Consumers;
 
 namespace WorkoutService
 {

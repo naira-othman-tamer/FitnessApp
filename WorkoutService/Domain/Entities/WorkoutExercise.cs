@@ -6,11 +6,12 @@ namespace WorkoutService.Domain.Entities
 {
     public class WorkoutExercise : BaseEntity
     {
-        public int WorkoutId { get; private set; }
-        public int ExerciseId { get; private set; }
-        public Exercise Exercise { get; private set; } = default!;
-        public int OrderIndex { get; private set; }
-        public ExercisePrescription Prescription { get; private set; } = default!;
+        public int WorkoutId { get;  set; }
+        public Workout Workout { get; set; } = default!;
+        public int ExerciseId { get;  set; }
+        public Exercise Exercise { get;  set; } = default!;
+        public int OrderIndex { get;  set; }
+        public ExercisePrescription? Prescription { get;  set; } = default!;
 
         private WorkoutExercise() { }
 
@@ -18,7 +19,7 @@ namespace WorkoutService.Domain.Entities
             int workoutId,
             int exerciseId,
             int orderIndex,
-            ExercisePrescription prescription)
+            ExercisePrescription? prescription)
         {
             if (orderIndex < 0)
                 throw new ArgumentException("OrderIndex cannot be negative.");
@@ -61,13 +62,13 @@ namespace WorkoutService.Domain.Entities
             // don't cascade-delete workout rows if an Exercise master record is removed
 
             builder.Property(x => x.OrderIndex)
-                   .IsRequired();
+                   .IsRequired(false);
 
             builder.OwnsOne(x => x.Prescription, p =>
             {
-                p.Property(x => x.Sets).HasColumnName("Sets").IsRequired();
-                p.Property(x => x.Reps).HasColumnName("Reps").IsRequired();
-                p.Property(x => x.RestTimeInSeconds).HasColumnName("RestSeconds").IsRequired();
+                p.Property(x => x.Sets).HasColumnName("Sets").IsRequired(false);
+                p.Property(x => x.Reps).HasColumnName("Reps").IsRequired(false);
+                p.Property(x => x.RestTimeInSeconds).HasColumnName("RestSeconds").IsRequired(false);
             });
         }
     }

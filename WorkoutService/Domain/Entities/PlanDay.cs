@@ -5,13 +5,13 @@ namespace WorkoutService.Domain.Entities
 {
     public class PlanDay :BaseEntity
     {
-        public int WorkoutPlanId { get; private set; }
-        public int DayNumber { get; private set; }
-        public string? Label { get; private set; } // e.g. "Push Day" — optional, display only
-        public int WorkoutId { get; private set; }
-        public Workout Workout { get; private set; } = default!;
+        public int WorkoutPlanId { get;  set; }
+        public int DayNumber { get;  set; }
+        public string? Label { get;  set; } // e.g. "Push Day" — optional, display only
+        public int WorkoutId { get;  set; }
+        public Workout Workout { get; set; } = default!;
 
-        private PlanDay() { }
+        public PlanDay() { }
 
         public static PlanDay Create(int workoutPlanId, int dayNumber, int workoutId, string? label = null)
         {

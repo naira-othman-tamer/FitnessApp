@@ -15,7 +15,6 @@ namespace FCE.Domain.Aggregates
         public ActivityLevel activityLevel { get; set; }
         public bool IsActive { get; set; } = true;
         public int WorkoutDays { get; set; } //>> sent to workout to select workout plan
-        //public int AssignedPlanId { get; set; }
     }
 
     public class UserFitnessStatsConfiguration : IEntityTypeConfiguration<UserFitnessStats>
