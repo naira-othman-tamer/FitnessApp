@@ -1,6 +1,8 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using WorkoutService.Domain.Enums;
 using WorkoutService.Features.Common.Helpers;
+using WorkoutService.Features.Workouts.GetWorkoutById;
 using WorkoutService.Infrastructure;
 
 namespace WorkoutService.Features.Workouts.GetWorkoutsList
@@ -59,6 +61,19 @@ namespace WorkoutService.Features.Workouts.GetWorkoutsList
 
             return RequestResult<GetWorkoutsListDto>.Success(result);
        
+        }
+    }
+
+    public static class GetWorkoutsEndPoint
+    {
+        public static void GetWorkoutsListEndpoint(this IEndpointRouteBuilder builder)
+        {
+            builder.MapGet("/", async ([FromServices] IMediator mediator,
+                [FromQuery] int page = 1, [FromQuery] int pageSize = 10)=>
+            {
+                var userResult = await mediator.Send(new GetAllWorkoutsQuery(page, pageSize));
+                return Results.Ok(userResult.Data);
+            });
         }
     }
 }

@@ -1,8 +1,9 @@
 ﻿using ContractMessages.Enums;
+using FluentValidation;
 using LinqKit;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using System.Linq.Expressions;
-using WorkoutService.Domain.Enums;
 using WorkoutService.Features.Common.Helpers;
 using WorkoutService.Infrastructure;
 
@@ -13,7 +14,6 @@ namespace WorkoutService.Features.WorkoutPlan.FilterWorkoutPlans
         int PageSize,
         string? Name,
         Goal? Goal,
-        Difficulty? Difficulty,
         int? WorkoutDaysPerWeek
     ) : IRequest<RequestResult<FilterPlansResultDto>>;
 
@@ -26,14 +26,35 @@ namespace WorkoutService.Features.WorkoutPlan.FilterWorkoutPlans
 
     public record GetPlansDto
     (
-     string Name ,
-     string? ImageUrl ,
-     bool IsPremium ,
+     string Name,
+     string? ImageUrl,
+     bool IsPremium,
      Goal Goal,
      int WorkoutDaysPerWeek
     );
 
-    public class GetFilteredWorkoutPlansQueryHandler 
+    public class GetFilteredWorkoutPlansQueryValidator : AbstractValidator<GetFilteredWorkoutPlansQuery>
+    {
+        public GetFilteredWorkoutPlansQueryValidator()
+        {
+            RuleFor(x => x.PageIndex).GreaterThanOrEqualTo(1);
+            RuleFor(x => x.PageSize).InclusiveBetween(1, 100);
+
+            RuleFor(x => x.Name)
+                .MaximumLength(100)
+                .When(x => !string.IsNullOrWhiteSpace(x.Name));
+
+            RuleFor(x => x.Goal!.Value)
+                .IsInEnum()
+                .When(x => x.Goal.HasValue);
+
+            RuleFor(x => x.WorkoutDaysPerWeek!.Value)
+                .InclusiveBetween(1, 7)
+                .When(x => x.WorkoutDaysPerWeek.HasValue);
+        }
+    }
+
+    public class GetFilteredWorkoutPlansQueryHandler
         : IRequestHandler<GetFilteredWorkoutPlansQuery, RequestResult<FilterPlansResultDto>>
     {
         private readonly GeneralRepository<Domain.Entities.WorkoutPlan> _workoutPlanRepository;
@@ -67,7 +88,8 @@ namespace WorkoutService.Features.WorkoutPlan.FilterWorkoutPlans
             var predicate = PredicateBuilder.New<Domain.Entities.WorkoutPlan>(true);
 
             if (!string.IsNullOrWhiteSpace(query.Name))
-                predicate = predicate.And(p => p.Name.Contains(query.Name));
+                predicate = predicate.And(p =>
+                                     p.Name.ToLower().Contains(query.Name.ToLower()));
 
             if (query.Goal.HasValue)
                 predicate = predicate.And(p => p.Goal == query.Goal.Value);
@@ -76,6 +98,29 @@ namespace WorkoutService.Features.WorkoutPlan.FilterWorkoutPlans
                 predicate = predicate.And(p => p.WorkoutDaysPerWeek == query.WorkoutDaysPerWeek.Value);
 
             return predicate;
+        }
+    }
+
+    public static class GetFilteredWorkoutPlansEndPont
+    {
+        public static void GetFilteredPlansEndPoint(this IEndpointRouteBuilder builder)
+        {
+            builder.MapGet("/", async ([FromServices] IMediator mediator,
+                 int PageIndex=1,
+                 int PageSize=10,
+                 string? Name=null,
+                 Goal? Goal=null,
+                 int? WorkoutDaysPerWeek=null
+               ) =>
+            {
+                var Plans = await mediator.Send(new GetFilteredWorkoutPlansQuery(
+                    PageIndex,
+                    PageSize,
+                    Name,
+                    Goal,
+                   WorkoutDaysPerWeek));
+                return Results.Ok(Plans.Data);
+            });
         }
     }
 }

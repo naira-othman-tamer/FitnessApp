@@ -6,45 +6,16 @@ namespace WorkoutService.Domain.Entities
 {
     public class Workout : BaseEntity
     {
-        public string Name { get; private set; } = default!;
+        public string Name { get; set; } = default!;
         public WorkoutCategory Category { get; set; }
-        //public Difficulty Difficulty { get; set; }
         public int DurationInMinutes { get; set; }
         public int CaloriesBurn { get; set; }
         public string? ImageUrl { get; set; }
         public bool IsPremium { get; set; }
-
         public ICollection<WorkoutExercise> WorkoutExercises { get; set; } = new List<WorkoutExercise>();
 
         public Workout() { }
 
-        public static Workout Create(
-            string name,
-            Difficulty difficulty,
-            int durationInMinutes,
-            int caloriesBurn,
-            WorkoutCategory? category = null,
-            string? imageUrl = null,
-            bool isPremium = false)
-        {
-            if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentException("Name is required.");
-            if (durationInMinutes <= 0)
-                throw new ArgumentException("DurationInMinutes must be greater than zero.");
-            if (caloriesBurn < 0)
-                throw new ArgumentException("CaloriesBurn cannot be negative.");
-
-            return new Workout
-            {
-                Name = name,
-               // Difficulty = difficulty,
-                DurationInMinutes = durationInMinutes,
-                CaloriesBurn = caloriesBurn,
-                Category = category ?? WorkoutCategory.Unknown,
-                ImageUrl = imageUrl,
-                IsPremium = isPremium
-            };
-        }
     }
 
     public class WorkoutConfiguration : IEntityTypeConfiguration<Workout>
@@ -68,11 +39,6 @@ namespace WorkoutService.Domain.Entities
                    .HasMaxLength(30)
                    .IsRequired();
 
-            //builder.Property(x => x.Difficulty)
-            //       .HasConversion<string>()
-            //       .HasMaxLength(20)
-            //       .IsRequired();
-
             builder.Property(x => x.DurationInMinutes)
                    .IsRequired();
 
@@ -84,7 +50,7 @@ namespace WorkoutService.Domain.Entities
 
             builder.Property(x => x.IsPremium)
                    .HasDefaultValue(false)
-                   .IsRequired();
+                   .IsRequired(false);
 
             builder.HasMany(x => x.WorkoutExercises)
                    .WithOne()

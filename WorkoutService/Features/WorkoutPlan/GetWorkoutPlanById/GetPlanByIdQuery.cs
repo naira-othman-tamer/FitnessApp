@@ -1,8 +1,9 @@
 ﻿using ContractMessages.Enums;
+using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WorkoutService.Domain.Entities;
-using WorkoutService.Domain.Enums;
 using WorkoutService.Features.Common.Helpers;
 using WorkoutService.Infrastructure;
 
@@ -10,6 +11,14 @@ namespace WorkoutService.Features.WorkoutPlan.GetWorkoutPlanById
 {
     public record GetPlanByIdQuery (int PlanId) : IRequest<RequestResult<WorkoutPlanDto>>;
 
+    public class GetPlanByIdQueryValidator : AbstractValidator<GetPlanByIdQuery>
+    {
+        public GetPlanByIdQueryValidator()
+        {
+            RuleFor(x => x.PlanId).GreaterThan(0)
+                .WithMessage("Plan ID must be a positive integer.");
+        }
+    }
     public record WorkoutPlanDto
     (
          string PlanName ,
@@ -18,7 +27,6 @@ namespace WorkoutService.Features.WorkoutPlan.GetWorkoutPlanById
          bool IsPremium ,
          Goal PlanGoal ,
          int WorkoutDaysPerWeek ,
-         Difficulty Difficulty,
          ICollection<PlanDay>? PlanDays 
     );
 
@@ -40,7 +48,6 @@ namespace WorkoutService.Features.WorkoutPlan.GetWorkoutPlanById
                     p.IsPremium,
                     p.Goal,
                     p.WorkoutDaysPerWeek,
-                    p.Difficulty,
                     p.PlanDays
                 ))
                 .FirstOrDefaultAsync(cancellationToken);
@@ -51,6 +58,21 @@ namespace WorkoutService.Features.WorkoutPlan.GetWorkoutPlanById
             }
 
                 return RequestResult<WorkoutPlanDto>.Success(workoutPlanDto);
+        }
+    }
+
+    public static class GetPlanByIdQueryEndPoint
+    {
+        public static void GetPlanByIdEndPoint(this IEndpointRouteBuilder builder)
+        {
+            builder.MapGet("/{id}", async (
+                int id,
+                [FromServices] IMediator mediator
+               ) =>
+            {
+                var Plan = await mediator.Send(new GetPlanByIdQuery(id));
+                return Results.Ok(Plan.Data);
+            });
         }
     }
 

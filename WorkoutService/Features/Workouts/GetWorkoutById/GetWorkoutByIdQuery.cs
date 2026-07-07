@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WorkoutService.Domain.Enums;
 using WorkoutService.Features.Common.Helpers;
@@ -12,7 +13,6 @@ namespace WorkoutService.Features.Workouts.GetWorkoutById
     (
         string Name,
         WorkoutCategory Category,
-        Difficulty Difficulty,
         int DurationInMinutes,
         int CaloriesBurn,
         string? ImageUrl,
@@ -32,7 +32,6 @@ namespace WorkoutService.Features.Workouts.GetWorkoutById
                 .Select(w => new WorkoutDto(
                     w.Name,
                     w.Category,
-                    w.Difficulty,
                     w.DurationInMinutes,
                     w.CaloriesBurn,
                     w.ImageUrl,
@@ -40,6 +39,20 @@ namespace WorkoutService.Features.Workouts.GetWorkoutById
                 )).FirstOrDefaultAsync(cancellationToken);
 
             return RequestResult<WorkoutDto>.Success(workoutDto);
+        }
+    }
+
+    public static class GetWorkoutByIdEndPoint
+    {
+        public static void GetWorkoutByIDEndpoint(this IEndpointRouteBuilder builder)
+        {
+            builder.MapGet("/{workoutId}", async ([FromQuery] int WorkoutId,
+               [FromServices] IMediator mediator) =>
+            {
+                var userResult = await mediator.Send(new GetWorkoutByIdQuery
+                    (WorkoutId));
+                return Results.Ok(userResult.Data);
+            });
         }
     }
 

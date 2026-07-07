@@ -30,9 +30,10 @@
 
   <ItemGroup>
     <Folder Include="Domain\Aggregates\" />
+    <Folder Include="Features\PlanDay\" />
     <Folder Include="Features\WorkoutPlan\DeleteWorkoutPlan\" />
-    <Folder Include="Features\WorkoutPlan\AddPlanDay\" />
-    <Folder Include="Features\WorkoutPlan\RemovePlanDay\" />
+    <Folder Include="Features\PlanDay\AddPlanDay\" />
+    <Folder Include="Features\PlanDay\RemovePlanDay\" />
     <Folder Include="Features\WorkoutPlan\UpdateWorkoutPlan\" />
     <Folder Include="Features\WorkoutSession\CompleteWorkoutSession\" />
     <Folder Include="Features\WorkoutSession\AbandonWorkoutSession\" />
