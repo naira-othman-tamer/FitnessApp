@@ -70,7 +70,7 @@ namespace WorkoutService.Features.WorkoutPlan.CreateWorkoutPlan
                 ) =>
             {
                 var id = await mediator.Send(request);
-                return Results.Created($"stats/{id}", new { id });
+                return Results.Created($"/{id}", new { id });
             });
         }
     }

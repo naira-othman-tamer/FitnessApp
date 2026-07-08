@@ -68,7 +68,7 @@ namespace WorkoutService.Features.WorkoutPlan.FilterWorkoutPlans
         {
             var predicate = BuildPredicate(request);
             var Plans = _workoutPlanRepository.GetAll();
-            var (data, total, totalPages) = await Plans
+            var paginatedResult = await Plans
                 .Where(predicate)
                 .Select(p => new GetPlansDto(
                     p.Name,
@@ -78,8 +78,10 @@ namespace WorkoutService.Features.WorkoutPlan.FilterWorkoutPlans
                     p.WorkoutDaysPerWeek))
                 .ToPaginatedAsync(request.PageIndex, request.PageSize, cancellationToken);
 
-            var result = new FilterPlansResultDto(request.PageIndex, request.PageSize, data);
-
+            var result = new FilterPlansResultDto(request.PageIndex, request.PageSize, paginatedResult.Data);
+            if (paginatedResult.Data.Count == 0) {
+                return RequestResult<FilterPlansResultDto>.Failure("No workout plans found for the given filters.", RequestErrorCode.NotFound);
+            }
             return RequestResult<FilterPlansResultDto>.Success(result);
         }
 
@@ -101,7 +103,7 @@ namespace WorkoutService.Features.WorkoutPlan.FilterWorkoutPlans
         }
     }
 
-    public static class GetFilteredWorkoutPlansEndPont
+    public static class GetFilteredWorkoutPlansEndPoint
     {
         public static void GetFilteredPlansEndPoint(this IEndpointRouteBuilder builder)
         {

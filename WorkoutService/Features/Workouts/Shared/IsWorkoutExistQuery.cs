@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using WorkoutService.Features.Common.Helpers;
 using WorkoutService.Infrastructure;
@@ -6,6 +7,15 @@ using WorkoutService.Infrastructure;
 namespace WorkoutService.Features.Workouts.Shared
 {
     public record IsWorkoutExistQuery(int workoutId) : IRequest<RequestResult<bool>>;
+
+    public class IsWorkoutExistQueryValidator : AbstractValidator<IsWorkoutExistQuery>
+    {
+        public IsWorkoutExistQueryValidator()
+        {
+            RuleFor(x => x.workoutId)
+                .GreaterThan(0).WithMessage("Workout ID must be greater than 0.");
+        }
+    }
 
     public class IsWorkoutExistQueryHandler : IRequestHandler<IsWorkoutExistQuery, RequestResult<bool>>
     {
@@ -22,7 +32,7 @@ namespace WorkoutService.Features.Workouts.Shared
 
             if (!exists)
             {
-                return RequestResult<bool>.Failure($"Workout with ID {request.workoutId} not found.");
+                return RequestResult<bool>.Failure($"Workout with ID {request.workoutId} not found.", RequestErrorCode.NotFound);
             }
 
             return RequestResult<bool>.Success(true);

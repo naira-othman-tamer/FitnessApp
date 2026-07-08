@@ -1,7 +1,5 @@
 ﻿using FCE.Infrastructure.Data;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using System.Data;
 using System.Diagnostics;
 
 namespace FCE.Configs.Extensions
@@ -14,6 +12,7 @@ namespace FCE.Configs.Extensions
                 opt.UseSqlServer(configuration.GetConnectionString("cs"))
                    .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
                    .LogTo(log => Debug.WriteLine(log), LogLevel.Information)
+                   .EnableSensitiveDataLogging()
             );
 
             //services.AddScoped<IDbConnection>(_ =>

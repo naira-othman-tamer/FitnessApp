@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WorkoutService.Domain.Enums;
@@ -19,6 +20,14 @@ namespace WorkoutService.Features.Workouts.GetWorkoutById
         bool IsPremium
     );
 
+    public class GetWorkoutByIdQueryValidator : AbstractValidator<GetWorkoutByIdQuery>
+    {
+        public GetWorkoutByIdQueryValidator()
+        {
+            RuleFor(x => x.WorkoutId)
+                .GreaterThan(0).WithMessage("Workout ID must be greater than 0.");
+        }
+    }
     public class GetWorkoutByIdQueryHandler : IRequestHandler<GetWorkoutByIdQuery, RequestResult<WorkoutDto>>
     {
         private readonly GeneralRepository<Domain.Entities.Workout> _workoutRepository;
@@ -37,6 +46,11 @@ namespace WorkoutService.Features.Workouts.GetWorkoutById
                     w.ImageUrl,
                     w.IsPremium
                 )).FirstOrDefaultAsync(cancellationToken);
+
+            if (workoutDto is null)
+            {
+                return RequestResult<WorkoutDto>.Failure("Workout not found.",RequestErrorCode.NotFound);
+            }
 
             return RequestResult<WorkoutDto>.Success(workoutDto);
         }

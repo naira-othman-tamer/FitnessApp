@@ -8,6 +8,7 @@
         Conflict,
         DuplicateEntry,
         DependencyFailure,
-        DependencyInUse
+        DependencyInUse,
+        WorkoutNotFound
     }
 }

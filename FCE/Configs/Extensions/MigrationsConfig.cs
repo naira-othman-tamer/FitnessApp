@@ -13,7 +13,6 @@ namespace FCE.Configs.Extensions
             var pendingMigrations = await context.Database.GetPendingMigrationsAsync();
             if (pendingMigrations.Any())
                 await context.Database.MigrateAsync();
-            //await DBSeeder.SeedAsync(context);
             await TestDataSeeder.SeedAsync(context);
             return app;
         }

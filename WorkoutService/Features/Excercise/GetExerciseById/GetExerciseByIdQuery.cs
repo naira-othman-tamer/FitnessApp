@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using WorkoutService.Domain.Entities;
 using WorkoutService.Features.Common.Helpers;
@@ -6,7 +7,7 @@ using WorkoutService.Infrastructure;
 
 namespace WorkoutService.Features.Excercise.GetExerciseById
 {
-    public record GetExerciseByIdQuery(int Id) : IRequest<RequestResult<GetExerciseDto>>;
+    public record GetExerciseByIdQuery(int Id) : IRequest<RequestResult<RequestResult<GetExerciseDto>>>;
 
     public record GetExerciseDto
     (
@@ -20,14 +21,22 @@ namespace WorkoutService.Features.Excercise.GetExerciseById
         IEnumerable<string> EquipmentNeeded
     );
 
-    public class GetExerciseByIdQueryHandler : IRequestHandler<GetExerciseByIdQuery, RequestResult<GetExerciseDto>>
+    public class GetExerciseByIdQueryValidator : AbstractValidator<GetExerciseByIdQuery>
+    {
+        public GetExerciseByIdQueryValidator()
+        {
+            RuleFor(x => x.Id)
+                .GreaterThan(0).WithMessage("Exercise ID must be greater than 0.");
+        }
+    }
+    public class GetExerciseByIdQueryHandler : IRequestHandler<GetExerciseByIdQuery, RequestResult<RequestResult<GetExerciseDto>>>
     {
         private readonly GeneralRepository<Exercise> _exerciseRepository;
         public GetExerciseByIdQueryHandler(GeneralRepository<Exercise> exerciseRepository)
         {
             _exerciseRepository = exerciseRepository;
         }
-        public async Task<RequestResult<GetExerciseDto>> Handle(GetExerciseByIdQuery request, CancellationToken cancellationToken)
+        public async Task<RequestResult<RequestResult<GetExerciseDto>>> Handle(GetExerciseByIdQuery request, CancellationToken cancellationToken)
         {
             var exercise = await _exerciseRepository.Get(e => e.Id == request.Id)
                 .Select(e => new GetExerciseDto(
@@ -44,10 +53,24 @@ namespace WorkoutService.Features.Excercise.GetExerciseById
 
             if (exercise is null)
             {
-                throw new KeyNotFoundException($"Exercise with ID {request.Id} not found.");
+                return RequestResult<RequestResult<GetExerciseDto>>.Failure("Exercise not found.", RequestErrorCode.NotFound);
             }
 
-            return RequestResult<GetExerciseDto>.Success(exercise);
+            return RequestResult<RequestResult<GetExerciseDto>>.Success(RequestResult<GetExerciseDto>.Success(exercise));
+        }
+    }
+
+    public static class GetExerciseByIdEndpoint
+    {
+        public static void MapGetExerciseByIdEndpoint(this WebApplication app)
+        {
+            app.MapGet("/{id:int}", async (int id, IMediator mediator) =>
+            {
+                var result = await mediator.Send(new GetExerciseByIdQuery(id));
+                return result.IsSuccess ? Results.Ok(result.Data) : Results.NotFound(result);
+            })
+            .WithName("GetExerciseById");
+            //.WithTags("Exercises");
         }
     }
 }

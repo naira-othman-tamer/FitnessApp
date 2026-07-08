@@ -10,7 +10,9 @@ namespace WorkoutService.Configs.Extensions
         {
             await using var scope = app.Services.CreateAsyncScope();
             var context = scope.ServiceProvider.GetRequiredService<Context>();
-            await context.Database.MigrateAsync();
+            var pendingMigrations = await context.Database.GetPendingMigrationsAsync();
+            if (pendingMigrations.Any())
+                await context.Database.MigrateAsync();
             await DBSeeder.SeedAsync(context);
             return app;
         }

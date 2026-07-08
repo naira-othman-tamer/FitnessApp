@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using WorkoutService.Features.Common.Helpers;
 using WorkoutService.Infrastructure;
@@ -6,6 +7,15 @@ using WorkoutService.Infrastructure;
 namespace WorkoutService.Features.Workouts.AddExerciseToWorkout.Queries
 {
     public record GetWorkoutExerciseCountQuery(int workoutId) : IRequest<RequestResult<int>>;
+
+    public class GetWorkoutExerciseCountQueryValidator : AbstractValidator<GetWorkoutExerciseCountQuery>
+    {
+        public GetWorkoutExerciseCountQueryValidator()
+        {
+            RuleFor(x => x.workoutId)
+                .GreaterThan(0).WithMessage("Workout ID must be greater than 0.");
+        }
+    }
 
     public class GetWorkoutExerciseCountQueryHandler : IRequestHandler<GetWorkoutExerciseCountQuery, RequestResult<int>>
     {
@@ -19,7 +29,7 @@ namespace WorkoutService.Features.Workouts.AddExerciseToWorkout.Queries
             var exists = await _workoutRepository.Get(w => w.Id == request.workoutId).AnyAsync(cancellationToken);
             if (!exists)
             {
-                return RequestResult<int>.Failure($"Workout with ID {request.workoutId} not found.");
+                return RequestResult<int>.Failure($"Workout with ID {request.workoutId} not found.", RequestErrorCode.WorkoutNotFound);
             }
             var workout = await _workoutRepository
                 .Get(w => w.Id == request.workoutId)

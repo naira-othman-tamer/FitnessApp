@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using WorkoutService.Domain.Entities;
 using WorkoutService.Features.Common.Helpers;
@@ -15,6 +16,17 @@ namespace WorkoutService.Features.Excercise.GetExercisesList
         int totalCount,
         IEnumerable<ExerciseDto> Exercises
     );
+
+    public class GetAllExercisesQueryValidator : AbstractValidator<GetAllExercisesQuery>
+    {
+        public GetAllExercisesQueryValidator()
+        {
+            RuleFor(x => x.pageNumber)
+                .GreaterThan(0).WithMessage("Page number must be greater than 0.");
+            RuleFor(x => x.pageSize)
+                .GreaterThan(0).WithMessage("Page size must be greater than 0.");
+        }
+    }
 
     public record ExerciseDto
    (
@@ -37,11 +49,11 @@ namespace WorkoutService.Features.Excercise.GetExercisesList
         }
         public async Task<RequestResult<GetAllExercisesDto?>> Handle(GetAllExercisesQuery request, CancellationToken cancellationToken)
         {
-            var (exercises, totalCount, totalPages) = await _exerciseRepository
+            var paginatedResult = await _exerciseRepository
                 .GetAll()
                 .ToPaginatedAsync(request.pageNumber, request.pageSize, cancellationToken);
 
-            var exercisesDto = exercises
+            var exercisesDto = paginatedResult.Data
             .Select(e => new ExerciseDto(
                 Id: e.Id,
                 Name: e.Name,
@@ -56,7 +68,7 @@ namespace WorkoutService.Features.Excercise.GetExercisesList
             var result = new GetAllExercisesDto(
                 pageNumber: request.pageNumber,
                 pageSize: request.pageSize,
-                totalCount: totalCount,
+                totalCount: paginatedResult.TotalCount,
                 Exercises: exercisesDto
             );
 

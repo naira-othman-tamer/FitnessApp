@@ -1,9 +1,9 @@
 ﻿using MediatR;
 using WorkoutService.Domain.Enums;
-using WorkoutService.Domain.Entities;
 using WorkoutService.Infrastructure;
 using WorkoutService.Features.Common.Helpers;
 using Microsoft.AspNetCore.Mvc;
+using FluentValidation;
 
 namespace WorkoutService.Features.Workouts.CreateWorkout
 {
@@ -16,6 +16,22 @@ namespace WorkoutService.Features.Workouts.CreateWorkout
      bool IsPremium = false
     ) : IRequest<RequestResult<bool>>;
 
+    public class CreateWorkoutCommandValidator : AbstractValidator<CreateWorkoutCommand>
+    {
+        public CreateWorkoutCommandValidator()
+        {
+            RuleFor(x => x.Name)
+                .NotEmpty().WithMessage("Workout name is required.")
+                .MaximumLength(150).WithMessage("Workout name must not exceed 150 characters.");
+            RuleFor(x => x.Category)
+                .IsInEnum().WithMessage("Invalid workout category.");
+            RuleFor(x => x.DurationInMinutes)
+                .GreaterThan(0).WithMessage("Duration must be greater than 0 minutes.");
+            RuleFor(x => x.ImageUrl)
+                .MaximumLength(300).WithMessage("Image URL must not exceed 300 characters.");
+        }
+    }
+    
     public class CreateWorkoutCommandHandler : IRequestHandler<CreateWorkoutCommand, RequestResult<bool>>
     {
         private readonly GeneralRepository<Domain.Entities.Workout> _workoutRepository;

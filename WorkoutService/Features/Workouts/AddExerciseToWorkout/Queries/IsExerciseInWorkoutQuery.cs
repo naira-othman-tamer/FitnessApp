@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using WorkoutService.Features.Common.Helpers;
 using WorkoutService.Infrastructure;
@@ -6,6 +7,17 @@ using WorkoutService.Infrastructure;
 namespace WorkoutService.Features.Workouts.AddExerciseToWorkout.Queries
 {
     public record IsExerciseInWorkoutQuery(int workoutId, int exerciseId) : IRequest<RequestResult<bool>>;
+
+    public class IsExerciseInWorkoutQueryValidator : AbstractValidator<IsExerciseInWorkoutQuery>
+    {
+        public IsExerciseInWorkoutQueryValidator()
+        {
+            RuleFor(x => x.workoutId)
+                .GreaterThan(0).WithMessage("Workout ID must be greater than 0.");
+            RuleFor(x => x.exerciseId)
+                .GreaterThan(0).WithMessage("Exercise ID must be greater than 0.");
+        }
+    }
 
     public class IsExerciseInWorkoutQueryHandler : IRequestHandler<IsExerciseInWorkoutQuery, RequestResult<bool>>
     {
@@ -23,7 +35,8 @@ namespace WorkoutService.Features.Workouts.AddExerciseToWorkout.Queries
 
             if (alreadyAdded)
             {
-                return RequestResult<bool>.Failure($"Exercise with ID {request.exerciseId} is already in this workout.");
+                return RequestResult<bool>
+                    .Failure($"Exercise with ID {request.exerciseId} is already in this workout.", RequestErrorCode.DuplicateEntry);
             }
             return RequestResult<bool>.Success(false);
         }
