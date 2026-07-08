@@ -1,36 +1,38 @@
+using Microsoft.EntityFrameworkCore;
+using NutritionService.Data;
+using NutritionService.Extensions;
+using NutritionService.Features.Nutrition;
+using NutritionService.Middlewares;
 
-namespace NutritionService
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<NutritionDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("NutritionDatabase")));
+builder.Services.AddNutritionInfrastructure(builder.Configuration);
+builder.Services.AddMediatR(configuration =>
+    configuration.RegisterServicesFromAssembly(typeof(Program).Assembly));
+builder.Services.AddScoped<ExceptionMiddleware>();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+    options.CustomSchemaIds(type => (type.FullName ?? type.Name).Replace('+', '.')));
+builder.Services.AddHealthChecks();
+
+var app = builder.Build();
+
+await app.MigrateAndSeedNutritionDatabaseAsync();
+app.UseMiddleware<ExceptionMiddleware>();
+
+if (app.Environment.IsDevelopment())
 {
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            var builder = WebApplication.CreateBuilder(args);
-
-            // Add services to the container.
-
-            builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-
-            var app = builder.Build();
-
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
-
-            app.UseHttpsRedirection();
-
-            app.UseAuthorization();
-
-
-            app.MapControllers();
-
-            app.Run();
-        }
-    }
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
+
+app.UseAuthentication();
+app.UseAuthorization();
+app.MapNutritionEndpoints();
+app.MapHealthChecks("/health");
+
+app.Run();
+
+public partial class Program;

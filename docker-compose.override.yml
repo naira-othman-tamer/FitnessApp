@@ -36,7 +36,8 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
-      - ConnectionStrings__FCEDatabase=Server=sqlserver,1433;Database=FceDB;User Id=sa;Password=SqlServer@123;TrustServerCertificate=True;MultipleActiveResultSets=true
+      - ConnectionStrings__cs=Server=sqlserver,1433;Database=FceDB;User Id=sa;Password=SqlServer@123;TrustServerCertificate=True;MultipleActiveResultSets=true
+      - RabbitMq__Host=rabbitmq
     ports:
       - "7080:8080"
       - "7081:8081"
@@ -45,6 +46,11 @@ services:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_started
   authenticationservice:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -85,6 +91,7 @@ services:
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
       - ConnectionStrings__NutritionDatabase=Server=sqlserver,1433;Database=FitnessNutrition;User Id=sa;Password=SqlServer@123;TrustServerCertificate=True;MultipleActiveResultSets=true
+      - Services__FceBaseUrl=http://fce:8080
     ports:
       - "6080:8080"
       - "6081:8081"
@@ -96,6 +103,8 @@ services:
     depends_on:
       sqlserver:
         condition: service_healthy
+      fce:
+        condition: service_started
   progresstrackingservice:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
