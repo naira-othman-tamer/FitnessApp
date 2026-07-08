@@ -1,8 +1,12 @@
-﻿namespace ContractMessages.WorkoutPlanMatching
+﻿using ContractMessages.Enums;
+
+namespace ContractMessages.WorkoutPlanMatching
 {
     public interface IGetWorkoutPlanResponse
     {
-        Guid WorkoutPlanId { get; }
-        string Name { get; }
+        bool IsSuccess { get; }
+        int WorkoutPlanId { get; }
+        string WorkoutPlanName { get; }
+        IntegrationErrorCode ErrorCode { get; }
     }
 }

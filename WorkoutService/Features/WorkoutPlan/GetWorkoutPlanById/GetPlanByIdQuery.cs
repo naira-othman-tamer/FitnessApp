@@ -52,9 +52,9 @@ namespace WorkoutService.Features.WorkoutPlan.GetWorkoutPlanById
                 ))
                 .FirstOrDefaultAsync(cancellationToken);
 
-            if (workoutPlanDto == null)
+            if (workoutPlanDto is null)
             {
-                return RequestResult<WorkoutPlanDto>.Failure("Workout plan not found.");
+                return RequestResult<WorkoutPlanDto>.Failure("Workout plan not found.", RequestErrorCode.NotFound);
             }
 
                 return RequestResult<WorkoutPlanDto>.Success(workoutPlanDto);
@@ -71,6 +71,10 @@ namespace WorkoutService.Features.WorkoutPlan.GetWorkoutPlanById
                ) =>
             {
                 var Plan = await mediator.Send(new GetPlanByIdQuery(id));
+                if (!Plan.IsSuccess)
+                {
+                    return Results.NotFound(Plan.Message);
+                }
                 return Results.Ok(Plan.Data);
             });
         }

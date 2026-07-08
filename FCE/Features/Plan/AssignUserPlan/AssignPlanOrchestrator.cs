@@ -1,5 +1,4 @@
-﻿using ContractMessages.Enums;
-using ContractMessages.WorkoutPlanMatching;
+﻿using ContractMessages.WorkoutPlanMatching;
 using FCE.Features.Common.Helpers;
 using FCE.Features.Metrics.GetUserCurrentMetrics;
 using FCE.Features.Stats.GetUsetStats;
@@ -39,7 +38,7 @@ namespace FCE.Features.Plan.AssignUserPlan
               },
               cancellationToken
           );
-            string workoutPlanName = workoutResponse.Message.Name;
+            string workoutPlanName = workoutResponse.Message.WorkoutPlanName;
 
             await _mediator.Send(new SetUserPlanCommand
                 (

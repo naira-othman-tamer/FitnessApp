@@ -2,6 +2,7 @@
 {
     public enum RequestErrorCode
     {
+        NotFound,
         None,
         ValidationError
     }

@@ -1,9 +1,8 @@
-﻿using ContractMessages.WorkoutPlanMatching;
+﻿using ContractMessages.Enums;
+using ContractMessages.WorkoutPlanMatching;
 using MassTransit;
-//using MassTransit.Mediator;
 using MediatR;
-using WorkoutService.Features.Plan;
-using WorkoutService.Features.Plan.MatchUserWorkoutPlan;
+using WorkoutService.Features.WorkoutPlan.MatchUserWorkoutPlan;
 
 
 namespace WorkoutService.Integrations.Consumers
@@ -25,11 +24,24 @@ namespace WorkoutService.Integrations.Consumers
                    context.Message.Goal,
                    context.Message.WorkoutDaysPerWeek));
 
+            if (!plan.IsSuccess || plan.Data is null)
+            {
+                await context.RespondAsync<IGetWorkoutPlanResponse>(new
+                {
+                    IsSuccess = false,
+                    WorkoutPlanId = 0,
+                    WorkoutPlanName = string.Empty,
+                    ErrorCode = IntegrationErrorCode.NoMatchingPlanFound
+                });
+                return;
+            }
 
             await context.RespondAsync<IGetWorkoutPlanResponse>(new
             {
-                WorkoutPlanId = plan.Id,
-                Name = plan.Name
+                IsSuccess = true,
+                WorkoutPlanId = plan.Data.Id,
+                WorkoutPlanName = plan.Data.Name,
+                ErrorCode = IntegrationErrorCode.None
             });
         }
     }
