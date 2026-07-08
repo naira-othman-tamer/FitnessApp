@@ -10,6 +10,7 @@ namespace ContractMessages.Enums
     {
         None = 0,
         NoMatchingPlanFound,
+        UserMetricsNotFound,
         InvalidRequest,
         InternalError
     }

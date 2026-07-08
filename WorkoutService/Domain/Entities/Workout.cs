@@ -50,7 +50,7 @@ namespace WorkoutService.Domain.Entities
                    
 
             builder.HasMany(x => x.WorkoutExercises)
-                   .WithOne()
+                   .WithOne(x => x.Workout)
                    .HasForeignKey(x => x.WorkoutId)
                    .OnDelete(DeleteBehavior.Cascade);
             // deleting a Workout removes its exercise mappings — safe since WorkoutExercise is just a join

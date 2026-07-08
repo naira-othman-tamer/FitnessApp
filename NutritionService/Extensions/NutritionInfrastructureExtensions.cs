@@ -1,4 +1,6 @@
 using System.Text;
+using ContractMessages.UserMetrics;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using NutritionService.Data;
@@ -20,12 +22,22 @@ public static class NutritionInfrastructureExtensions
         services.AddScoped<IClaimsManager, ClaimsManager>();
         services.AddScoped(typeof(IUnitOfWork<NutritionDbContext>), typeof(UnitOfWork<NutritionDbContext>));
         services.AddScoped<INutritionDataSeeder, NutritionDataSeeder>();
-        services.AddHttpClient<IFceClient, FceClient>(client =>
+        services.AddScoped<IFceClient, FceClient>();
+
+        services.AddMassTransit(x =>
         {
-            var baseUrl = configuration["Services:FceBaseUrl"]
-                ?? throw new InvalidOperationException("FCE service URL is missing.");
-            client.BaseAddress = new Uri(baseUrl.TrimEnd('/') + "/");
-            client.Timeout = TimeSpan.FromSeconds(5);
+            x.AddRequestClient<IGetUserMetricsRequest>(new Uri("queue:fce-user-metrics"));
+
+            x.UsingRabbitMq((context, cfg) =>
+            {
+                cfg.Host(configuration["RabbitMq:Host"] ?? "localhost", "/", h =>
+                {
+                    h.Username(configuration["RabbitMq:Username"] ?? "guest");
+                    h.Password(configuration["RabbitMq:Password"] ?? "guest");
+                });
+
+                cfg.ConfigureEndpoints(context);
+            });
         });
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>

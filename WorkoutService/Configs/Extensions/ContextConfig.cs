@@ -12,7 +12,6 @@ namespace WorkoutService.Configs.Extensions
                 opt.UseSqlServer(configuration.GetConnectionString("cs"))
                    .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
                    .LogTo(log => Debug.WriteLine(log), LogLevel.Information)
-                   .EnableSensitiveDataLogging()
             );
 
             return services;

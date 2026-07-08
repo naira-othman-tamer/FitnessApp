@@ -1,5 +1,5 @@
-using System.Net.Http.Json;
-using System.Text.Json;
+using ContractMessages.UserMetrics;
+using MassTransit;
 
 namespace NutritionService.Infrastructure;
 
@@ -8,26 +8,23 @@ public interface IFceClient
     Task<double?> GetCalorieTargetAsync(Guid userId, CancellationToken cancellationToken);
 }
 
-public sealed class FceClient(HttpClient httpClient, ILogger<FceClient> logger) : IFceClient
+public sealed class FceClient(IRequestClient<IGetUserMetricsRequest> requestClient, ILogger<FceClient> logger) : IFceClient
 {
     public async Task<double?> GetCalorieTargetAsync(Guid userId, CancellationToken cancellationToken)
     {
         try
         {
-            var path = $"metrics/{userId}?userId={userId}";
-            using var response = await httpClient.GetAsync(path, cancellationToken);
-            if (!response.IsSuccessStatusCode) return null;
+            var response = await requestClient.GetResponse<IGetUserMetricsResponse>(new
+            {
+                UserId = userId
+            }, cancellationToken);
 
-            var envelope = await response.Content.ReadFromJsonAsync<FceEnvelope>(cancellationToken: cancellationToken);
-            return envelope?.IsSuccess == true ? envelope.Data?.CalorieTarget : null;
+            return response.Message.IsSuccess ? response.Message.CalorieTarget : null;
         }
-        catch (Exception exception) when (exception is HttpRequestException or TaskCanceledException or JsonException)
+        catch (Exception exception) when (exception is RequestTimeoutException or RabbitMqConnectionException or OperationCanceledException)
         {
-            logger.LogWarning(exception, "Could not retrieve calorie target for user {UserId} from FCE.", userId);
+            logger.LogWarning(exception, "Could not retrieve calorie target for user {UserId} from FCE over RabbitMQ.", userId);
             return null;
         }
     }
-
-    private sealed record FceEnvelope(bool IsSuccess, FceMetrics? Data);
-    private sealed record FceMetrics(double CalorieTarget);
 }

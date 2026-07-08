@@ -7,6 +7,7 @@ using MassTransit;
 using System.Reflection;
 using System.Text.Json.Serialization;
 using ContractMessages.WorkoutPlanMatching;
+using FCE.Integrations.Consumers;
 
 namespace FCE
 {
@@ -15,6 +16,10 @@ namespace FCE
         public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.Logging.ClearProviders();
+            builder.Logging.AddConsole();
+            builder.Logging.AddDebug();
 
             // Add services to the container.
 
@@ -40,6 +45,7 @@ namespace FCE
             {
                 
                 x.AddRequestClient<IGetWorkoutPlanRequest>();
+                x.AddConsumer<UserMetricsConsumer>();
 
                 x.UsingRabbitMq((context, cfg) =>
                 {
@@ -48,6 +54,11 @@ namespace FCE
                     {
                         h.Username("guest");
                         h.Password("guest");
+                    });
+
+                    cfg.ReceiveEndpoint("fce-user-metrics", e =>
+                    {
+                        e.ConfigureConsumer<UserMetricsConsumer>(context);
                     });
 
                     cfg.ConfigureEndpoints(context);

@@ -14,7 +14,6 @@ namespace FCE.Configs.Extensions
                 opt.UseSqlServer(configuration.GetConnectionString("cs"))
                    .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
                    .LogTo(log => Debug.WriteLine(log), LogLevel.Information)
-                   .EnableSensitiveDataLogging()
             );
 
             //services.AddScoped<IDbConnection>(_ =>
