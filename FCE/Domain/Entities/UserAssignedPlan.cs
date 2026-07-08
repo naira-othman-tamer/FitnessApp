@@ -10,22 +10,31 @@ namespace FCE.Domain.Entities
         public Guid userId { get; set; }
         public Goal goal { get; private set; }
         public double calorieIntake { get; private set; } //CalroieAllocation
-        public int WorkoutPlanId { get; private set; } // Assuming this is the ID of the workout plan assigned to the user
+        public int? WorkoutPlanId { get; private set; } // Assuming this is the ID of the workout plan assigned to the user
         public string? WorkoutPlan { get; private set; } 
-        public int NutritionPlanId { get; private set; } // Assuming this is the ID of the nutrition plan assigned to the user
+        public Guid? NutritionPlanId { get; private set; } // Assuming this is the ID of the nutrition plan assigned to the user
         public string? NutritionPlan { get; private set; }                                       
         public bool IsActive { get; set; } = true;
 
         private UserAssignedPlan() { }
 
-        public static UserAssignedPlan Create(Guid userId, Goal goal, double calorieIntake, string? workoutPlan, string? nutritionPlan)
+        public static UserAssignedPlan Create(
+            Guid userId,
+            Goal goal,
+            double calorieIntake,
+            string? workoutPlan,
+            int? workoutPlanId,
+            string? nutritionPlan,
+            Guid? nutritionPlanId)
             => new UserAssignedPlan
             {
                 userId = userId,
                 goal = goal,
                 calorieIntake = calorieIntake,
                 WorkoutPlan = workoutPlan,
+                WorkoutPlanId = workoutPlanId,
                 NutritionPlan = nutritionPlan,
+                NutritionPlanId = nutritionPlanId,
                 IsActive = true
             };
     }

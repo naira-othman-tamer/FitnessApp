@@ -6,15 +6,15 @@ namespace WorkoutService.Domain.Entities
 {
     public class Exercise : BaseEntity
     {
-        public string Name { get; private set; } = default!;
-        public string? Description { get; private set; }
-        public string? ImageUrl { get; private set; }
-        public string? VideoUrl { get; private set; }
-        public Difficulty Difficulty { get; private set; }
-        public ICollection<MuscleGroup> TargetMuscles { get; private set; } = new List<MuscleGroup>();
-        public ICollection<EquipmentNeeded> EquipmentNeeded { get; private set; } = new List<EquipmentNeeded>();
+        public string Name { get; set; } = default!;
+        public string? Description { get; set; }
+        public string? ImageUrl { get; set; }
+        public string? VideoUrl { get; set; }
+        public Difficulty Difficulty { get; set; }
+        public ICollection<MuscleGroup> TargetMuscles { get; set; } = new List<MuscleGroup>();
+        public ICollection<EquipmentNeeded> EquipmentNeeded { get; set; } = new List<EquipmentNeeded>();
 
-        private Exercise() { }
+        public Exercise() { }
 
         public static Exercise Create(
             string name,

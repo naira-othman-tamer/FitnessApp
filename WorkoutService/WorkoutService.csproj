@@ -13,10 +13,15 @@
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="FluentValidation" Version="11.12.0" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.12.0" />
+    <PackageReference Include="LinqKit" Version="1.3.11" />
     <PackageReference Include="MassTransit" Version="8.5.10" />
     <PackageReference Include="MassTransit.RabbitMQ" Version="8.5.10" />
     <PackageReference Include="MediatR" Version="12.5.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.28" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.28">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.28" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.28">
       <PrivateAssets>all</PrivateAssets>
@@ -29,12 +34,21 @@
 
   <ItemGroup>
     <Folder Include="Domain\Aggregates\" />
-    <Folder Include="Features\Excercise\GetExerciseById\" />
-    <Folder Include="Features\Plan\GetAllWorkoutPlans\" />
-    <Folder Include="Features\Plan\GetWorkoutPlanById\" />
-    <Folder Include="Features\Excercise\GetExercises\" />
-    <Folder Include="Features\Excercise\GetWorkoutExercises\" />
-    <Folder Include="Features\Session\GetWorkoutSessoionById\" />
+    <Folder Include="Features\PlanDay\" />
+    <Folder Include="Features\WorkoutPlan\DeleteWorkoutPlan\" />
+    <Folder Include="Features\PlanDay\AddPlanDay\" />
+    <Folder Include="Features\PlanDay\RemovePlanDay\" />
+    <Folder Include="Features\WorkoutPlan\UpdateWorkoutPlan\" />
+    <Folder Include="Features\WorkoutSession\CompleteWorkoutSession\" />
+    <Folder Include="Features\WorkoutSession\AbandonWorkoutSession\" />
+    <Folder Include="Features\WorkoutSession\GetActiveSessionForUser\" />
+    <Folder Include="Features\WorkoutSession\GetUserSessionHistory\" />
+    <Folder Include="Features\WorkoutSession\GetSessionById\" />
+    <Folder Include="Features\WorkoutSession\StartWorkoutSession\" />
+    <Folder Include="Features\Workouts\DeleteWorkout\" />
+    <Folder Include="Features\Workouts\ReorderWorkoutExercises\" />
+    <Folder Include="Features\Workouts\RemoveExerciseFromWorkout\" />
+    <Folder Include="Features\Workouts\UpdateWorkout\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -9,6 +9,7 @@ namespace WorkoutService.Infrastructure.Data
         public Context(DbContextOptions<Context> options) : base (options) { }
 
         public DbSet<WorkoutPlan> WorkoutPlans { get; set; }
+        public DbSet<Domain.Entities.Workout> Workouts { get; set; }
         public DbSet<WorkoutExercise> WorkoutExercises{ get; set; }
         public DbSet<PlanDay> WorkoutPlanDays { get; set; }
         public DbSet<Exercise> Exercises { get; set; }

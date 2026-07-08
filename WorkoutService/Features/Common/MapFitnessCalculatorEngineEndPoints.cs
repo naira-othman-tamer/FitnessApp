@@ -1,4 +1,7 @@
-﻿namespace FCE.Features.Common
+﻿using WorkoutService.Features.WorkoutPlan.CreateWorkoutPlan;
+using WorkoutService.Features.WorkoutPlan.FilterWorkoutPlans;
+
+namespace WorkoutService.Features.Common
 {
     public static class MapWorkoutServiceEndPoints
     {
@@ -9,6 +12,8 @@
             var metricsGroup = builder.MapGroup("metrics");
 
             var planGroup = builder.MapGroup("plan");
+            planGroup.GetFilteredPlansEndPoint();
+            planGroup.AddPlanEndPoint();
 
             return builder;
         }

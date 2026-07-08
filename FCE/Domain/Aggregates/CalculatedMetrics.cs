@@ -15,8 +15,6 @@ namespace FCE.Domain.Aggregates
         public double CalorieTarget { get; private set; } // => sent to Nutrition Service to select Nutrition Plan
         public BMRStatus BMRStatus { get; private set; }
         public BMRRange BMRRange { get; private set; }
-        
-        //public MetabolicCalculator Result { get; private set; }
         private CalculatedMetrics() { }
 
         public static CalculatedMetrics Calculate(UserFitnessStats stats)
