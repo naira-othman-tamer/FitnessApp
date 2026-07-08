@@ -2,7 +2,7 @@
 {
     public record ExercisePrescription
     {
-        public int Sets { get; init; }
+        public int Sets { get; init; } 
         public int Reps { get; init; }
         public int RestTimeInSeconds { get; init; }
 

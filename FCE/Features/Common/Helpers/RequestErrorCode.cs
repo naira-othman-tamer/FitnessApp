@@ -3,6 +3,10 @@
     public enum RequestErrorCode
     {
         None,
-        ValidationError
+        NotFound,
+        ValidationError,
+        DuplicateEntry,
+        Conflict,
+        DependencyFailure
     }
 }

@@ -61,14 +61,11 @@ namespace WorkoutService.Domain.Entities
                    .OnDelete(DeleteBehavior.Restrict);
             // don't cascade-delete workout rows if an Exercise master record is removed
 
-            builder.Property(x => x.OrderIndex)
-                   .IsRequired(false);
-
             builder.OwnsOne(x => x.Prescription, p =>
             {
-                p.Property(x => x.Sets).HasColumnName("Sets").IsRequired(false);
-                p.Property(x => x.Reps).HasColumnName("Reps").IsRequired(false);
-                p.Property(x => x.RestTimeInSeconds).HasColumnName("RestSeconds").IsRequired(false);
+                p.Property(x => x.Sets).HasColumnName("Sets");
+                p.Property(x => x.Reps).HasColumnName("Reps");
+                p.Property(x => x.RestTimeInSeconds).HasColumnName("RestSeconds");
             });
         }
     }

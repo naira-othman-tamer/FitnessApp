@@ -1,7 +1,7 @@
 
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using FCE.Features.Common;
+using WorkoutService.Features.Common;
 using MassTransit;
 using System.Reflection;
 using System.Text.Json.Serialization;

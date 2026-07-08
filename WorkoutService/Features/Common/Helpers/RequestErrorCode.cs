@@ -2,8 +2,12 @@
 {
     public enum RequestErrorCode
     {
-        NotFound,
         None,
-        ValidationError
+        NotFound,
+        ValidationError,
+        Conflict,
+        DuplicateEntry,
+        DependencyFailure,
+        DependencyInUse
     }
 }

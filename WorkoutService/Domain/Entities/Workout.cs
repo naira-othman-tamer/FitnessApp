@@ -9,7 +9,7 @@ namespace WorkoutService.Domain.Entities
         public string Name { get; set; } = default!;
         public WorkoutCategory Category { get; set; }
         public int DurationInMinutes { get; set; }
-        public int CaloriesBurn { get; set; }
+        public int CaloriesBurn { get; set; } = 350;
         public string? ImageUrl { get; set; }
         public bool IsPremium { get; set; }
         public ICollection<WorkoutExercise> WorkoutExercises { get; set; } = new List<WorkoutExercise>();
@@ -42,15 +42,12 @@ namespace WorkoutService.Domain.Entities
             builder.Property(x => x.DurationInMinutes)
                    .IsRequired();
 
-            builder.Property(x => x.CaloriesBurn)
-                   .IsRequired(false);
-
             builder.Property(x => x.ImageUrl)
                    .HasMaxLength(300);
 
             builder.Property(x => x.IsPremium)
-                   .HasDefaultValue(false)
-                   .IsRequired(false);
+                   .HasDefaultValue(false);
+                   
 
             builder.HasMany(x => x.WorkoutExercises)
                    .WithOne()

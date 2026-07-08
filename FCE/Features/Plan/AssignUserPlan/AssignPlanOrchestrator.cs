@@ -2,6 +2,7 @@
 using FCE.Features.Common.Helpers;
 using FCE.Features.Metrics.GetUserCurrentMetrics;
 using FCE.Features.Stats.GetUsetStats;
+using FluentValidation;
 using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +10,14 @@ using Microsoft.AspNetCore.Mvc;
 namespace FCE.Features.Plan.AssignUserPlan
 {
     public record AssignPlanOrchestrator(Guid userId) : IRequest<RequestResult<bool>>;
+
+    public class AssignPlanOrchestratorValidator : AbstractValidator<AssignPlanOrchestrator>
+    {
+        public AssignPlanOrchestratorValidator()
+        {
+            RuleFor(x => x.userId).NotEmpty().WithMessage("User ID cannot be empty.");
+        }
+    }
 
     public class AssignPlanOrchestratorHandler : IRequestHandler<AssignPlanOrchestrator, RequestResult<bool>>
     {
@@ -26,11 +35,20 @@ namespace FCE.Features.Plan.AssignUserPlan
             var stats = await _mediator
                 .Send(new GetUsetStatsQuery(request.userId), cancellationToken);
 
+            if (!stats.IsSuccess)
+            {
+                return RequestResult<bool>.Failure(stats.Message ?? "Failed to retrieve user stats.", stats.requestErrorCode);
+            }
+
             var metrics = await _mediator
                 .Send(new GetUserMetricsQuery(request.userId), cancellationToken);
-                
 
-            var workoutResponse = await _workoutPlanClient.GetResponse<IGetWorkoutPlanResponse>(
+            if (!metrics.IsSuccess)
+            {
+                return RequestResult<bool>.Failure(metrics.Message ?? "Failed to retrieve user metrics.", metrics.requestErrorCode);
+            }
+
+              var workoutResponse = await _workoutPlanClient.GetResponse<IGetWorkoutPlanResponse>(
               new
               {
                   Goal = stats.Data.userGoal,
@@ -38,16 +56,29 @@ namespace FCE.Features.Plan.AssignUserPlan
               },
               cancellationToken
           );
-            string workoutPlanName = workoutResponse.Message.WorkoutPlanName;
 
-            await _mediator.Send(new SetUserPlanCommand
+            if (!workoutResponse.Message.IsSuccess)
+            {
+                return RequestResult<bool>.Failure(
+                                          $"Workout plan matching failed: {workoutResponse.Message.ErrorCode}");
+            }
+
+            string workoutPlanName = workoutResponse.Message.WorkoutPlanName;
+            int workoutPlanId = workoutResponse.Message.WorkoutPlanId;
+
+            var setPlanResult = await _mediator.Send(new SetUserPlanCommand
                 (
                 request.userId,
                 stats.Data.userGoal,
                 metrics.Data.CalorieTarget,
                 workoutPlanName,
-                ""
+                workoutPlanId,
+                "",
+                null
                 ), cancellationToken);
+
+            if (!setPlanResult.IsSuccess)
+                return RequestResult<bool>.Failure(setPlanResult.Message ?? "Failed to assign plan.", setPlanResult.requestErrorCode);
 
             return RequestResult<bool>.Success(true);
         }
@@ -62,7 +93,9 @@ namespace FCE.Features.Plan.AssignUserPlan
                 [FromServices] IMediator mediator) =>
             {
                 var result = await mediator.Send(request);
-                return Results.Ok(result);
+                return result.IsSuccess
+                             ? Results.Ok(result)
+                             : Results.BadRequest(result);
             });
         }
     }

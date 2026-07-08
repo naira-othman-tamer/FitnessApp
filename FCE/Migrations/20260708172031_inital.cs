@@ -1,0 +1,145 @@
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
+
+#nullable disable
+
+namespace FCE.Migrations
+{
+    /// <inheritdoc />
+    public partial class inital : Migration
+    {
+        /// <inheritdoc />
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.CreateTable(
+                name: "CalculatedMetrics",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    BMR = table.Column<double>(type: "float", nullable: false),
+                    TDEE = table.Column<double>(type: "float", nullable: false),
+                    CalorieTarget = table.Column<double>(type: "float", nullable: false),
+                    BMRStatus = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    BMRRangeMin = table.Column<double>(type: "float", nullable: false),
+                    BMRRangeMax = table.Column<double>(type: "float", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CalculatedMetrics", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserAssignedPlans",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    userId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    goal = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    calorieIntake = table.Column<double>(type: "float", nullable: false),
+                    WorkoutPlanId = table.Column<int>(type: "int", nullable: true),
+                    WorkoutPlan = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    NutritionPlanId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    NutritionPlan = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserAssignedPlans", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserFitnessStats",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    userId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Weight = table.Column<double>(type: "float", nullable: false),
+                    Height = table.Column<double>(type: "float", nullable: false),
+                    Age = table.Column<short>(type: "smallint", nullable: false),
+                    Gender = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    goal = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    activityLevel = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
+                    WorkoutDays = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserFitnessStats", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserPlanHistory",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PlanId = table.Column<int>(type: "int", nullable: false),
+                    EndedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ResonForChange = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserPlanHistory", x => x.Id);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CalculatedMetrics_UserId",
+                table: "CalculatedMetrics",
+                column: "UserId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserAssignedPlans_userId",
+                table: "UserAssignedPlans",
+                column: "userId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserFitnessStats_userId",
+                table: "UserFitnessStats",
+                column: "userId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserPlanHistory_UserId",
+                table: "UserPlanHistory",
+                column: "UserId");
+        }
+
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropTable(
+                name: "CalculatedMetrics");
+
+            migrationBuilder.DropTable(
+                name: "UserAssignedPlans");
+
+            migrationBuilder.DropTable(
+                name: "UserFitnessStats");
+
+            migrationBuilder.DropTable(
+                name: "UserPlanHistory");
+        }
+    }
+}
