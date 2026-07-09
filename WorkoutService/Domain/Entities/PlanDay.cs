@@ -5,7 +5,7 @@ namespace WorkoutService.Domain.Entities
 {
     public class PlanDay :BaseEntity
     {
-        public int WorkoutPlanId { get;  set; }
+        public int WorkoutPlanId { get; set; } = 0;
         public int DayNumber { get;  set; }
         public string? Label { get;  set; } // e.g. "Push Day" — optional, display only
         public int WorkoutId { get;  set; }
@@ -40,9 +40,6 @@ namespace WorkoutService.Domain.Entities
 
             builder.HasIndex(x => new { x.WorkoutPlanId, x.DayNumber })
                    .IsUnique(); // no duplicate "Day 2" within same plan
-
-            builder.Property(x => x.WorkoutPlanId)
-                   .IsRequired();
 
             builder.Property(x => x.DayNumber)
                    .IsRequired();

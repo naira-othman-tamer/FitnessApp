@@ -2,7 +2,6 @@
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using WorkoutService.Domain.Entities;
 using WorkoutService.Features.Common.Helpers;
 using WorkoutService.Infrastructure;
 
@@ -15,7 +14,7 @@ namespace WorkoutService.Features.WorkoutPlan.CreateWorkoutPlan
           string? ImageUrl,
           Goal Goal,
           int WorkoutDaysPerWeek,
-          ICollection<PlanDay> PlanDays
+          ICollection<Domain.Entities.PlanDay> PlanDays
      ) : IRequest<RequestResult<bool>>;
 
     public class SetWorkoutPlanCommandValidator : AbstractValidator<SetWorkoutPlanCommand>

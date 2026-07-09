@@ -34,9 +34,7 @@
 
   <ItemGroup>
     <Folder Include="Domain\Aggregates\" />
-    <Folder Include="Features\PlanDay\" />
     <Folder Include="Features\WorkoutPlan\DeleteWorkoutPlan\" />
-    <Folder Include="Features\PlanDay\AddPlanDay\" />
     <Folder Include="Features\PlanDay\RemovePlanDay\" />
     <Folder Include="Features\WorkoutPlan\UpdateWorkoutPlan\" />
     <Folder Include="Features\WorkoutSession\CompleteWorkoutSession\" />
