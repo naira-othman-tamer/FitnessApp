@@ -33,7 +33,7 @@ namespace FCE.Features.Plan.AssignUserPlan
         public async Task<RequestResult<bool>> Handle(AssignPlanOrchestrator request, CancellationToken cancellationToken)
         {
             var stats = await _mediator
-                .Send(new GetUsetStatsQuery(request.userId), cancellationToken);
+                .Send(new GetCurrentUserStatsQuery(request.userId), cancellationToken);
 
             if (!stats.IsSuccess)
             {

@@ -7,6 +7,12 @@
         ValidationError,
         DuplicateEntry,
         Conflict,
-        DependencyFailure
+        DependencyFailure,
+        CalculationFailed,
+        InvalidMetricsInput,
+        UserStatsNotFound,
+        WeightUpdateFailed,
+        GetUserMetricsFailed,
+        BioMetricsResetFailed
     }
 }

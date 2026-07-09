@@ -11,35 +11,11 @@ using Microsoft.AspNetCore.Mvc;
 namespace FCE.Features.Stats.SubmitFitnessStats
 {
     public record SubmitStateCommand
-    (Guid userId,
+    ( Guid userId,
       PhysicalStats PhysicalStats,
       Goal goal,
       ActivityLevel activityLevel,
-      bool IsActive) : ICommandRequest<RequestResult<int>>; 
-
-   public class SubmitStateCommandHandler : IRequestHandler<SubmitStateCommand, RequestResult<int>>
-    {
-        private readonly GeneralRepository<UserFitnessStats> _userStatsRepo;
-        public SubmitStateCommandHandler(GeneralRepository<UserFitnessStats> userStatsRepo)
-        {
-            _userStatsRepo = userStatsRepo;
-        }
-        public async Task<RequestResult<int>> Handle(SubmitStateCommand request, CancellationToken cancellationToken)
-        {
-            
-            var userFitnessStats = new UserFitnessStats
-            {
-                userId = request.userId,
-                PhysicalStats = request.PhysicalStats,
-                goal = request.goal,
-                activityLevel = request.activityLevel,
-                IsActive = request.IsActive
-            };
-            _userStatsRepo.Add(userFitnessStats);
-            await _userStatsRepo.SaveChangesAsync();
-            return RequestResult<int>.Success(userFitnessStats.Id);
-        }
-    }
+      bool IsActive) : ICommandRequest<RequestResult<int>>;
 
     public class SubmitStateCommandValidator : AbstractValidator<SubmitStateCommand>
     {
@@ -75,6 +51,32 @@ namespace FCE.Features.Stats.SubmitFitnessStats
         }
     };
 
+    public class SubmitStateCommandHandler : IRequestHandler<SubmitStateCommand, RequestResult<int>>
+    {
+        private readonly GeneralRepository<UserFitnessStats> _userStatsRepo;
+        public SubmitStateCommandHandler(GeneralRepository<UserFitnessStats> userStatsRepo)
+        {
+            _userStatsRepo = userStatsRepo;
+        }
+        public async Task<RequestResult<int>> Handle(SubmitStateCommand request, CancellationToken cancellationToken)
+        {
+            
+            var userFitnessStats = new UserFitnessStats
+            {
+                userId = request.userId,
+                PhysicalStats = request.PhysicalStats,
+                goal = request.goal,
+                activityLevel = request.activityLevel,
+                IsActive = request.IsActive
+            };
+            _userStatsRepo.Add(userFitnessStats);
+            await _userStatsRepo.SaveChangesAsync(cancellationToken);
+            return RequestResult<int>.Success(userFitnessStats.Id);
+        }
+    }
+
+  
+
     public static class SubmitFitnessEndPoint
     {
         public static void SubmitFitnessStateEndPoint(this IEndpointRouteBuilder builder)
@@ -84,8 +86,8 @@ namespace FCE.Features.Stats.SubmitFitnessStats
                [FromServices] IMediator mediator
                 ) =>
             {
-                var id = await mediator.Send(request);
-                return Results.Created($"stats/{id}", new { id });
+                var result = await mediator.Send(request);
+                return Results.Created($"stats/{result.Data}", new { id = result.Data });
             });
         }
 

@@ -3,12 +3,23 @@ using FCE.Domain.Aggregates;
 using FCE.Domain.Enums;
 using FCE.Features.Common.Helpers;
 using FCE.Infrastructure;
+using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace FCE.Features.Stats.GetUsetStats
+namespace FCE.Features.Stats.Shared.GetUsetStats
 {
-    public record GetUsetStatsQuery(Guid userId) : IRequest<RequestResult<GetUserStatsDTO>>;
+    public record GetCurrentUserStatsQuery(Guid userId) : IRequest<RequestResult<GetUserStatsDTO>>;
+
+    public class GetCurrentUserStatsQueryValidator : AbstractValidator<GetCurrentUserStatsQuery>
+    {
+        public GetCurrentUserStatsQueryValidator()
+        {
+            RuleFor(x => x.userId)
+                .NotEmpty()
+                .WithMessage("UserId is required");
+        }
+    }
 
     public record GetUserStatsDTO
         (
@@ -19,16 +30,16 @@ namespace FCE.Features.Stats.GetUsetStats
         short userAge,
         int WorkoutDays
         );
-    public class GetUsetStatsQueryHandler : IRequestHandler<GetUsetStatsQuery, RequestResult<GetUserStatsDTO>>
+    public class GetCurrentUserStatsQueryHandler : IRequestHandler<GetCurrentUserStatsQuery, RequestResult<GetUserStatsDTO>>
     {
         private readonly GeneralRepository<UserFitnessStats> _statsRepository;
 
-        public GetUsetStatsQueryHandler(GeneralRepository<UserFitnessStats> statsRepository)
+        public GetCurrentUserStatsQueryHandler(GeneralRepository<UserFitnessStats> statsRepository)
         {
             _statsRepository = statsRepository;
         }
 
-        public async Task<RequestResult<GetUserStatsDTO>> Handle(GetUsetStatsQuery request, CancellationToken cs)
+        public async Task<RequestResult<GetUserStatsDTO>> Handle(GetCurrentUserStatsQuery request, CancellationToken cs)
         {
             var userStats = await _statsRepository
                 .Get(s => s.userId == request.userId)
@@ -41,6 +52,11 @@ namespace FCE.Features.Stats.GetUsetStats
                    s.PhysicalStats.Age,
                    s.WorkoutDays
                 )).FirstOrDefaultAsync(cs);
+
+            if (userStats is null)
+            {
+                return RequestResult<GetUserStatsDTO>.Failure("User stats not found", RequestErrorCode.NotFound);
+            }
 
             return RequestResult<GetUserStatsDTO>.Success(userStats);
         }
@@ -55,8 +71,12 @@ namespace FCE.Features.Stats.GetUsetStats
                IMediator mediator
                ) =>
             {
-                var userStats = await mediator.Send(new GetUsetStatsQuery(userID));
-                return Results.Ok(userStats);
+                var userStatsResult = await mediator.Send(new GetCurrentUserStatsQuery(userID));
+                if (!userStatsResult.IsSuccess)
+                {
+                    return Results.Problem(userStatsResult.Message, statusCode: userStatsResult.requestErrorCode == RequestErrorCode.NotFound ? 404 : 400);
+                }
+                return Results.Ok(userStatsResult.Data);
             });
         }
     }

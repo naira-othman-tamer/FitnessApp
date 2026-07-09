@@ -1,12 +1,24 @@
 ﻿using FCE.Features.Common.Helpers;
 using FCE.Features.Metrics.SetUserCalculatedMetrics.Commands;
 using FCE.Features.Metrics.SetUserCalculatedMetrics.Queries;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FCE.Features.Metrics.SetUserCalculatedMetrics.Orchestrator
 {
     public record SubmitCalculatedMetricsOrchestrator(Guid userId) : IRequest<RequestResult<bool>>;
+
+    public class SubmitCalculatedMetricsOrchestratorValidator : AbstractValidator<SubmitCalculatedMetricsOrchestrator>
+    {
+        public SubmitCalculatedMetricsOrchestratorValidator()
+        {
+            RuleFor(x => x.userId)
+                .NotEmpty()
+                .WithMessage("UserId is required");
+        }
+    }
+
     public class SubmitCalculatedMetricsOrchestratorHandler : IRequestHandler<SubmitCalculatedMetricsOrchestrator, RequestResult<bool>>
     {
         private readonly IMediator _mediator;
@@ -19,7 +31,17 @@ namespace FCE.Features.Metrics.SetUserCalculatedMetrics.Orchestrator
         public async Task<RequestResult<bool>> Handle(SubmitCalculatedMetricsOrchestrator request, CancellationToken cancellationToken)
         {
             var metrics = await _mediator.Send(new CalculateUserMetricsRequest(request.userId), cancellationToken);
-            await _mediator.Send(new SetMetricsCommand(metrics), cancellationToken);
+            if (!metrics.IsSuccess)
+            {
+                return RequestResult<bool>
+                    .Failure(metrics.Message?? "Failed to calculate user metrics.", metrics.requestErrorCode?? RequestErrorCode.CalculationFailed);
+            }
+            var setResult = await _mediator.Send(new SetMetricsCommand(metrics.Data!), cancellationToken);
+            if (!setResult.IsSuccess)
+            {
+                return RequestResult<bool>
+                    .Failure(setResult.Message?? "Failed to set user metrics.", setResult.requestErrorCode?? RequestErrorCode.CalculationFailed);
+            }
             return RequestResult<bool>.Success(true);
         }
     }
@@ -33,7 +55,11 @@ namespace FCE.Features.Metrics.SetUserCalculatedMetrics.Orchestrator
                 [FromServices] IMediator mediator) =>
             {
                 var result = await mediator.Send(request);
-                return Results.Ok(result);
+                if (!result.IsSuccess)
+                {
+                    return Results.BadRequest(new { result.Message, result.requestErrorCode });
+                }
+                return Results.Ok(result.Data);
             });
         }
     }

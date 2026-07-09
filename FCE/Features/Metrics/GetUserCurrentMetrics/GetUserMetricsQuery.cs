@@ -3,13 +3,24 @@ using FCE.Domain.Enums;
 using FCE.Domain.ValueObject;
 using FCE.Features.Common.Helpers;
 using FCE.Infrastructure;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace FCE.Features.Metrics.GetUserCurrentMetrics
 {
-    public record GetUserMetricsQuery(Guid userId) : IRequest<RequestResult<userMetricsDTO>>;//MetabolicCalculator>;
+    public record GetUserMetricsQuery(Guid userId) : IRequest<RequestResult<userMetricsDTO>>;
+
+  public class GetUserMetricsQueryValidator : AbstractValidator<GetUserMetricsQuery>
+    {
+        public GetUserMetricsQueryValidator()
+        {
+            RuleFor(x => x.userId)
+                .NotEmpty()
+                .WithMessage("UserId is required");
+        }
+    }
 
     public record userMetricsDTO
     (
@@ -17,11 +28,10 @@ namespace FCE.Features.Metrics.GetUserCurrentMetrics
         double userTDEE,
         BMRRange range,
         BMRStatus userTarget,
-        double CalorieTarget
-        
+        double CalorieTarget 
     );
 
-    public class GetUserMetricsQueryHandler : IRequestHandler<GetUserMetricsQuery, RequestResult<userMetricsDTO>> //, MetabolicCalculator>
+    public class GetUserMetricsQueryHandler : IRequestHandler<GetUserMetricsQuery, RequestResult<userMetricsDTO>> 
     {
         private readonly GeneralRepository<CalculatedMetrics> _metricsRepo;
 
@@ -43,12 +53,16 @@ namespace FCE.Features.Metrics.GetUserCurrentMetrics
                 ))
                 .FirstOrDefaultAsync(cancellationToken);
 
+            if (usermetrics is null)
+            {
+                return RequestResult<userMetricsDTO>.Failure("User metrics not found.", RequestErrorCode.NotFound);
+            }
+
             return RequestResult<userMetricsDTO>.Success(usermetrics);
         }
     }
 
     public static class GetMetricsEndPoint
-
     {
         public static void GetUserMetricsEndpoint(this IEndpointRouteBuilder builder)
         {
@@ -56,7 +70,11 @@ namespace FCE.Features.Metrics.GetUserCurrentMetrics
                [FromServices] IMediator mediator) =>
             {
                 var userResult = await mediator.Send(new GetUserMetricsQuery(userId));
-                return Results.Ok(userResult);
+                if (!userResult.IsSuccess)
+                {
+                    return Results.Problem(userResult.Message, statusCode: userResult.requestErrorCode == RequestErrorCode.NotFound ? 404 : 400);
+                }
+                return Results.Ok(userResult.Data);
             });
         }
     }

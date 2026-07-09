@@ -19,7 +19,11 @@ namespace FCE.Features.Metrics.SetUserCalculatedMetrics.Commands
         public async Task<RequestResult<bool>> Handle(SetMetricsCommand request, CancellationToken cancellationToken)
         {
             _metricsRepo.Add(request.metrics);
-            await _metricsRepo.SaveChangesAsync();
+            if (request.metrics is null)
+            {
+                return RequestResult<bool>.Failure("Metrics are null", RequestErrorCode.InvalidMetricsInput);
+            }
+            await _metricsRepo.SaveChangesAsync(cancellationToken);
             return RequestResult<bool>.Success(true);
         }
     }

@@ -3,7 +3,7 @@ using FCE.Features.Metrics.RecalculateBioMetrics;
 using FCE.Features.Metrics.SetUserCalculatedMetrics.Orchestrator;
 using FCE.Features.Plan.AssignUserPlan;
 using FCE.Features.Plan.GetActiveAssignedUserPlan;
-using FCE.Features.Stats.GetUsetStats;
+using FCE.Features.Stats.Shared.GetUsetStats;
 using FCE.Features.Stats.SubmitFitnessStats;
 
 namespace FCE.Features.Common
