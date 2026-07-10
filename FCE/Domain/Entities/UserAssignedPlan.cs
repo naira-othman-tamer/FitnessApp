@@ -1,5 +1,4 @@
 ﻿using ContractMessages.Enums;
-using FCE.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

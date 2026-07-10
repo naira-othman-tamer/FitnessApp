@@ -4,13 +4,13 @@ using Microsoft.AspNetCore.Mvc;
 using WorkoutService.Features.Common.Helpers;
 using WorkoutService.Infrastructure;
 
-namespace WorkoutService.Features.PlanDay.AddPlanDay
+namespace WorkoutService.Features.PlanDay.CreatePlanDay
 {
-    public record SetPLanDayCommand(int DayNumber, string? DayLabel, int WorkoutId) : IRequest<RequestResult<bool>>;
+    public record CreatePLanDayCommand(int DayNumber, string? DayLabel, int WorkoutId) : ICommand<RequestResult<bool>>;
 
-    public class SetPLanDayCommandValidator : AbstractValidator<SetPLanDayCommand>
+    public class CreatePLanDayCommandValidator : AbstractValidator<CreatePLanDayCommand>
     {
-        public SetPLanDayCommandValidator()
+        public CreatePLanDayCommandValidator()
         {
             RuleFor(x => x.DayNumber)
                 .InclusiveBetween(1, 7)
@@ -24,16 +24,16 @@ namespace WorkoutService.Features.PlanDay.AddPlanDay
         }
     }
 
-    public class SetPLanDayCommandHandler : IRequestHandler<SetPLanDayCommand, RequestResult<bool>>
+    public class CreatePLanDayCommandHandler : IRequestHandler<CreatePLanDayCommand, RequestResult<bool>>
     {
         private readonly GeneralRepository<Domain.Entities.PlanDay> _planDayRepository;
 
-        public SetPLanDayCommandHandler(GeneralRepository<Domain.Entities.PlanDay> planDayRepository)
+        public CreatePLanDayCommandHandler(GeneralRepository<Domain.Entities.PlanDay> planDayRepository)
         {
             _planDayRepository = planDayRepository;
         }
 
-        public async Task<RequestResult<bool>> Handle(SetPLanDayCommand request, CancellationToken cancellationToken)
+        public async Task<RequestResult<bool>> Handle(CreatePLanDayCommand request, CancellationToken cancellationToken)
         {
             _planDayRepository.Add(new Domain.Entities.PlanDay
             {
@@ -50,12 +50,12 @@ namespace WorkoutService.Features.PlanDay.AddPlanDay
         }
     }
 
-    public static class AddPlanDayEndpoint
+    public static class CreatePlanDayEndpoint
     {
-        public static void AddPlanDayEndPoint(this IEndpointRouteBuilder builder)
+        public static void MapCreatePlanDayEndPoint(this IEndpointRouteBuilder builder)
         {
             builder.MapPost("", async (
-               [FromBody] SetPLanDayCommand request,
+               [FromBody] CreatePLanDayCommand request,
                [FromServices] IMediator mediator
                 ) =>
             {

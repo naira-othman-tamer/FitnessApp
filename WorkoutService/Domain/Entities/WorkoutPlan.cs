@@ -1,7 +1,6 @@
 ﻿using ContractMessages.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using WorkoutService.Domain.Enums;
 
 namespace WorkoutService.Domain.Entities
 {
@@ -13,7 +12,6 @@ namespace WorkoutService.Domain.Entities
         public bool IsPremium { get; set; }
         public Goal Goal { get; set; }
         public int WorkoutDaysPerWeek { get; set; }
-        //public Difficulty Difficulty { get; set; }
         public ICollection<PlanDay> PlanDays { get; set; } = new List<PlanDay>();
 
         public WorkoutPlan() { }

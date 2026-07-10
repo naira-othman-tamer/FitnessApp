@@ -64,7 +64,7 @@ namespace FCE.Features.Metrics.GetUserCurrentMetrics
 
     public static class GetMetricsEndPoint
     {
-        public static void GetUserMetricsEndpoint(this IEndpointRouteBuilder builder)
+        public static void MapGetUserMetricsEndpoint(this IEndpointRouteBuilder builder)
         {
             builder.MapGet("/{userId}", async ([FromQuery] Guid userId,
                [FromServices] IMediator mediator) =>

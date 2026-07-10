@@ -1,7 +1,8 @@
-﻿using ContractMessages.WorkoutPlanMatching;
+﻿using ContractMessages.NutritionPlanMatching;
+using ContractMessages.WorkoutPlanMatching;
 using FCE.Features.Common.Helpers;
 using FCE.Features.Metrics.GetUserCurrentMetrics;
-using FCE.Features.Stats.GetUsetStats;
+using FCE.Features.Stats.Shared.GetUsetStats;
 using FluentValidation;
 using MassTransit;
 using MediatR;
@@ -23,11 +24,13 @@ namespace FCE.Features.Plan.AssignUserPlan
     {
         private readonly IMediator _mediator;
         private readonly IRequestClient<IGetWorkoutPlanRequest> _workoutPlanClient;
+        private readonly IRequestClient<IGetNutritionPlanRequest> _nutritionPlanClient;
 
-        public AssignPlanOrchestratorHandler(IMediator mediator, IRequestClient<IGetWorkoutPlanRequest> workoutPlanClient)
+        public AssignPlanOrchestratorHandler(IMediator mediator, IRequestClient<IGetWorkoutPlanRequest> workoutPlanClient, IRequestClient<IGetNutritionPlanRequest> nutritionPlanClient)
         {
             _mediator = mediator;
             _workoutPlanClient = workoutPlanClient;
+            _nutritionPlanClient = nutritionPlanClient;
         }
 
         public async Task<RequestResult<bool>> Handle(AssignPlanOrchestrator request, CancellationToken cancellationToken)
@@ -47,15 +50,16 @@ namespace FCE.Features.Plan.AssignUserPlan
             {
                 return RequestResult<bool>.Failure(metrics.Message ?? "Failed to retrieve user metrics.", metrics.requestErrorCode);
             }
+            #region WorkoutPlanRequestClient
 
-              var workoutResponse = await _workoutPlanClient.GetResponse<IGetWorkoutPlanResponse>(
-              new
-              {
-                  Goal = stats.Data.userGoal,
-                  WorkoutDaysPerWeek = stats.Data.WorkoutDays  
-              },
-              cancellationToken
-          );
+            var workoutResponse = await _workoutPlanClient.GetResponse<IGetWorkoutPlanResponse>(
+            new
+            {
+                Goal = stats.Data.userGoal,
+                WorkoutDaysPerWeek = stats.Data.WorkoutDays
+            },
+            cancellationToken
+        );
 
             if (!workoutResponse.Message.IsSuccess)
             {
@@ -64,7 +68,24 @@ namespace FCE.Features.Plan.AssignUserPlan
             }
 
             string workoutPlanName = workoutResponse.Message.WorkoutPlanName;
-            int workoutPlanId = workoutResponse.Message.WorkoutPlanId;
+            int workoutPlanId = workoutResponse.Message.WorkoutPlanId; 
+            #endregion
+
+            var nutritionResponse = await _nutritionPlanClient.GetResponse<IGetNutritionPlanResponse>(
+                new
+                {
+                    Goal = stats.Data.userGoal,
+                    CalorieTarget = metrics.Data.CalorieTarget
+                },
+                cancellationToken
+            );
+            if (!nutritionResponse.Message.IsSuccess)
+            {
+                return RequestResult<bool>.Failure(
+                                          $"Nutrition plan matching failed: {nutritionResponse.Message.ErrorCode}");
+            }
+            string nutritionPlanName = nutritionResponse.Message.NutritionPlanName;
+            Guid nutritionPlanId = nutritionResponse.Message.planId;
 
             var setPlanResult = await _mediator.Send(new SetUserPlanCommand
                 (
@@ -73,8 +94,8 @@ namespace FCE.Features.Plan.AssignUserPlan
                 metrics.Data.CalorieTarget,
                 workoutPlanName,
                 workoutPlanId,
-                "",
-                null
+                nutritionPlanName,
+                nutritionPlanId
                 ), cancellationToken);
 
             if (!setPlanResult.IsSuccess)
@@ -86,7 +107,7 @@ namespace FCE.Features.Plan.AssignUserPlan
 
     public static class AssignUserPlanEndPoint
     {
-        public static void AssignUserPlanEndPointEndPoint(this IEndpointRouteBuilder builder)
+        public static void MapAssignUserPlanEndPointEndPoint(this IEndpointRouteBuilder builder)
         {
             builder.MapPost("", async (
                 [FromBody] AssignPlanOrchestrator request,
@@ -94,8 +115,8 @@ namespace FCE.Features.Plan.AssignUserPlan
             {
                 var result = await mediator.Send(request);
                 return result.IsSuccess
-                             ? Results.Ok(result)
-                             : Results.BadRequest(result);
+                             ? Results.Ok(result.Data)
+                             : Results.BadRequest(result.Data);
             });
         }
     }

@@ -59,7 +59,7 @@ namespace WorkoutService.Features.Workouts.CreateWorkout
 
     public static class CreateWorkoutEndPoint
     {
-        public static void AddWorkoutEndPoint(this IEndpointRouteBuilder builder)
+        public static void MapCreateWorkoutEndPoint(this IEndpointRouteBuilder builder)
         {
             builder.MapPost("", async (
                 [FromBody] CreateWorkoutCommand request,

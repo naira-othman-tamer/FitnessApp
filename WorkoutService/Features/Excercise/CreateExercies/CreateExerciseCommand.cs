@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using WorkoutService.Domain.Entities;
 using WorkoutService.Domain.Enums;
 using WorkoutService.Features.Common.Helpers;
@@ -15,7 +16,7 @@ namespace WorkoutService.Features.Excercise.CreateExercies
        string? Description = null,
        string? ImageUrl = null,
        string? VideoUrl = null
-    ) : IRequest<RequestResult<bool>>;
+    ) : ICommand<RequestResult<bool>>;
 
     public class CreateExerciseCommandValidator : AbstractValidator<CreateExerciseCommand>
     {
@@ -41,6 +42,7 @@ namespace WorkoutService.Features.Excercise.CreateExercies
                 .WithMessage("Video URL must be a valid absolute URL.");
         }
     }
+
     public class CreateExerciseCommandHandler : IRequestHandler<CreateExerciseCommand, RequestResult<bool>>
     {
         private readonly GeneralRepository<Exercise> _exerciseRepository;
@@ -66,17 +68,22 @@ namespace WorkoutService.Features.Excercise.CreateExercies
         }
     }
 
-    public static class CreateExerciseEndpoint
+    public static class CreateExerciseEndPoint
     {
-        public static void MapCreateExerciseEndpoint(this WebApplication app)
+        public static void MapCreateExerciseEndpoint(this IEndpointRouteBuilder builder)
         {
-            app.MapPost("/", async (CreateExerciseCommand command, IMediator mediator) =>
+            builder.MapPost("", async (
+               [FromBody] CreateExerciseCommand request,
+               [FromServices] IMediator mediator
+                ) =>
             {
-                var result = await mediator.Send(command);
-                return result.IsSuccess ? Results.Ok(result.Data) : Results.BadRequest(result);
-            })
-            .WithName("CreateExercise");
-            //.WithTags("Exercises");
+                var result = await mediator.Send(request);
+                if (!result.IsSuccess)
+                {
+                    return Results.BadRequest(result.Message);
+                }
+                return Results.Ok( result.Data);
+            });
         }
     }
 

@@ -3,7 +3,6 @@ using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using WorkoutService.Domain.Entities;
 using WorkoutService.Features.Common.Helpers;
 using WorkoutService.Infrastructure;
 
@@ -27,7 +26,7 @@ namespace WorkoutService.Features.WorkoutPlan.GetWorkoutPlanById
          bool IsPremium ,
          Goal PlanGoal ,
          int WorkoutDaysPerWeek ,
-         ICollection<PlanDay>? PlanDays 
+         ICollection<Domain.Entities.PlanDay>? PlanDays 
     );
 
     public class GetPlanByIdQueryHandler : IRequestHandler<GetPlanByIdQuery, RequestResult<WorkoutPlanDto>>
@@ -63,7 +62,7 @@ namespace WorkoutService.Features.WorkoutPlan.GetWorkoutPlanById
 
     public static class GetPlanByIdQueryEndPoint
     {
-        public static void GetPlanByIdEndPoint(this IEndpointRouteBuilder builder)
+        public static void MapGetPlanByIdEndPoint(this IEndpointRouteBuilder builder)
         {
             builder.MapGet("/{id}", async (
                 int id,

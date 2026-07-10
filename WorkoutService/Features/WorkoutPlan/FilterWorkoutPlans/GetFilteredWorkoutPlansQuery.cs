@@ -4,7 +4,9 @@ using LinqKit;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq.Expressions;
+using WorkoutService.Domain.Enums;
 using WorkoutService.Features.Common.Helpers;
+using WorkoutService.Features.Excercise.GetExercisesList;
 using WorkoutService.Infrastructure;
 
 namespace WorkoutService.Features.WorkoutPlan.FilterWorkoutPlans
@@ -15,11 +17,11 @@ namespace WorkoutService.Features.WorkoutPlan.FilterWorkoutPlans
         string? Name,
         Goal? Goal,
         int? WorkoutDaysPerWeek
-    ) : IRequest<RequestResult<FilterPlansResultDto>>;
+    ) : IRequest<RequestResult<PaginatedFilterPlansResultDto>>;
 
-    public record FilterPlansResultDto
+    public record PaginatedFilterPlansResultDto
     (
-        int Page,
+        int PageIndex,
         int PageSize,
         IEnumerable<GetPlansDto> filteredPlans
     );
@@ -55,7 +57,7 @@ namespace WorkoutService.Features.WorkoutPlan.FilterWorkoutPlans
     }
 
     public class GetFilteredWorkoutPlansQueryHandler
-        : IRequestHandler<GetFilteredWorkoutPlansQuery, RequestResult<FilterPlansResultDto>>
+        : IRequestHandler<GetFilteredWorkoutPlansQuery, RequestResult<PaginatedFilterPlansResultDto>>
     {
         private readonly GeneralRepository<Domain.Entities.WorkoutPlan> _workoutPlanRepository;
 
@@ -64,10 +66,10 @@ namespace WorkoutService.Features.WorkoutPlan.FilterWorkoutPlans
             _workoutPlanRepository = workoutPlanRepository;
         }
 
-        public async Task<RequestResult<FilterPlansResultDto>> Handle(GetFilteredWorkoutPlansQuery request, CancellationToken cancellationToken)
+        public async Task<RequestResult<PaginatedFilterPlansResultDto>> Handle(GetFilteredWorkoutPlansQuery request, CancellationToken cancellationToken)
         {
             var predicate = BuildPredicate(request);
-            var Plans = _workoutPlanRepository.GetAll();
+            var Plans = _workoutPlanRepository.GetAll().AsExpandable();
             var paginatedResult = await Plans
                 .Where(predicate)
                 .Select(p => new GetPlansDto(
@@ -78,11 +80,11 @@ namespace WorkoutService.Features.WorkoutPlan.FilterWorkoutPlans
                     p.WorkoutDaysPerWeek))
                 .ToPaginatedAsync(request.PageIndex, request.PageSize, cancellationToken);
 
-            var result = new FilterPlansResultDto(request.PageIndex, request.PageSize, paginatedResult.Data);
+            var result = new PaginatedFilterPlansResultDto(request.PageIndex, request.PageSize, paginatedResult.Data);
             if (paginatedResult.Data.Count == 0) {
-                return RequestResult<FilterPlansResultDto>.Failure("No workout plans found for the given filters.", RequestErrorCode.NotFound);
+                return RequestResult<PaginatedFilterPlansResultDto>.Failure("No workout plans found for the given filters.", RequestErrorCode.NotFound);
             }
-            return RequestResult<FilterPlansResultDto>.Success(result);
+            return RequestResult<PaginatedFilterPlansResultDto>.Success(result);
         }
 
         private static Expression<Func<Domain.Entities.WorkoutPlan, bool>> BuildPredicate(GetFilteredWorkoutPlansQuery query)
@@ -103,16 +105,17 @@ namespace WorkoutService.Features.WorkoutPlan.FilterWorkoutPlans
         }
     }
 
-    public static class GetFilteredWorkoutPlansEndPoint
+
+    public static class GetFilteredWorkoutPlansQueryEndpoint
     {
-        public static void GetFilteredPlansEndPoint(this IEndpointRouteBuilder builder)
+        public static void MapGetFilteredPlansEndPoint(this IEndpointRouteBuilder builder)
         {
             builder.MapGet("/", async ([FromServices] IMediator mediator,
-                 int PageIndex=1,
-                 int PageSize=10,
-                 string? Name=null,
-                 Goal? Goal=null,
-                 int? WorkoutDaysPerWeek=null
+                 int PageIndex = 1,
+                 int PageSize = 10,
+                 string? Name = null,
+                 Goal? Goal = null,
+                 int? WorkoutDaysPerWeek = null
                ) =>
             {
                 var Plans = await mediator.Send(new GetFilteredWorkoutPlansQuery(
@@ -120,8 +123,9 @@ namespace WorkoutService.Features.WorkoutPlan.FilterWorkoutPlans
                     PageSize,
                     Name,
                     Goal,
-                   WorkoutDaysPerWeek));
-                return Results.Ok(Plans.Data);
+                    WorkoutDaysPerWeek));
+
+                return;
             });
         }
     }

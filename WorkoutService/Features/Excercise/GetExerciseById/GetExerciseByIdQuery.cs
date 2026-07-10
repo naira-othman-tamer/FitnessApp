@@ -1,8 +1,11 @@
 ﻿using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WorkoutService.Domain.Entities;
+using WorkoutService.Domain.Enums;
 using WorkoutService.Features.Common.Helpers;
+using WorkoutService.Features.WorkoutPlan.GetWorkoutPlanById;
 using WorkoutService.Infrastructure;
 
 namespace WorkoutService.Features.Excercise.GetExerciseById
@@ -16,7 +19,7 @@ namespace WorkoutService.Features.Excercise.GetExerciseById
         string? Description,
         string? ImageUrl,
         string? VideoUrl,
-        string Difficulty,
+        Difficulty Difficulty,
         IEnumerable<string> TargetMuscles,
         IEnumerable<string> EquipmentNeeded
     );
@@ -29,6 +32,7 @@ namespace WorkoutService.Features.Excercise.GetExerciseById
                 .GreaterThan(0).WithMessage("Exercise ID must be greater than 0.");
         }
     }
+
     public class GetExerciseByIdQueryHandler : IRequestHandler<GetExerciseByIdQuery, RequestResult<RequestResult<GetExerciseDto>>>
     {
         private readonly GeneralRepository<Exercise> _exerciseRepository;
@@ -45,7 +49,7 @@ namespace WorkoutService.Features.Excercise.GetExerciseById
                     e.Description,
                     e.ImageUrl,
                     e.VideoUrl,
-                    e.Difficulty.ToString(),
+                    e.Difficulty,
                     e.TargetMuscles.Select(m => m.ToString()),
                     e.EquipmentNeeded.Select(eq => eq.ToString())
                 )
@@ -60,17 +64,22 @@ namespace WorkoutService.Features.Excercise.GetExerciseById
         }
     }
 
-    public static class GetExerciseByIdEndpoint
+    public static class GetExerciseByIdQueryEndPoint
     {
-        public static void MapGetExerciseByIdEndpoint(this WebApplication app)
+        public static void MapGetExerciseByIdEndPoint(this IEndpointRouteBuilder builder)
         {
-            app.MapGet("/{id:int}", async (int id, IMediator mediator) =>
+            builder.MapGet("/{id}", async (
+                int id,
+                [FromServices] IMediator mediator
+               ) =>
             {
-                var result = await mediator.Send(new GetExerciseByIdQuery(id));
-                return result.IsSuccess ? Results.Ok(result.Data) : Results.NotFound(result);
-            })
-            .WithName("GetExerciseById");
-            //.WithTags("Exercises");
+                var Plan = await mediator.Send(new GetExerciseByIdQuery(id));
+                if (!Plan.IsSuccess)
+                {
+                    return Results.NotFound(Plan.Message);
+                }
+                return Results.Ok(Plan.Data);
+            });
         }
     }
 }

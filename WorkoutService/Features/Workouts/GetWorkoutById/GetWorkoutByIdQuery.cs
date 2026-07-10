@@ -58,7 +58,7 @@ namespace WorkoutService.Features.Workouts.GetWorkoutById
 
     public static class GetWorkoutByIdEndPoint
     {
-        public static void GetWorkoutByIDEndpoint(this IEndpointRouteBuilder builder)
+        public static void MapGetWorkoutByIdEndpoint(this IEndpointRouteBuilder builder)
         {
             builder.MapGet("/{workoutId}", async ([FromQuery] int WorkoutId,
                [FromServices] IMediator mediator) =>

@@ -64,7 +64,7 @@ namespace FCE.Features.Stats.Shared.GetUsetStats
 
     public static class GetStatsEndPont
     {
-        public static void GetUserStatsEndPoint(this IEndpointRouteBuilder builder)
+        public static void MapGetUserStatsEndPoint(this IEndpointRouteBuilder builder)
         {
             builder.MapGet("/{userID}", async (
                Guid userID,

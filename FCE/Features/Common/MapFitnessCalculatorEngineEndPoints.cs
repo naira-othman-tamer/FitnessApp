@@ -13,20 +13,17 @@ namespace FCE.Features.Common
         public static IEndpointRouteBuilder MapFCEEndpoints(this IEndpointRouteBuilder builder)
         {
             var statsGroup = builder.MapGroup("stats");
-            statsGroup.SubmitFitnessStateEndPoint();
-            statsGroup.GetUserStatsEndPoint();
+            statsGroup.MapSubmitFitnessStateEndPoint();
+            statsGroup.MapGetUserStatsEndPoint();
 
             var metricsGroup = builder.MapGroup("metrics");
-            metricsGroup.SubmitCalculateMetricsEndPoint();
-            metricsGroup.GetUserMetricsEndpoint();
-            metricsGroup.UpdateCalculateMetricsEndPoint();
+            metricsGroup.MapSubmitCalculateMetricsEndPoint();
+            metricsGroup.MapGetUserMetricsEndpoint();
+            metricsGroup.MapReCalculateMetricsEndPoint();
 
             var planGroup = builder.MapGroup("plan");
-            planGroup.AssignUserPlanEndPointEndPoint();
-            planGroup.GetActiveUserPlanEndPoint();
-
-
-
+            planGroup.MapAssignUserPlanEndPointEndPoint();
+            planGroup.MapGetActiveUserPlanEndPoint();
             return builder;
         }
     }

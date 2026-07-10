@@ -48,7 +48,7 @@ namespace FCE.Features.Metrics.SetUserCalculatedMetrics.Orchestrator
 
     public static class CalculateMetricsEndPoint
     {
-        public static void SubmitCalculateMetricsEndPoint(this IEndpointRouteBuilder builder)
+        public static void MapSubmitCalculateMetricsEndPoint(this IEndpointRouteBuilder builder)
         {
             builder.MapPost("", async (
                 [FromBody] SubmitCalculatedMetricsOrchestrator request, 

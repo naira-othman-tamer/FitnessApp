@@ -89,9 +89,9 @@ namespace FCE.Features.Metrics.RecalculateBioMetrics
 
     public static class ReCalculateMetricsEndPoint
     {
-        public static void ReCalculateMetrics(this IEndpointRouteBuilder builder)
+        public static void MapReCalculateMetricsEndPoint(this IEndpointRouteBuilder builder)
         {
-            builder.MapPost("", async (
+            builder.MapPost("/Recalculate", async (
                 [FromBody] RecalculateBioMetricsOrchestrator request,
                 [FromServices] IMediator mediator) =>
             {
@@ -101,7 +101,8 @@ namespace FCE.Features.Metrics.RecalculateBioMetrics
                     return Results.BadRequest(new { result.Message, result.requestErrorCode });
                 }
                 return Results.Ok(result.Data);
-            });
+            })
+            .WithDisplayName("Recalculate Bio Metrics");
         }
     }
 

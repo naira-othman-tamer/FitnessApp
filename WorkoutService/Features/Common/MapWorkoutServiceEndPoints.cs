@@ -1,5 +1,9 @@
-﻿using WorkoutService.Features.WorkoutPlan.CreateWorkoutPlan;
+﻿using WorkoutService.Features.Excercise.CreateExercies;
+using WorkoutService.Features.Excercise.GetExerciseById;
+using WorkoutService.Features.Excercise.GetExercisesList;
+using WorkoutService.Features.WorkoutPlan.CreateWorkoutPlan;
 using WorkoutService.Features.WorkoutPlan.FilterWorkoutPlans;
+using WorkoutService.Features.WorkoutPlan.GetWorkoutPlanById;
 using WorkoutService.Features.Workouts.AddExerciseToWorkout.Orchestrator;
 using WorkoutService.Features.Workouts.CreateWorkout;
 using WorkoutService.Features.Workouts.GetWorkoutById;
@@ -12,19 +16,23 @@ namespace WorkoutService.Features.Common
         public static IEndpointRouteBuilder MapWorkoutEndpoints(this IEndpointRouteBuilder builder)
         {
             var planGroup = builder.MapGroup("plan");
-            planGroup.GetFilteredPlansEndPoint();
-            planGroup.AddPlanEndPoint();
+            planGroup.MapGetPlanByIdEndPoint();
+            planGroup.MapGetFilteredPlansEndPoint();
+            planGroup.MapCreatePlanEndPoint();
 
             var workoutGroup = builder.MapGroup("workouts");
-            workoutGroup.GetWorkoutByIDEndpoint();
-            workoutGroup.AddWorkoutEndPoint();
-            workoutGroup.GetFilteredWorkoutsEndPoint();
+            workoutGroup.MapGetWorkoutByIdEndpoint();
+            workoutGroup.MapCreateWorkoutEndPoint();
+            workoutGroup.MapGetFilteredWorkoutsEndPoint();
 
             var workoutExerciseGroup = builder.MapGroup("workouts/exercises");
-            workoutExerciseGroup.AddExerciseToWorkoutEndpoint();
+            workoutExerciseGroup.MapAddExerciseToWorkoutEndpoint();
 
             var ExerciseGroup = builder.MapGroup("Exercises");
-            //ExerciseGroup.MapCreateExerciseEndpoint();
+            ExerciseGroup.MapGetExerciseByIdEndPoint();
+            ExerciseGroup.MapGetFilteredExerciseListEndPoint();
+            ExerciseGroup.MapCreateExerciseEndpoint();
+
             return builder;
         }
     }

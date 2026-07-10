@@ -89,7 +89,7 @@ namespace WorkoutService.Features.Workouts.GetWorkoutsList
 
     public static class GetFilteredWorkoutPlansEndPont
     {
-        public static void GetFilteredWorkoutsEndPoint(this IEndpointRouteBuilder builder)
+        public static void MapGetFilteredWorkoutsEndPoint(this IEndpointRouteBuilder builder)
         {
             builder.MapGet("/", async ([FromServices] IMediator mediator,
                  int PageIndex = 1,

@@ -101,7 +101,7 @@ namespace FCE.Domain.Aggregates
 
             builder.HasKey(x => x.Id);
 
-            builder.HasIndex(x => x.UserId).IsUnique(); // upsert key — one current snapshot per user
+            //builder.HasIndex(x => x.UserId).IsUnique(); // upsert key — one current snapshot per user
 
             builder.Property(x => x.UserId)
                    .IsRequired();

@@ -90,7 +90,7 @@ namespace WorkoutService.Features.Workouts.AddExerciseToWorkout.Orchestrator
 
     public static class AddExerciseToWorkoutEndPoint
     {
-        public static void AddExerciseToWorkoutEndpoint(this IEndpointRouteBuilder builder)
+        public static void MapAddExerciseToWorkoutEndpoint(this IEndpointRouteBuilder builder)
         {
             builder.MapPost("AddExerciseToWorkout", async ([FromBody] AddExerciseToWorkoutOrchestrator request,
                 [FromServices] IMediator mediator) =>

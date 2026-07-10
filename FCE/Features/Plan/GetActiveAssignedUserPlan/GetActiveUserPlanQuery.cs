@@ -1,6 +1,5 @@
 ﻿using FCE.Domain.Entities;
 using FCE.Features.Common.Helpers;
-using FCE.Features.Stats.GetUsetStats;
 using FCE.Infrastructure;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -37,7 +36,7 @@ namespace FCE.Features.Plan.GetActiveAssignedUserPlan
 
     public static class GetPlanEndPoint
     {
-        public static void GetActiveUserPlanEndPoint(this IEndpointRouteBuilder builder)
+        public static void MapGetActiveUserPlanEndPoint(this IEndpointRouteBuilder builder)
         {
             builder.MapGet("/{userID}", async (
                Guid userID,

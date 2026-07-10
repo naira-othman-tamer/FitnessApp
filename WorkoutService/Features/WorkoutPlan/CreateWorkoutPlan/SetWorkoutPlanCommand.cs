@@ -61,15 +61,19 @@ namespace WorkoutService.Features.WorkoutPlan.CreateWorkoutPlan
 
     public static class CreateWorkoutPlanEndPoint
     {
-        public static void AddPlanEndPoint(this IEndpointRouteBuilder builder)
+        public static void MapCreatePlanEndPoint(this IEndpointRouteBuilder builder)
         {
             builder.MapPost("", async (
                [FromBody] SetWorkoutPlanCommand request,
                [FromServices] IMediator mediator
                 ) =>
             {
-                var id = await mediator.Send(request);
-                return Results.Created($"/{id}", new { id });
+                var result = await mediator.Send(request);
+                if (!result.IsSuccess)
+                {
+                    return Results.BadRequest();
+                }
+                return Results.Created();
             });
         }
     }

@@ -50,7 +50,7 @@ namespace FCE.Features.Plan.AssignUserPlan
                 request.NutritionPlanId);
             
             _userPlanRepo.Add(plan);
-           await _userPlanRepo.SaveChangesAsync();
+           await _userPlanRepo.SaveChangesAsync(cancellationToken);
 
            return RequestResult<int>.Success(plan.Id);
         }

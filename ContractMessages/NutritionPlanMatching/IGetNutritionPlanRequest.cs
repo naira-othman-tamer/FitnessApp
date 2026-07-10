@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ContractMessages.Enums;
 
 namespace ContractMessages.NutritionPlanMatching
 {
-    internal interface IGetNutritionPlanRequest
+    public interface IGetNutritionPlanRequest
     {
+        Goal goal { get; }
+        double CalroieTarget { get; }
     }
 }
