@@ -39,20 +39,20 @@ namespace FCE.Features.Plan.AssignUserPlan
 
         public async Task<RequestResult<int>> Handle(SetUserPlanCommand request, CancellationToken cancellationToken)
         {
-           var plan = UserAssignedPlan
-                .Create(
-                request.userId,
-                request.userGoal,
-                request.IntakeClaorie,
-                request.WorkoutPlanName,
-                request.WorkoutPlanId,
-                request.NutritionPlanName,
-                request.NutritionPlanId);
-            
+            var plan = UserAssignedPlan
+                 .Create(
+                 request.userId,
+                 request.userGoal,
+                 request.IntakeClaorie,
+                 request.WorkoutPlanName,
+                 request.WorkoutPlanId,
+                 request.NutritionPlanName,
+                 request.NutritionPlanId);
+            // TODO: Check if the user already has an active plan and handle accordingly (e.g., deactivate the old plan, or return an error).
             _userPlanRepo.Add(plan);
-           await _userPlanRepo.SaveChangesAsync(cancellationToken);
+            await _userPlanRepo.SaveChangesAsync(cancellationToken);
 
-           return RequestResult<int>.Success(plan.Id);
+            return RequestResult<int>.Success(plan.Id);
         }
     }
 }

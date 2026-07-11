@@ -19,7 +19,7 @@ namespace FCE.Domain.Aggregates
 
         public static CalculatedMetrics Calculate(UserFitnessStats stats)
         {
-            var bmr = CalculateBmr(stats.PhysicalStats); 
+            var bmr = CalculateBmr(stats.PhysicalStats);
             var tdee = CalculateTdee(bmr, stats.activityLevel);
             var calorieTarget = CalculateCalorieTarget(tdee, stats.goal);
             var BMRRange = GetBMRRange(stats.PhysicalStats.Gender);
@@ -34,11 +34,11 @@ namespace FCE.Domain.Aggregates
                 BMRStatus = GetBMRStatus(bmr, BMRRange)
             };
         }
-        public static CalculatedMetrics Calculate(Guid userId,PhysicalStats stats,ActivityLevel activelvl,Goal goal,Gender gender)
+        public static CalculatedMetrics Calculate(Guid userId, PhysicalStats stats, ActivityLevel activelvl, Goal goal, Gender gender)
         {
-            var bmr = CalculateBmr(stats); 
+            var bmr = CalculateBmr(stats);
             var tdee = CalculateTdee(bmr, activelvl);
-            var calorieTarget = CalculateCalorieTarget(tdee,goal);
+            var calorieTarget = CalculateCalorieTarget(tdee, goal);
             var BMRRange = GetBMRRange(gender);
 
             return new CalculatedMetrics
@@ -84,7 +84,7 @@ namespace FCE.Domain.Aggregates
            _ => throw new ArgumentOutOfRangeException(nameof(gender))
 
        };
-        private static BMRStatus GetBMRStatus(double bmr,BMRRange range)
+        private static BMRStatus GetBMRStatus(double bmr, BMRRange range)
         {
             if (bmr >= range.Min && bmr <= range.Max)
                 return BMRStatus.InRange;
@@ -100,7 +100,7 @@ namespace FCE.Domain.Aggregates
             builder.ToTable("CalculatedMetrics");
 
             builder.HasKey(x => x.Id);
-
+            // TODO: Bring back the unique index on UserId if we want to enforce one current snapshot per user
             //builder.HasIndex(x => x.UserId).IsUnique(); // upsert key — one current snapshot per user
 
             builder.Property(x => x.UserId)
@@ -137,6 +137,6 @@ namespace FCE.Domain.Aggregates
         }
     }
 }
-    
+
 
 
