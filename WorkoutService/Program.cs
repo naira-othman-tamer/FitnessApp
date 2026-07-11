@@ -8,6 +8,7 @@ using System.Text.Json.Serialization;
 using WorkoutService.Configs;
 using WorkoutService.Configs.Extensions;
 using WorkoutService.Integrations.Consumers;
+using Microsoft.OpenApi.Models;
 
 namespace WorkoutService
 {
@@ -26,7 +27,33 @@ namespace WorkoutService
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(options =>
+            {
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "Enter: Bearer {your JWT token}"
+                });
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        Array.Empty<string>()
+                    }
+                });
+            });
+            builder.Services.AddJwtAuthentication(builder.Configuration);
 
             builder.Services.AddDatabase(builder.Configuration);
             builder.Services.AddMediatR(cfg =>
@@ -83,8 +110,9 @@ namespace WorkoutService
             }
 
             app.UseHttpsRedirection();
+            app.UseAuthentication();
             app.UseAuthorization();
-            app.MapControllers();
+            app.MapControllers().RequireAuthorization();
             app.MapWorkoutEndpoints();
             app.Run();
         }

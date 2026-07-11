@@ -15,20 +15,20 @@ namespace WorkoutService.Features.Common
     {
         public static IEndpointRouteBuilder MapWorkoutEndpoints(this IEndpointRouteBuilder builder)
         {
-            var planGroup = builder.MapGroup("plan");
+            var planGroup = builder.MapGroup("plan").RequireAuthorization();
             planGroup.MapGetPlanByIdEndPoint();
             planGroup.MapGetFilteredPlansEndPoint();
             planGroup.MapCreatePlanEndPoint();
 
-            var workoutGroup = builder.MapGroup("workouts");
+            var workoutGroup = builder.MapGroup("workouts").RequireAuthorization();
             workoutGroup.MapGetWorkoutByIdEndpoint();
             workoutGroup.MapCreateWorkoutEndPoint();
             workoutGroup.MapGetFilteredWorkoutsEndPoint();
 
-            var workoutExerciseGroup = builder.MapGroup("workouts/exercises");
+            var workoutExerciseGroup = builder.MapGroup("workouts/exercises").RequireAuthorization();
             workoutExerciseGroup.MapAddExerciseToWorkoutEndpoint();
 
-            var ExerciseGroup = builder.MapGroup("Exercises");
+            var ExerciseGroup = builder.MapGroup("Exercises").RequireAuthorization();
             ExerciseGroup.MapGetExerciseByIdEndPoint();
             ExerciseGroup.MapGetFilteredExerciseListEndPoint();
             ExerciseGroup.MapCreateExerciseEndpoint();
