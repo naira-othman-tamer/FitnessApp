@@ -85,7 +85,7 @@ namespace FCE.Features.Plan.AssignUserPlan
                                           $"Nutrition plan matching failed: {nutritionResponse.Message.ErrorCode}");
             }
             string nutritionPlanName = nutritionResponse.Message.NutritionPlanName;
-            Guid nutritionPlanId = nutritionResponse.Message.planId;
+            Guid nutritionPlanId = nutritionResponse.Message.NutritionPlanId;
 
             var setPlanResult = await _mediator.Send(new SetUserPlanCommand
                 (

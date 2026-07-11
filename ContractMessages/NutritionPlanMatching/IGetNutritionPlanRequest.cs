@@ -4,7 +4,7 @@ namespace ContractMessages.NutritionPlanMatching
 {
     public interface IGetNutritionPlanRequest
     {
-        Goal goal { get; }
-        double CalroieTarget { get; }
+        Goal Goal { get; }
+        double CalorieTarget { get; }
     }
 }

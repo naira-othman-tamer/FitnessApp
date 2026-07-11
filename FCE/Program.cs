@@ -6,6 +6,7 @@ using FCE.Features.Common;
 using MassTransit;
 using System.Reflection;
 using System.Text.Json.Serialization;
+using ContractMessages.NutritionPlanMatching;
 using ContractMessages.WorkoutPlanMatching;
 using FCE.Integrations.Consumers;
 
@@ -45,6 +46,7 @@ namespace FCE
             {
                 
                 x.AddRequestClient<IGetWorkoutPlanRequest>();
+                x.AddRequestClient<IGetNutritionPlanRequest>(new Uri("queue:nutrition-plan-matching"));
                 x.AddConsumer<UserMetricsConsumer>();
 
                 x.UsingRabbitMq((context, cfg) =>

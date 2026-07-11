@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using NutritionService.Data;
 using NutritionService.Infrastructure;
+using NutritionService.Integrations.Consumers;
 using Repository.Layer;
 using Repository.Layer.Interfaces;
 
@@ -27,6 +28,7 @@ public static class NutritionInfrastructureExtensions
         services.AddMassTransit(x =>
         {
             x.AddRequestClient<IGetUserMetricsRequest>(new Uri("queue:fce-user-metrics"));
+            x.AddConsumer<NutritionPlanMatchingConsumer>();
 
             x.UsingRabbitMq((context, cfg) =>
             {
@@ -34,6 +36,11 @@ public static class NutritionInfrastructureExtensions
                 {
                     h.Username(configuration["RabbitMq:Username"] ?? "guest");
                     h.Password(configuration["RabbitMq:Password"] ?? "guest");
+                });
+
+                cfg.ReceiveEndpoint("nutrition-plan-matching", e =>
+                {
+                    e.ConfigureConsumer<NutritionPlanMatchingConsumer>(context);
                 });
 
                 cfg.ConfigureEndpoints(context);

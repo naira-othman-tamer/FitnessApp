@@ -51,6 +51,8 @@ services:
         condition: service_healthy
       rabbitmq:
         condition: service_started
+      nutritionservice:
+        condition: service_started
   authenticationservice:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -104,8 +106,6 @@ services:
       sqlserver:
         condition: service_healthy
       rabbitmq:
-        condition: service_started
-      fce:
         condition: service_started
   progresstrackingservice:
     environment:
