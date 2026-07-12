@@ -125,8 +125,18 @@ namespace WorkoutService.Features.WorkoutPlan.FilterWorkoutPlans
                     Name,
                     Goal,
                     WorkoutDaysPerWeek));
-                // TODO: Handle the response and return appropriate HTTP status codes based on the result
-                return;
+
+                if (!Plans.IsSuccess)
+                {
+                    return Plans.requestErrorCode switch
+                    {
+                        RequestErrorCode.NotFound => Results.NotFound(Plans.Message),
+                        RequestErrorCode.ValidationError => Results.BadRequest(Plans.Message),
+                        _ => Results.Problem(Plans.Message)
+                    };
+                }
+
+                return Results.Ok(Plans.Data);
             });
         }
     }

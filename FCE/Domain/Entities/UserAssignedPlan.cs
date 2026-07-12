@@ -36,6 +36,11 @@ namespace FCE.Domain.Entities
                 NutritionPlanId = nutritionPlanId,
                 IsActive = true
             };
+
+        public void Deactivate()
+        {
+            IsActive = false;
+        }
     }
 
     public class UserAssignedPlanConfiguration : IEntityTypeConfiguration<UserAssignedPlan>

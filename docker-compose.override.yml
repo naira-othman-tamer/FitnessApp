@@ -18,6 +18,11 @@ services:
     ports:
       - "15672:15672"
       - "5672:5672"
+  redis:
+    image: redis:7-alpine
+    container_name: fitnessredis
+    ports:
+      - "6379:6379"
   fitnessapp:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -38,6 +43,7 @@ services:
       - ASPNETCORE_HTTPS_PORTS=8081
       - ConnectionStrings__cs=Server=sqlserver,1433;Database=FceDB;User Id=sa;Password=SqlServer@123;TrustServerCertificate=True;MultipleActiveResultSets=true
       - RabbitMq__Host=rabbitmq
+      - Redis__ConnectionString=redis:6379
     ports:
       - "7080:8080"
       - "7081:8081"
@@ -51,6 +57,8 @@ services:
         condition: service_healthy
       rabbitmq:
         condition: service_started
+      redis:
+        condition: service_started
       nutritionservice:
         condition: service_started
   authenticationservice:
@@ -59,6 +67,7 @@ services:
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
       - ConnectionStrings__AuthenticationDatabase=Server=sqlserver,1433;Database=FitnessAuthentication;User Id=sa;Password=SqlServer@123;TrustServerCertificate=True;MultipleActiveResultSets=true
+      - Redis__ConnectionString=redis:6379
     ports:
       - "8082:8080"
       - "8083:8081"    
@@ -70,12 +79,15 @@ services:
     depends_on:
       sqlserver:
         condition: service_healthy
+      redis:
+        condition: service_started
   profileservice:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
       - ConnectionStrings__ProfileDatabase=Server=sqlserver,1433;Database=profileservice;User Id=sa;Password=SqlServer@123;TrustServerCertificate=True;MultipleActiveResultSets=true
+      - Redis__ConnectionString=redis:6379
     ports:
       - "3080:8080"
       - "3081:8081"    
@@ -87,6 +99,8 @@ services:
     depends_on:
       sqlserver:
         condition: service_healthy
+      redis:
+        condition: service_started
   nutritionservice:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -94,6 +108,7 @@ services:
       - ASPNETCORE_HTTPS_PORTS=8081
       - ConnectionStrings__NutritionDatabase=Server=sqlserver,1433;Database=FitnessNutrition;User Id=sa;Password=SqlServer@123;TrustServerCertificate=True;MultipleActiveResultSets=true
       - RabbitMq__Host=rabbitmq
+      - Redis__ConnectionString=redis:6379
     ports:
       - "6080:8080"
       - "6081:8081"
@@ -107,12 +122,15 @@ services:
         condition: service_healthy
       rabbitmq:
         condition: service_started
+      redis:
+        condition: service_started
   progresstrackingservice:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
       - ConnectionStrings__ProgressTrackingDatabase=Server=sqlserver,1433;Database=FitnessProgressTracking;User Id=sa;Password=SqlServer@123;TrustServerCertificate=True;MultipleActiveResultSets=true
+      - Redis__ConnectionString=redis:6379
     ports:
       - "9080:8080"
       - "9081:8081"
@@ -124,6 +142,8 @@ services:
     depends_on:
       sqlserver:
         condition: service_healthy
+      redis:
+        condition: service_started
   workoutservice:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -131,6 +151,7 @@ services:
       - ASPNETCORE_HTTPS_PORTS=8081
       - ConnectionStrings__cs=Server=sqlserver,1433;Database=FitnessWorkout;User Id=sa;Password=SqlServer@123;TrustServerCertificate=True;MultipleActiveResultSets=true
       - RabbitMq__Host=rabbitmq
+      - Redis__ConnectionString=redis:6379
     ports:
       - "4080:8080"
       - "4081:8081"
@@ -142,3 +163,5 @@ services:
     depends_on:
       sqlserver:
         condition: service_healthy
+      redis:
+        condition: service_started

@@ -4,6 +4,7 @@ using FCE.Features.Common.Helpers;
 using FCE.Infrastructure;
 using FluentValidation;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace FCE.Features.Plan.AssignUserPlan
 {
@@ -25,7 +26,10 @@ namespace FCE.Features.Plan.AssignUserPlan
             RuleFor(x => x.userGoal).IsInEnum().WithMessage("Invalid user goal.");
             RuleFor(x => x.IntakeClaorie).GreaterThan(0).WithMessage("Calorie intake must be greater than zero.");
             RuleFor(x => x.WorkoutPlanName).NotEmpty().WithMessage("Workout plan name cannot be empty.");
-            //RuleFor(x => x.NutritionPlanName).NotEmpty().WithMessage("Nutrition plan name cannot be empty.");
+            RuleFor(x => x.WorkoutPlanId).GreaterThan(0).When(x => x.WorkoutPlanId.HasValue)
+                .WithMessage("Workout plan ID must be greater than zero.");
+            RuleFor(x => x.NutritionPlanName).NotEmpty().WithMessage("Nutrition plan name cannot be empty.");
+            RuleFor(x => x.NutritionPlanId).NotEmpty().WithMessage("Nutrition plan ID cannot be empty.");
         }
     }
     public class AssignUserPlanCommandHandler : IRequestHandler<SetUserPlanCommand, RequestResult<int>>
@@ -39,6 +43,16 @@ namespace FCE.Features.Plan.AssignUserPlan
 
         public async Task<RequestResult<int>> Handle(SetUserPlanCommand request, CancellationToken cancellationToken)
         {
+            var activePlans = await _userPlanRepo
+                .Get(x => x.userId == request.userId && x.IsActive)
+                .ToListAsync(cancellationToken);
+
+            foreach (var activePlan in activePlans)
+            {
+                activePlan.Deactivate();
+                _userPlanRepo.Update(activePlan);
+            }
+
             var plan = UserAssignedPlan
                  .Create(
                  request.userId,
@@ -48,7 +62,7 @@ namespace FCE.Features.Plan.AssignUserPlan
                  request.WorkoutPlanId,
                  request.NutritionPlanName,
                  request.NutritionPlanId);
-            // TODO: Check if the user already has an active plan and handle accordingly (e.g., deactivate the old plan, or return an error).
+
             _userPlanRepo.Add(plan);
             await _userPlanRepo.SaveChangesAsync(cancellationToken);
 

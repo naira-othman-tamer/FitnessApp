@@ -1,7 +1,9 @@
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using ContractMessages.UserMetrics;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.IdentityModel.Tokens;
 using NutritionService.Data;
 using NutritionService.Infrastructure;
@@ -24,6 +26,11 @@ public static class NutritionInfrastructureExtensions
         services.AddScoped(typeof(IUnitOfWork<NutritionDbContext>), typeof(UnitOfWork<NutritionDbContext>));
         services.AddScoped<INutritionDataSeeder, NutritionDataSeeder>();
         services.AddScoped<IFceClient, FceClient>();
+        services.AddStackExchangeRedisCache(options =>
+        {
+            options.Configuration = configuration["Redis:ConnectionString"] ?? "localhost:6379";
+            options.InstanceName = "FitnessApp:";
+        });
 
         services.AddMassTransit(x =>
         {
@@ -59,6 +66,33 @@ public static class NutritionInfrastructureExtensions
                 ValidAudience = jwt.Audience,
                 ValidateLifetime = true,
                 ClockSkew = TimeSpan.Zero
+            };
+            options.Events = new JwtBearerEvents
+            {
+                OnTokenValidated = async context =>
+                {
+                    var jti = context.Principal?.FindFirst(JwtRegisteredClaimNames.Jti)?.Value
+                              ?? context.Principal?.FindFirst("jti")?.Value;
+
+                    if (string.IsNullOrWhiteSpace(jti))
+                    {
+                        context.Fail("Token does not include a JWT ID.");
+                        return;
+                    }
+
+                    try
+                    {
+                        var cache = context.HttpContext.RequestServices.GetRequiredService<IDistributedCache>();
+                        if (await cache.GetStringAsync($"auth:revoked:{jti}", context.HttpContext.RequestAborted) is not null)
+                        {
+                            context.Fail("Token has been revoked.");
+                        }
+                    }
+                    catch
+                    {
+                        context.Fail("Token revocation check is unavailable.");
+                    }
+                }
             };
         });
         services.AddAuthorization();

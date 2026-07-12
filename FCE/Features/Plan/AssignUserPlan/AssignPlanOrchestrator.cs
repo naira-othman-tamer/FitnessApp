@@ -42,6 +42,10 @@ namespace FCE.Features.Plan.AssignUserPlan
             {
                 return RequestResult<bool>.Failure(stats.Message ?? "Failed to retrieve user stats.", stats.requestErrorCode);
             }
+            if (stats.Data is null)
+            {
+                return RequestResult<bool>.Failure("User stats response did not include data.", RequestErrorCode.UserStatsNotFound);
+            }
 
             var metrics = await _mediator
                 .Send(new GetUserMetricsQuery(request.userId), cancellationToken);
@@ -49,6 +53,10 @@ namespace FCE.Features.Plan.AssignUserPlan
             if (!metrics.IsSuccess)
             {
                 return RequestResult<bool>.Failure(metrics.Message ?? "Failed to retrieve user metrics.", metrics.requestErrorCode);
+            }
+            if (metrics.Data is null)
+            {
+                return RequestResult<bool>.Failure("User metrics response did not include data.", RequestErrorCode.GetUserMetricsFailed);
             }
             #region WorkoutPlanRequestClient
 

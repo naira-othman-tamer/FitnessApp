@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WorkoutService.Domain.Enums;
 using WorkoutService.Features.Common.Helpers;
@@ -60,11 +59,21 @@ namespace WorkoutService.Features.Workouts.GetWorkoutById
     {
         public static void MapGetWorkoutByIdEndpoint(this IEndpointRouteBuilder builder)
         {
-            builder.MapGet("/{workoutId}", async ([FromQuery] int WorkoutId,
-               [FromServices] IMediator mediator) =>
+            builder.MapGet("/{workoutId}", async (int workoutId,
+               IMediator mediator) =>
             {
                 var userResult = await mediator.Send(new GetWorkoutByIdQuery
-                    (WorkoutId));
+                    (workoutId));
+                if (!userResult.IsSuccess)
+                {
+                    return userResult.requestErrorCode switch
+                    {
+                        RequestErrorCode.NotFound => Results.NotFound(userResult.Message),
+                        RequestErrorCode.ValidationError => Results.BadRequest(userResult.Message),
+                        _ => Results.Problem(userResult.Message)
+                    };
+                }
+
                 return Results.Ok(userResult.Data);
             });
         }

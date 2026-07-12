@@ -1,10 +1,9 @@
-using System.Text;
+using System.IdentityModel.Tokens.Jwt;
 using AuthenticationService.Data;
 using AuthenticationService.Domain.Entities;
 using AuthenticationService.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
 using Repository.Layer;
 using Repository.Layer.Interfaces;
 
@@ -40,7 +39,11 @@ public static class AuthenticationInfrastructureExtensions
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IOtpNotificationService, LoggingOtpNotificationService>();
         services.AddScoped<IProfileLifecyclePublisher, LoggingProfileLifecyclePublisher>();
-        services.AddDistributedMemoryCache();
+        services.AddStackExchangeRedisCache(options =>
+        {
+            options.Configuration = configuration["Redis:ConnectionString"] ?? "localhost:6379";
+            options.InstanceName = "FitnessApp:";
+        });
         services.AddScoped<IAccountStateCache, AccountStateCache>();
         services.AddScoped<IAccessTokenRevocationStore, AccessTokenRevocationStore>();
         services.AddScoped<IAuthenticationDataSeeder, AuthenticationDataSeeder>();
@@ -53,12 +56,27 @@ public static class AuthenticationInfrastructureExtensions
                 {
                     OnTokenValidated = async context =>
                     {
-                        var jti = context.Principal?.FindFirst("jti")?.Value;
-                        if (jti is not null && await context.HttpContext.RequestServices
-                                .GetRequiredService<IAccessTokenRevocationStore>()
-                                .IsRevokedAsync(jti, context.HttpContext.RequestAborted))
+                        var jti = context.Principal?.FindFirst(JwtRegisteredClaimNames.Jti)?.Value
+                                  ?? context.Principal?.FindFirst("jti")?.Value;
+
+                        if (string.IsNullOrWhiteSpace(jti))
                         {
-                            context.Fail("Token has been revoked.");
+                            context.Fail("Token does not include a JWT ID.");
+                            return;
+                        }
+
+                        try
+                        {
+                            if (await context.HttpContext.RequestServices
+                                    .GetRequiredService<IAccessTokenRevocationStore>()
+                                    .IsRevokedAsync(jti, context.HttpContext.RequestAborted))
+                            {
+                                context.Fail("Token has been revoked.");
+                            }
+                        }
+                        catch
+                        {
+                            context.Fail("Token revocation check is unavailable.");
                         }
                     }
                 };

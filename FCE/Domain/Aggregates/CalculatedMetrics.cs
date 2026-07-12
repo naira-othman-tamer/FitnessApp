@@ -17,6 +17,15 @@ namespace FCE.Domain.Aggregates
         public BMRRange BMRRange { get; private set; }
         private CalculatedMetrics() { }
 
+        public void UpdateFrom(CalculatedMetrics metrics)
+        {
+            BMR = metrics.BMR;
+            TDEE = metrics.TDEE;
+            CalorieTarget = metrics.CalorieTarget;
+            BMRRange = metrics.BMRRange;
+            BMRStatus = metrics.BMRStatus;
+        }
+
         public static CalculatedMetrics Calculate(UserFitnessStats stats)
         {
             var bmr = CalculateBmr(stats.PhysicalStats);
@@ -100,8 +109,7 @@ namespace FCE.Domain.Aggregates
             builder.ToTable("CalculatedMetrics");
 
             builder.HasKey(x => x.Id);
-            // TODO: Bring back the unique index on UserId if we want to enforce one current snapshot per user
-            //builder.HasIndex(x => x.UserId).IsUnique(); // upsert key — one current snapshot per user
+            builder.HasIndex(x => x.UserId).IsUnique();
 
             builder.Property(x => x.UserId)
                    .IsRequired();
