@@ -5,7 +5,6 @@ using FCE.Features.Common.Helpers;
 using FCE.Infrastructure;
 using FluentValidation;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace FCE.Features.Metrics.GetUserCurrentMetrics
@@ -66,8 +65,8 @@ namespace FCE.Features.Metrics.GetUserCurrentMetrics
     {
         public static void MapGetUserMetricsEndpoint(this IEndpointRouteBuilder builder)
         {
-            builder.MapGet("/{userId}", async ([FromQuery] Guid userId,
-               [FromServices] IMediator mediator) =>
+            builder.MapGet("/{userId}", async (Guid userId,
+               IMediator mediator) =>
             {
                 var userResult = await mediator.Send(new GetUserMetricsQuery(userId));
                 if (!userResult.IsSuccess)

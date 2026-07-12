@@ -81,7 +81,8 @@ namespace WorkoutService.Features.WorkoutPlan.FilterWorkoutPlans
                 .ToPaginatedAsync(request.PageIndex, request.PageSize, cancellationToken);
 
             var result = new PaginatedFilterPlansResultDto(request.PageIndex, request.PageSize, paginatedResult.Data);
-            if (paginatedResult.Data.Count == 0) {
+            if (paginatedResult.Data.Count == 0)
+            {
                 return RequestResult<PaginatedFilterPlansResultDto>.Failure("No workout plans found for the given filters.", RequestErrorCode.NotFound);
             }
             return RequestResult<PaginatedFilterPlansResultDto>.Success(result);
@@ -125,7 +126,17 @@ namespace WorkoutService.Features.WorkoutPlan.FilterWorkoutPlans
                     Goal,
                     WorkoutDaysPerWeek));
 
-                return;
+                if (!Plans.IsSuccess)
+                {
+                    return Plans.requestErrorCode switch
+                    {
+                        RequestErrorCode.NotFound => Results.NotFound(Plans.Message),
+                        RequestErrorCode.ValidationError => Results.BadRequest(Plans.Message),
+                        _ => Results.Problem(Plans.Message)
+                    };
+                }
+
+                return Results.Ok(Plans.Data);
             });
         }
     }

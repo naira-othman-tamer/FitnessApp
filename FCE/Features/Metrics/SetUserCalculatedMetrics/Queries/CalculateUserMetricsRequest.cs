@@ -50,6 +50,11 @@ namespace FCE.Features.Metrics.SetUserCalculatedMetrics.Queries
                     
                 }).FirstOrDefaultAsync(cancellationToken);
 
+            if (stats is null)
+            {
+                return RequestResult<CalculatedMetrics>.Failure("User stats not found.", RequestErrorCode.UserStatsNotFound);
+            }
+
             var metrics = CalculatedMetrics
                 .Calculate(request.userId,stats.PhysicalStats,stats.activityLevel,stats.goal,stats.PhysicalStats.Gender);
 

@@ -8,7 +8,7 @@ namespace FCE.Features.Plan.GetActiveAssignedUserPlan
 {
     public record GetActiveUserPlanQuery(Guid userId) : IRequest<RequestResult<ActivePlanDto>>;
 
-    public record ActivePlanDto(int planId , string WorkoutPlan="" , string NutritionPlan ="");
+    public record ActivePlanDto(int planId , string WorkoutPlan = "" , string NutritionPlan = "");
 
     public class GetActiveUserPlanQueryHandler : IRequestHandler<GetActiveUserPlanQuery, RequestResult<ActivePlanDto>>
     {
@@ -26,9 +26,14 @@ namespace FCE.Features.Plan.GetActiveAssignedUserPlan
                 .Select(p => new ActivePlanDto
                 (
                     p.Id,
-                    p.WorkoutPlan,
-                    p.NutritionPlan
+                    p.WorkoutPlan ?? string.Empty,
+                    p.NutritionPlan ?? string.Empty
                  )).FirstOrDefaultAsync(cancellationToken);
+
+            if (plan is null)
+            {
+                return RequestResult<ActivePlanDto>.Failure("No active plan found for this user.", RequestErrorCode.NotFound);
+            }
 
             return RequestResult<ActivePlanDto>.Success(plan);
         }
@@ -44,7 +49,12 @@ namespace FCE.Features.Plan.GetActiveAssignedUserPlan
                ) =>
             {
                 var userPlan = await mediator.Send(new GetActiveUserPlanQuery(userID));
-                return Results.Ok(userPlan);
+                if (!userPlan.IsSuccess)
+                {
+                    return Results.Problem(userPlan.Message, statusCode: userPlan.requestErrorCode == RequestErrorCode.NotFound ? 404 : 400);
+                }
+
+                return Results.Ok(userPlan.Data);
             });
         }
 
