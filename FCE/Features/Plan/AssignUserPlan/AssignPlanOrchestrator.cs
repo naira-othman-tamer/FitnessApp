@@ -50,6 +50,19 @@ namespace FCE.Features.Plan.AssignUserPlan
             {
                 return RequestResult<bool>.Failure(metrics.Message ?? "Failed to retrieve user metrics.", metrics.requestErrorCode);
             }
+
+            var HasUserActivePlan = await _mediator.Send(new CheckUserActivePlanQuery(request.userId), cancellationToken);
+            if (HasUserActivePlan.IsSuccess)
+            {
+                //1- Get Current PlanId
+                //2- Set Current Plan to History
+                //3- InActive Current Plan
+                //var setPlanHistoryResult = await _mediator.Send(new SetUserPlanHistoryCommand(request.userId), cancellationToken);
+                //if (!setPlanHistoryResult.IsSuccess)
+                //{
+                //    return RequestResult<bool>.Failure(setPlanHistoryResult.Message ?? "Failed to set user plan history.", setPlanHistoryResult.requestErrorCode);
+                //}
+            }
             #region WorkoutPlanRequestClient
 
             var workoutResponse = await _workoutPlanClient.GetResponse<IGetWorkoutPlanResponse>(

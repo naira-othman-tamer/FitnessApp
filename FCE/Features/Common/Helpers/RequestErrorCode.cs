@@ -13,6 +13,7 @@
         UserStatsNotFound,
         WeightUpdateFailed,
         GetUserMetricsFailed,
-        BioMetricsResetFailed
+        BioMetricsResetFailed,
+        UserMetricsNotFound
     }
 }

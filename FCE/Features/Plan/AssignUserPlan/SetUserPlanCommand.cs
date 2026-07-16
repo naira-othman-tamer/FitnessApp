@@ -25,7 +25,7 @@ namespace FCE.Features.Plan.AssignUserPlan
             RuleFor(x => x.userGoal).IsInEnum().WithMessage("Invalid user goal.");
             RuleFor(x => x.IntakeClaorie).GreaterThan(0).WithMessage("Calorie intake must be greater than zero.");
             RuleFor(x => x.WorkoutPlanName).NotEmpty().WithMessage("Workout plan name cannot be empty.");
-            //RuleFor(x => x.NutritionPlanName).NotEmpty().WithMessage("Nutrition plan name cannot be empty.");
+            RuleFor(x => x.NutritionPlanName).NotEmpty().WithMessage("Nutrition plan name cannot be empty.");
         }
     }
     public class AssignUserPlanCommandHandler : IRequestHandler<SetUserPlanCommand, RequestResult<int>>

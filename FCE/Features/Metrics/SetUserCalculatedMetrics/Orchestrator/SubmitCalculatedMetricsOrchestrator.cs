@@ -36,6 +36,14 @@ namespace FCE.Features.Metrics.SetUserCalculatedMetrics.Orchestrator
                 return RequestResult<bool>
                     .Failure(metrics.Message?? "Failed to calculate user metrics.", metrics.requestErrorCode?? RequestErrorCode.CalculationFailed);
             }
+        
+            var IsuserHasMetrics = await _mediator.Send(new CheckUserHasMetricsQuery(request.userId), cancellationToken);
+            if (!IsuserHasMetrics.IsSuccess)
+            {
+                return RequestResult<bool>
+                    .Failure(IsuserHasMetrics.Message?? "Failed to check user metrics.",
+                    IsuserHasMetrics.requestErrorCode?? RequestErrorCode.CalculationFailed);
+            }
             var setResult = await _mediator.Send(new SetMetricsCommand(metrics.Data!), cancellationToken);
             if (!setResult.IsSuccess)
             {

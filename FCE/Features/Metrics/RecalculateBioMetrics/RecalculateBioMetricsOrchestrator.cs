@@ -102,7 +102,7 @@ namespace FCE.Features.Metrics.RecalculateBioMetrics
                 }
                 return Results.Ok(result.Data);
             })
-            .WithDisplayName("Recalculate Bio Metrics");
+            .WithName("RecalculateBioMetrics");
         }
     }
 
