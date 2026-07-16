@@ -13,6 +13,8 @@ namespace FitnessApp
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddReverseProxy()
+                .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
 
             var app = builder.Build();
 
@@ -23,12 +25,11 @@ namespace FitnessApp
                 app.UseSwaggerUI();
             }
 
-            app.UseHttpsRedirection();
-
             app.UseAuthorization();
 
-
+            app.MapGet("/health", () => Results.Ok(new { status = "Healthy", service = "FitnessApp Gateway" }));
             app.MapControllers();
+            app.MapReverseProxy();
 
             app.Run();
         }
