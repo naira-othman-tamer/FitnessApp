@@ -33,7 +33,6 @@
 
   <ItemGroup>
     <Folder Include="Features\GetUserDashboard\" />
-    <Folder Include="Features\Measurments\GetMeasurementHistoryForCurrentUser\" />
     <Folder Include="Integrations\" />
   </ItemGroup>
 

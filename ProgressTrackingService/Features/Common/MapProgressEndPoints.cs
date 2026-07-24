@@ -4,7 +4,9 @@
     {
         public static IEndpointRouteBuilder MapProgressServiceEndPoints(this IEndpointRouteBuilder builder)
         {
-            var planGroup = builder.MapGroup("plan");
+            var MeasurmentsGroup = builder.MapGroup("BodyMeasurment");
+
+            var ProgressGoalGroup = builder.MapGroup("ProgressTarget");
           
 
             return builder;
