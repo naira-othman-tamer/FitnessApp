@@ -2,5 +2,5 @@
 
 namespace ProgressTrackingService.Features.Common.Helpers
 {
-    public interface ICommand<TResponse> : IRequest<TResponse>;
+    public interface ICommandRequest<TResponse> : IRequest<TResponse>;
 }

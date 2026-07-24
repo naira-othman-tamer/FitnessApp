@@ -5,9 +5,9 @@ namespace ProgressTrackingService.Domain.Entities
 {
     public class BodyMeasurements : BaseEntity
     {
-        public Guid UserId { get; }//(Guid, indexed)
-        public double WeightKg { get; set; }//(required)
-        public double? BodyFatPercent { get; set; }//(optional)
+        public Guid UserId { get; set; }
+        public double WeightKg { get; set; }
+        public double? BodyFatPercent { get; set; }
         public string? Notes { get; set; }
     }
 
@@ -31,10 +31,9 @@ namespace ProgressTrackingService.Domain.Entities
 
             builder.Property(x => x.CreatedAt).IsRequired();
 
-            builder.Property(x => x.CreatedAt).IsRequired();
             builder.Property(x => x.IsDeleted).HasDefaultValue(false);
 
-            builder.HasIndex(x => new { x.UserId, x.CreatedAt });
+            builder.HasIndex(x => new { x.UserId, x.CreatedAt});
 
             builder.HasQueryFilter(x => !x.IsDeleted);
         }

@@ -5,10 +5,10 @@ namespace ProgressTrackingService.Domain.Entities;
 
 public class ProgressGoals : BaseEntity
 {
-   public Guid UserId { get; set; }//(Guid, unique — one active goal)
-   public double? TargetWeightKg { get; set; }//(optional)
-   public DateTime? TargetDate { get; set; }//(optional)
-   public DateTime? CompletedAt { get; set; }// (optional)
+   public Guid UserId { get; set; }
+   public double? TargetWeightKg { get; set; }
+   public DateTime? TargetDate { get; set; }
+   public DateTime? CompletedAt { get; set; }
 }
 
 public class ProgressGoalsConfiguration : IEntityTypeConfiguration<ProgressGoals>
