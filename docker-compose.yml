@@ -34,3 +34,8 @@ services:
     build:
       context: .
       dockerfile: WorkoutService/Dockerfile
+  notificationservice:
+    image: ${DOCKER_REGISTRY-}notificationservice
+    build:
+      context: .
+      dockerfile: NotificationService/Dockerfile

@@ -1,4 +1,7 @@
-﻿using ContractMessages.NutritionPlanMatching;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using ContractMessages.Notifications;
+using ContractMessages.NutritionPlanMatching;
 using ContractMessages.WorkoutPlanMatching;
 using FCE.Features.Common.Helpers;
 using FCE.Features.Metrics.GetUserCurrentMetrics;
@@ -10,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FCE.Features.Plan.AssignUserPlan
 {
-    public record AssignPlanOrchestrator(Guid userId) : IRequest<RequestResult<bool>>;
+    public record AssignPlanOrchestrator(Guid userId, string? Email = null) : IRequest<RequestResult<bool>>;
 
     public class AssignPlanOrchestratorValidator : AbstractValidator<AssignPlanOrchestrator>
     {
@@ -25,12 +28,18 @@ namespace FCE.Features.Plan.AssignUserPlan
         private readonly IMediator _mediator;
         private readonly IRequestClient<IGetWorkoutPlanRequest> _workoutPlanClient;
         private readonly IRequestClient<IGetNutritionPlanRequest> _nutritionPlanClient;
+        private readonly IPublishEndpoint _publishEndpoint;
 
-        public AssignPlanOrchestratorHandler(IMediator mediator, IRequestClient<IGetWorkoutPlanRequest> workoutPlanClient, IRequestClient<IGetNutritionPlanRequest> nutritionPlanClient)
+        public AssignPlanOrchestratorHandler(
+            IMediator mediator,
+            IRequestClient<IGetWorkoutPlanRequest> workoutPlanClient,
+            IRequestClient<IGetNutritionPlanRequest> nutritionPlanClient,
+            IPublishEndpoint publishEndpoint)
         {
             _mediator = mediator;
             _workoutPlanClient = workoutPlanClient;
             _nutritionPlanClient = nutritionPlanClient;
+            _publishEndpoint = publishEndpoint;
         }
 
         public async Task<RequestResult<bool>> Handle(AssignPlanOrchestrator request, CancellationToken cancellationToken)
@@ -42,6 +51,7 @@ namespace FCE.Features.Plan.AssignUserPlan
             {
                 return RequestResult<bool>.Failure(stats.Message ?? "Failed to retrieve user stats.", stats.requestErrorCode);
             }
+
             if (stats.Data is null)
             {
                 return RequestResult<bool>.Failure("User stats response did not include data.", RequestErrorCode.UserStatsNotFound);
@@ -54,30 +64,27 @@ namespace FCE.Features.Plan.AssignUserPlan
             {
                 return RequestResult<bool>.Failure(metrics.Message ?? "Failed to retrieve user metrics.", metrics.requestErrorCode);
             }
+
             if (metrics.Data is null)
             {
                 return RequestResult<bool>.Failure("User metrics response did not include data.", RequestErrorCode.GetUserMetricsFailed);
             }
-            #region WorkoutPlanRequestClient
 
             var workoutResponse = await _workoutPlanClient.GetResponse<IGetWorkoutPlanResponse>(
-            new
-            {
-                Goal = stats.Data.userGoal,
-                WorkoutDaysPerWeek = stats.Data.WorkoutDays
-            },
-            cancellationToken
-        );
+                new
+                {
+                    Goal = stats.Data.userGoal,
+                    WorkoutDaysPerWeek = stats.Data.WorkoutDays
+                },
+                cancellationToken);
 
             if (!workoutResponse.Message.IsSuccess)
             {
-                return RequestResult<bool>.Failure(
-                                          $"Workout plan matching failed: {workoutResponse.Message.ErrorCode}");
+                return RequestResult<bool>.Failure($"Workout plan matching failed: {workoutResponse.Message.ErrorCode}");
             }
 
             string workoutPlanName = workoutResponse.Message.WorkoutPlanName;
-            int workoutPlanId = workoutResponse.Message.WorkoutPlanId; 
-            #endregion
+            int workoutPlanId = workoutResponse.Message.WorkoutPlanId;
 
             var nutritionResponse = await _nutritionPlanClient.GetResponse<IGetNutritionPlanResponse>(
                 new
@@ -85,29 +92,59 @@ namespace FCE.Features.Plan.AssignUserPlan
                     Goal = stats.Data.userGoal,
                     CalorieTarget = metrics.Data.CalorieTarget
                 },
-                cancellationToken
-            );
+                cancellationToken);
+
             if (!nutritionResponse.Message.IsSuccess)
             {
-                return RequestResult<bool>.Failure(
-                                          $"Nutrition plan matching failed: {nutritionResponse.Message.ErrorCode}");
+                return RequestResult<bool>.Failure($"Nutrition plan matching failed: {nutritionResponse.Message.ErrorCode}");
             }
+
             string nutritionPlanName = nutritionResponse.Message.NutritionPlanName;
             Guid nutritionPlanId = nutritionResponse.Message.NutritionPlanId;
 
             var setPlanResult = await _mediator.Send(new SetUserPlanCommand
                 (
-                request.userId,
-                stats.Data.userGoal,
-                metrics.Data.CalorieTarget,
-                workoutPlanName,
-                workoutPlanId,
-                nutritionPlanName,
-                nutritionPlanId
+                    request.userId,
+                    stats.Data.userGoal,
+                    metrics.Data.CalorieTarget,
+                    workoutPlanName,
+                    workoutPlanId,
+                    nutritionPlanName,
+                    nutritionPlanId
                 ), cancellationToken);
 
             if (!setPlanResult.IsSuccess)
+            {
                 return RequestResult<bool>.Failure(setPlanResult.Message ?? "Failed to assign plan.", setPlanResult.requestErrorCode);
+            }
+
+            if (!string.IsNullOrWhiteSpace(request.Email))
+            {
+                var replacedActivePlan = setPlanResult.Data?.ReplacedActivePlan == true;
+                await _publishEndpoint.Publish<IEmailNotificationRequested>(new
+                {
+                    NotificationId = Guid.NewGuid(),
+                    To = request.Email,
+                    Subject = replacedActivePlan
+                        ? "Your fitness plan has been updated"
+                        : "Your fitness plan is ready",
+                    Body = replacedActivePlan
+                        ? $"""
+                           <p>Your previous active plan was replaced with a new personalized plan.</p>
+                           <p><strong>Workout plan:</strong> {workoutPlanName}</p>
+                           <p><strong>Nutrition plan:</strong> {nutritionPlanName}</p>
+                           <p>Open the app to continue with your updated plan.</p>
+                           """
+                        : $"""
+                           <p>Your personalized fitness plan is ready.</p>
+                            <p><strong>Workout plan:</strong> {workoutPlanName}</p>
+                            <p><strong>Nutrition plan:</strong> {nutritionPlanName}</p>
+                            <p>Open the app to start following your new plan.</p>
+                           """,
+                    IsHtml = true,
+                    RequestedAtUtc = DateTime.UtcNow
+                }, cancellationToken);
+            }
 
             return RequestResult<bool>.Success(true);
         }
@@ -119,9 +156,14 @@ namespace FCE.Features.Plan.AssignUserPlan
         {
             builder.MapPost("", async (
                 [FromBody] AssignPlanOrchestrator request,
+                ClaimsPrincipal principal,
                 [FromServices] IMediator mediator) =>
             {
-                var result = await mediator.Send(request);
+                var email = principal.FindFirstValue(ClaimTypes.Email)
+                    ?? principal.FindFirstValue(JwtRegisteredClaimNames.Email)
+                    ?? request.Email;
+
+                var result = await mediator.Send(request with { Email = email });
                 return result.IsSuccess
                              ? Results.Ok(result.Data)
                              : Results.BadRequest(result.Data);

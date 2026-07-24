@@ -49,6 +49,8 @@ services:
         condition: service_started
       progresstrackingservice:
         condition: service_started
+      notificationservice:
+        condition: service_started
   fce:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -81,6 +83,7 @@ services:
       - ASPNETCORE_HTTPS_PORTS=8081
       - ConnectionStrings__AuthenticationDatabase=Server=sqlserver,1433;Database=FitnessAuthentication;User Id=sa;Password=SqlServer@123;TrustServerCertificate=True;MultipleActiveResultSets=true
       - Redis__ConnectionString=redis:6379
+      - RabbitMq__Host=rabbitmq
     ports:
       - "8082:8080"
       - "8083:8081"    
@@ -94,6 +97,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_started
+      rabbitmq:
+        condition: service_started
   profileservice:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -101,6 +106,7 @@ services:
       - ASPNETCORE_HTTPS_PORTS=8081
       - ConnectionStrings__ProfileDatabase=Server=sqlserver,1433;Database=profileservice;User Id=sa;Password=SqlServer@123;TrustServerCertificate=True;MultipleActiveResultSets=true
       - Redis__ConnectionString=redis:6379
+      - RabbitMq__Host=rabbitmq
     ports:
       - "3080:8080"
       - "3081:8081"    
@@ -113,6 +119,8 @@ services:
       sqlserver:
         condition: service_healthy
       redis:
+        condition: service_started
+      rabbitmq:
         condition: service_started
   nutritionservice:
     environment:
@@ -177,4 +185,23 @@ services:
       sqlserver:
         condition: service_healthy
       redis:
+        condition: service_started
+      rabbitmq:
+        condition: service_started
+  notificationservice:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - RabbitMq__Host=rabbitmq
+    ports:
+      - "10080:8080"
+      - "10081:8081"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    depends_on:
+      rabbitmq:
         condition: service_started

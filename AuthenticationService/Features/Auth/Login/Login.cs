@@ -2,6 +2,8 @@ using AuthenticationService.Common.StandardizedResponse;
 using AuthenticationService.Data;
 using AuthenticationService.Domain.Entities;
 using AuthenticationService.Infrastructure;
+using ContractMessages.Notifications;
+using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -21,12 +23,15 @@ public sealed class LoginHandler(
     IUnitOfWork<AuthenticationDbContext> unitOfWork,
     ITokenService tokens,
     IAccountStateCache accountStateCache,
+    IPublishEndpoint publishEndpoint,
     IOptions<JwtOptions> options) : IRequestHandler<LoginCommand, OperationResult<LoginResponse>>
 {
     public async Task<OperationResult<LoginResponse>> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
         var email = request.Email.Trim().ToLowerInvariant();
         var user = await userManager.FindByEmailAsync(email);
+        var wasAlreadyLocked = user?.IsLockedOut == true;
+
         if (user is not null && user.AccessFailedCount > 0)
         {
             var windowStart = DateTime.UtcNow.AddMinutes(-15);
@@ -35,6 +40,7 @@ public sealed class LoginHandler(
             if (!hasRecentFailure)
                 await userManager.ResetAccessFailedCountAsync(user);
         }
+
         var signIn = user is null
             ? SignInResult.Failed
             : await signInManager.CheckPasswordSignInAsync(user, request.Password, lockoutOnFailure: true);
@@ -54,13 +60,31 @@ public sealed class LoginHandler(
             user.LockedUntil = user.LockoutEnd?.UtcDateTime;
             await userManager.UpdateAsync(user);
             await unitOfWork.CompleteAsync();
-            return new OperationResult<LoginResponse>(ApiStatusCode.Locked, "AUTH_ACCOUNT_LOCKED", "الحساب مغلق مؤقتاً");
+
+            if (!wasAlreadyLocked && !string.IsNullOrWhiteSpace(user.Email))
+            {
+                await publishEndpoint.Publish<IEmailNotificationRequested>(new
+                {
+                    NotificationId = Guid.NewGuid(),
+                    To = user.Email,
+                    Subject = "Your account was temporarily locked",
+                    Body = $"""
+                            <p>Your Fitness App account was temporarily locked after multiple failed login attempts.</p>
+                            <p><strong>IP address:</strong> {request.IpAddress}</p>
+                            <p>If this was not you, reset your password immediately.</p>
+                            """,
+                    IsHtml = true,
+                    RequestedAtUtc = DateTime.UtcNow
+                }, cancellationToken);
+            }
+
+            return new OperationResult<LoginResponse>(ApiStatusCode.Locked, "AUTH_ACCOUNT_LOCKED", "Account is temporarily locked.");
         }
 
         if (!signIn.Succeeded || user is null)
         {
             await unitOfWork.CompleteAsync();
-            return OperationResultFactory.UnAuthorized<LoginResponse>("Invalid email or password.", "البريد الإلكتروني أو كلمة المرور غير صحيحة");
+            return OperationResultFactory.UnAuthorized<LoginResponse>("Invalid email or password.", "Invalid email or password.");
         }
 
         user.IsLockedOut = false;

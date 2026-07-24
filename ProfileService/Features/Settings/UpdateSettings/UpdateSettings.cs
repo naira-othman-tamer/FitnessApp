@@ -1,3 +1,5 @@
+using ContractMessages.Notifications;
+using MassTransit;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ProfileService.Data;
@@ -14,7 +16,8 @@ public sealed record UpdateSettingsCommand(
 
 public sealed class UpdateSettingsHandler(
     IClaimsManager claims,
-    IUnitOfWork<ProfileDbContext> unitOfWork) : IRequestHandler<UpdateSettingsCommand, OperationResult<SettingsResponse>>
+    IUnitOfWork<ProfileDbContext> unitOfWork,
+    IPublishEndpoint publishEndpoint) : IRequestHandler<UpdateSettingsCommand, OperationResult<SettingsResponse>>
 {
     public async Task<OperationResult<SettingsResponse>> Handle(UpdateSettingsCommand request, CancellationToken cancellationToken)
     {
@@ -40,6 +43,24 @@ public sealed class UpdateSettingsHandler(
             return OperationResultFactory.BadRequest<SettingsResponse>(validationError, validationError);
 
         await unitOfWork.CompleteAsync();
+
+        if (!string.IsNullOrWhiteSpace(profile.Email) && request.Notifications is not null)
+        {
+            await publishEndpoint.Publish<IEmailNotificationRequested>(new
+            {
+                NotificationId = Guid.NewGuid(),
+                To = profile.Email,
+                Subject = "Your notification settings were updated",
+                Body = $"""
+                        <p>Your Fitness App notification settings were updated.</p>
+                        <p><strong>Email notifications:</strong> {(profile.NotificationSettings.EmailNotifications ? "Enabled" : "Disabled")}</p>
+                        <p><strong>Workout reminders:</strong> {(profile.NotificationSettings.WorkoutReminders ? "Enabled" : "Disabled")}</p>
+                        <p><strong>Meal reminders:</strong> {(profile.NotificationSettings.MealReminders ? "Enabled" : "Disabled")}</p>
+                        """,
+                IsHtml = true,
+                RequestedAtUtc = DateTime.UtcNow
+            }, cancellationToken);
+        }
 
         return OperationResultFactory.Success(new SettingsResponse(
             new UserPreferencesDto(

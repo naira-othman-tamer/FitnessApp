@@ -11,6 +11,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["AuthenticationService/AuthenticationService.csproj", "AuthenticationService/"]
+COPY ["ContractMessages/ContractMessages.csproj", "ContractMessages/"]
 COPY ["AuthenticationService/libs/Base.Repository.dll", "AuthenticationService/libs/"]
 RUN dotnet restore "AuthenticationService/AuthenticationService.csproj"
 COPY . .

@@ -16,7 +16,9 @@ namespace FCE.Features.Plan.AssignUserPlan
         int? WorkoutPlanId,
         string NutritionPlanName,
         Guid? NutritionPlanId
-        ) : ICommandRequest<RequestResult<int>>;
+        ) : ICommandRequest<RequestResult<SetUserPlanResult>>;
+
+    public record SetUserPlanResult(int PlanId, bool ReplacedActivePlan);
 
     public class SetUserPlanCommandValidator : AbstractValidator<SetUserPlanCommand>
     {
@@ -32,7 +34,7 @@ namespace FCE.Features.Plan.AssignUserPlan
             RuleFor(x => x.NutritionPlanId).NotEmpty().WithMessage("Nutrition plan ID cannot be empty.");
         }
     }
-    public class AssignUserPlanCommandHandler : IRequestHandler<SetUserPlanCommand, RequestResult<int>>
+    public class AssignUserPlanCommandHandler : IRequestHandler<SetUserPlanCommand, RequestResult<SetUserPlanResult>>
     {
         private readonly GeneralRepository<UserAssignedPlan> _userPlanRepo;
 
@@ -41,11 +43,12 @@ namespace FCE.Features.Plan.AssignUserPlan
             _userPlanRepo = userPlanRepo;
         }
 
-        public async Task<RequestResult<int>> Handle(SetUserPlanCommand request, CancellationToken cancellationToken)
+        public async Task<RequestResult<SetUserPlanResult>> Handle(SetUserPlanCommand request, CancellationToken cancellationToken)
         {
             var activePlans = await _userPlanRepo
                 .Get(x => x.userId == request.userId && x.IsActive)
                 .ToListAsync(cancellationToken);
+            var replacedActivePlan = activePlans.Count > 0;
 
             foreach (var activePlan in activePlans)
             {
@@ -66,7 +69,7 @@ namespace FCE.Features.Plan.AssignUserPlan
             _userPlanRepo.Add(plan);
             await _userPlanRepo.SaveChangesAsync(cancellationToken);
 
-            return RequestResult<int>.Success(plan.Id);
+            return RequestResult<SetUserPlanResult>.Success(new SetUserPlanResult(plan.Id, replacedActivePlan));
         }
     }
 }

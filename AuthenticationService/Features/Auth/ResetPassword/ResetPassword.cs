@@ -1,6 +1,8 @@
 using AuthenticationService.Common.StandardizedResponse;
+using ContractMessages.Notifications;
 using AuthenticationService.Domain.Entities;
 using AuthenticationService.Infrastructure;
+using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -15,7 +17,8 @@ public sealed record ResetPasswordResponse(bool PasswordChanged);
 public sealed class ResetPasswordHandler(
     UserManager<ApplicationUser> userManager,
     ITokenService tokens,
-    IUnitOfWork<Data.AuthenticationDbContext> unitOfWork)
+    IUnitOfWork<Data.AuthenticationDbContext> unitOfWork,
+    IPublishEndpoint publishEndpoint)
     : IRequestHandler<ResetPasswordCommand, OperationResult<ResetPasswordResponse>>
 {
     public async Task<OperationResult<ResetPasswordResponse>> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
@@ -46,6 +49,23 @@ public sealed class ResetPasswordHandler(
             .UpdateWhereAsync(x => x.UserId == user.Id && x.RevokedAt == null,
                 setters => setters.SetProperty(x => x.RevokedAt, DateTime.UtcNow));
         await unitOfWork.CompleteAsync();
+
+        if (!string.IsNullOrWhiteSpace(user.Email))
+        {
+            await publishEndpoint.Publish<IEmailNotificationRequested>(new
+            {
+                NotificationId = Guid.NewGuid(),
+                To = user.Email,
+                Subject = "Your password was changed",
+                Body = """
+                       <p>Your Fitness App password was changed successfully.</p>
+                       <p>If this was not you, reset your password immediately and contact support.</p>
+                       """,
+                IsHtml = true,
+                RequestedAtUtc = DateTime.UtcNow
+            }, cancellationToken);
+        }
+
         return OperationResultFactory.Success(new ResetPasswordResponse(true));
     }
 }

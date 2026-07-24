@@ -2,6 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using AuthenticationService.Data;
 using AuthenticationService.Domain.Entities;
 using AuthenticationService.Infrastructure;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Repository.Layer;
@@ -37,7 +38,9 @@ public static class AuthenticationInfrastructureExtensions
             .AddEntityFrameworkStores<AuthenticationDbContext>()
             .AddDefaultTokenProviders();
         services.AddScoped<ITokenService, TokenService>();
-        services.AddScoped<IOtpNotificationService, LoggingOtpNotificationService>();
+        services.Configure<EmailOptions>(configuration.GetSection(EmailOptions.SectionName));
+        services.AddScoped<IEmailSender, SmtpEmailSender>();
+        services.AddScoped<IOtpNotificationService, OtpEmailNotificationService>();
         services.AddScoped<IProfileLifecyclePublisher, LoggingProfileLifecyclePublisher>();
         services.AddStackExchangeRedisCache(options =>
         {
@@ -47,6 +50,19 @@ public static class AuthenticationInfrastructureExtensions
         services.AddScoped<IAccountStateCache, AccountStateCache>();
         services.AddScoped<IAccessTokenRevocationStore, AccessTokenRevocationStore>();
         services.AddScoped<IAuthenticationDataSeeder, AuthenticationDataSeeder>();
+        services.AddMassTransit(x =>
+        {
+            x.UsingRabbitMq((context, cfg) =>
+            {
+                cfg.Host(configuration["RabbitMq:Host"] ?? "localhost", "/", h =>
+                {
+                    h.Username(configuration["RabbitMq:Username"] ?? "guest");
+                    h.Password(configuration["RabbitMq:Password"] ?? "guest");
+                });
+
+                cfg.ConfigureEndpoints(context);
+            });
+        });
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>

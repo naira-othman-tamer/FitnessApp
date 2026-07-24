@@ -1,5 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.IdentityModel.Tokens;
@@ -29,6 +30,19 @@ public static class ProfileInfrastructureExtensions
         {
             options.Configuration = configuration["Redis:ConnectionString"] ?? "localhost:6379";
             options.InstanceName = "FitnessApp:";
+        });
+        services.AddMassTransit(x =>
+        {
+            x.UsingRabbitMq((context, cfg) =>
+            {
+                cfg.Host(configuration["RabbitMq:Host"] ?? "localhost", "/", h =>
+                {
+                    h.Username(configuration["RabbitMq:Username"] ?? "guest");
+                    h.Password(configuration["RabbitMq:Password"] ?? "guest");
+                });
+
+                cfg.ConfigureEndpoints(context);
+            });
         });
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

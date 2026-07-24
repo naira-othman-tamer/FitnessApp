@@ -8,16 +8,30 @@ public interface IOtpNotificationService
     Task SendPasswordResetOtpAsync(string email, string otp, CancellationToken cancellationToken);
 }
 
-public sealed class LoggingOtpNotificationService(ILogger<LoggingOtpNotificationService> logger, IHostEnvironment environment)
+public sealed class OtpEmailNotificationService(
+    IEmailSender emailSender,
+    ILogger<OtpEmailNotificationService> logger,
+    IHostEnvironment environment)
     : IOtpNotificationService
 {
-    public Task SendPasswordResetOtpAsync(string email, string otp, CancellationToken cancellationToken)
+    public async Task SendPasswordResetOtpAsync(string email, string otp, CancellationToken cancellationToken)
     {
         if (environment.IsDevelopment())
-            logger.LogInformation("Development OTP for {Email}: {Otp}", email, otp);
-        else
-            logger.LogInformation("OTP delivery requested for {Email}", email);
-        return Task.CompletedTask;
+            logger.LogInformation("Development password reset OTP for {Email}: {Otp}", email, otp);
+
+        var body = $"""
+                   <p>Hello,</p>
+                   <p>Your password reset OTP is:</p>
+                   <h2>{otp}</h2>
+                   <p>This code expires in 10 minutes.</p>
+                   <p>If you did not request this reset, please ignore this email.</p>
+                   """;
+
+        await emailSender.SendAsync(
+            new EmailMessage(email, "Fitness App Password Reset OTP", body),
+            cancellationToken);
+
+        logger.LogInformation("Password reset OTP email sent to {Email}", email);
     }
 }
 
