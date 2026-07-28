@@ -29,6 +29,7 @@ public class RemoveCurrentMetricsCommandHandler : IRequestHandler<RemoveCurrentM
         }
 
         _metricsRepo.SoftDelete(CurrentMetrics);
+        await _metricsRepo.SaveChangesAsync(cancellationToken);
 
         return RequestResult<bool>.Success(true);
     }
