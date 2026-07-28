@@ -101,7 +101,11 @@ namespace FCE.Domain.Aggregates
 
             builder.HasKey(x => x.Id);
 
-            builder.HasIndex(x => x.UserId).IsUnique(); // upsert key — one current snapshot per user
+            builder.HasIndex(x => x.UserId)
+                .IsUnique()
+                .HasFilter("[IsDeleted] = 0");
+
+            builder.HasQueryFilter(x => !x.IsDeleted);
 
             builder.Property(x => x.UserId)
                    .IsRequired();

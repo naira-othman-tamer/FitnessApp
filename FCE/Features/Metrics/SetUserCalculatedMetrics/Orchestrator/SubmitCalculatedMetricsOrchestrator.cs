@@ -30,25 +30,40 @@ namespace FCE.Features.Metrics.SetUserCalculatedMetrics.Orchestrator
 
         public async Task<RequestResult<bool>> Handle(SubmitCalculatedMetricsOrchestrator request, CancellationToken cancellationToken)
         {
-            var metrics = await _mediator.Send(new CalculateUserMetricsRequest(request.userId), cancellationToken);
-            if (!metrics.IsSuccess)
+
+            var IsUserHasMetrics = await _mediator.Send(new CheckUserHasMetricsQuery(request.userId), cancellationToken);
+
+            if (IsUserHasMetrics.IsSuccess)
+            {
+                //  Get Current metrics data 
+                //TODO sent message to Progress to store latest message before softDelte
+
+                var removeCurrentMetricResult =await _mediator
+                    .Send(new RemoveCurrentMetricsCommand(request.userId), cancellationToken);
+
+                if (!removeCurrentMetricResult.IsSuccess)
+                {
+                    return RequestResult<bool>
+                           .Failure(removeCurrentMetricResult.Message ?? "Failed to Update current calculatedMetricsResult.",
+                             removeCurrentMetricResult.requestErrorCode ?? RequestErrorCode.Conflict);
+                }
+                 
+            }
+
+            var calculatedMetricsResult = await _mediator
+                                         .Send(new CalculateUserMetricsRequest(request.userId), cancellationToken);
+            if (!calculatedMetricsResult.IsSuccess)
             {
                 return RequestResult<bool>
-                    .Failure(metrics.Message?? "Failed to calculate user metrics.", metrics.requestErrorCode?? RequestErrorCode.CalculationFailed);
+                    .Failure(calculatedMetricsResult.Message?? "Failed to calculate user calculatedMetricsResult.",
+                             calculatedMetricsResult.requestErrorCode?? RequestErrorCode.CalculationFailed);
             }
         
-            var IsuserHasMetrics = await _mediator.Send(new CheckUserHasMetricsQuery(request.userId), cancellationToken);
-            if (!IsuserHasMetrics.IsSuccess)
-            {
-                return RequestResult<bool>
-                    .Failure(IsuserHasMetrics.Message?? "Failed to check user metrics.",
-                    IsuserHasMetrics.requestErrorCode?? RequestErrorCode.CalculationFailed);
-            }
-            var setResult = await _mediator.Send(new SetMetricsCommand(metrics.Data!), cancellationToken);
+            var setResult = await _mediator.Send(new SetMetricsCommand(calculatedMetricsResult.Data!), cancellationToken);
             if (!setResult.IsSuccess)
             {
                 return RequestResult<bool>
-                    .Failure(setResult.Message?? "Failed to set user metrics.", setResult.requestErrorCode?? RequestErrorCode.CalculationFailed);
+                    .Failure(setResult.Message?? "Failed to set user calculatedMetricsResult.", setResult.requestErrorCode?? RequestErrorCode.CalculationFailed);
             }
             return RequestResult<bool>.Success(true);
         }

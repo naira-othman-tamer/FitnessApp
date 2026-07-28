@@ -33,7 +33,9 @@
 
   <ItemGroup>
     <Folder Include="Features\GetUserDashboard\" />
-    <Folder Include="Integrations\" />
+    <Folder Include="Integrations\CalculatedMetricsUpdated\" />
+    <Folder Include="Integrations\WorkoutSessionAbandoned\" />
+    <Folder Include="Integrations\WorkoutSessionCompleted\" />
   </ItemGroup>
 
 </Project>
