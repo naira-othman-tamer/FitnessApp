@@ -1,8 +1,8 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using ProgressTrackingService.Domain.Entities;
 using ProgressTrackingService.Features.Common.Helpers;
 using ProgressTrackingService.Infrastructure;
-using System.Data.Entity;
 
 namespace ProgressTrackingService.Features.Goal.EndCurrentGoal;
 
