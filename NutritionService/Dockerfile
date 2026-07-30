@@ -13,6 +13,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["NutritionService/NutritionService.csproj", "NutritionService/"]
+COPY ["ContractMessages/ContractMessages.csproj", "ContractMessages/"]
 RUN dotnet restore "./NutritionService/NutritionService.csproj"
 COPY . .
 WORKDIR "/src/NutritionService"
