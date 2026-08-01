@@ -1,0 +1,184 @@
+# Portainer deployment compose.
+# Use this file from Portainer, not docker-compose.override.yml.
+#
+# Required Portainer stack environment variables:
+# TAG=latest
+# SQL_HOST=<from credentials.md>
+# SQL_PORT=1433
+# SQL_USER=sa
+# SQL_PASSWORD=<from credentials.md>
+# RABBITMQ_HOST=<from credentials.md>
+# RABBITMQ_USERNAME=<from credentials.md>
+# RABBITMQ_PASSWORD=<from credentials.md>
+# JWT_KEY=<same key for all services, minimum 32 chars>
+# JWT_ISSUER=FitnessApp.AuthenticationService
+# JWT_AUDIENCE=FitnessApp.Services
+# EMAIL_HOST=smtp.gmail.com
+# EMAIL_PORT=587
+# EMAIL_USERNAME=<your email>
+# EMAIL_PASSWORD=<your app password>
+# EMAIL_FROM=<your email>
+
+services:
+  fitnessapp:
+    image: wirosol793/elevateprojects:api-fitness-app-gateway-${TAG:-latest}
+    restart: unless-stopped
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:8080
+      - TZ=Africa/Cairo
+    ports:
+      - "${GATEWAY_PORT:-5080}:8080"
+    depends_on:
+      - authenticationservice
+      - profileservice
+      - nutritionservice
+      - fce
+      - workoutservice
+      - progresstrackingservice
+      - notificationservice
+
+  authenticationservice:
+    image: wirosol793/elevateprojects:api-fitness-app-auth-${TAG:-latest}
+    restart: unless-stopped
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:8080
+      - TZ=Africa/Cairo
+      - ConnectionStrings__AuthenticationDatabase=Server=${SQL_HOST},${SQL_PORT:-1433};Database=FitnessAuthentication;User Id=${SQL_USER:-sa};Password=${SQL_PASSWORD};TrustServerCertificate=True;MultipleActiveResultSets=true
+      - Jwt__Key=${JWT_KEY}
+      - Jwt__Issuer=${JWT_ISSUER:-FitnessApp.AuthenticationService}
+      - Jwt__Audience=${JWT_AUDIENCE:-FitnessApp.Services}
+      - Jwt__AccessTokenMinutes=${JWT_ACCESS_TOKEN_MINUTES:-15}
+      - Jwt__RefreshTokenDays=${JWT_REFRESH_TOKEN_DAYS:-7}
+      - Jwt__ResetTokenMinutes=${JWT_RESET_TOKEN_MINUTES:-10}
+      - Redis__ConnectionString=redis:6379
+      - RabbitMq__Host=${RABBITMQ_HOST}
+      - RabbitMq__Username=${RABBITMQ_USERNAME}
+      - RabbitMq__Password=${RABBITMQ_PASSWORD}
+      - Email__Host=${EMAIL_HOST:-smtp.gmail.com}
+      - Email__Port=${EMAIL_PORT:-587}
+      - Email__UserName=${EMAIL_USERNAME}
+      - Email__Password=${EMAIL_PASSWORD}
+      - Email__FromEmail=${EMAIL_FROM}
+      - Email__FromName=${EMAIL_FROM_NAME:-Fitness App}
+      - Email__EnableSsl=${EMAIL_ENABLE_SSL:-true}
+    depends_on:
+      - redis
+
+  profileservice:
+    image: wirosol793/elevateprojects:api-fitness-app-profile-${TAG:-latest}
+    restart: unless-stopped
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:8080
+      - TZ=Africa/Cairo
+      - ConnectionStrings__ProfileDatabase=Server=${SQL_HOST},${SQL_PORT:-1433};Database=profileservice;User Id=${SQL_USER:-sa};Password=${SQL_PASSWORD};TrustServerCertificate=True;MultipleActiveResultSets=true
+      - Jwt__Key=${JWT_KEY}
+      - Jwt__Issuer=${JWT_ISSUER:-FitnessApp.AuthenticationService}
+      - Jwt__Audience=${JWT_AUDIENCE:-FitnessApp.Services}
+      - Redis__ConnectionString=redis:6379
+      - RabbitMq__Host=${RABBITMQ_HOST}
+      - RabbitMq__Username=${RABBITMQ_USERNAME}
+      - RabbitMq__Password=${RABBITMQ_PASSWORD}
+    depends_on:
+      - redis
+
+  nutritionservice:
+    image: wirosol793/elevateprojects:api-fitness-app-nutrition-${TAG:-latest}
+    restart: unless-stopped
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:8080
+      - TZ=Africa/Cairo
+      - ConnectionStrings__NutritionDatabase=Server=${SQL_HOST},${SQL_PORT:-1433};Database=FitnessNutrition;User Id=${SQL_USER:-sa};Password=${SQL_PASSWORD};TrustServerCertificate=True;MultipleActiveResultSets=true
+      - Jwt__Key=${JWT_KEY}
+      - Jwt__Issuer=${JWT_ISSUER:-FitnessApp.AuthenticationService}
+      - Jwt__Audience=${JWT_AUDIENCE:-FitnessApp.Services}
+      - Redis__ConnectionString=redis:6379
+      - RabbitMq__Host=${RABBITMQ_HOST}
+      - RabbitMq__Username=${RABBITMQ_USERNAME}
+      - RabbitMq__Password=${RABBITMQ_PASSWORD}
+    depends_on:
+      - redis
+
+  workoutservice:
+    image: wirosol793/elevateprojects:api-fitness-app-workout-${TAG:-latest}
+    restart: unless-stopped
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:8080
+      - TZ=Africa/Cairo
+      - ConnectionStrings__cs=Server=${SQL_HOST},${SQL_PORT:-1433};Database=FitnessWorkout;User Id=${SQL_USER:-sa};Password=${SQL_PASSWORD};TrustServerCertificate=True;MultipleActiveResultSets=true
+      - Jwt__Key=${JWT_KEY}
+      - Jwt__Issuer=${JWT_ISSUER:-FitnessApp.AuthenticationService}
+      - Jwt__Audience=${JWT_AUDIENCE:-FitnessApp.Services}
+      - Redis__ConnectionString=redis:6379
+      - RabbitMq__Host=${RABBITMQ_HOST}
+      - RabbitMq__Username=${RABBITMQ_USERNAME}
+      - RabbitMq__Password=${RABBITMQ_PASSWORD}
+    depends_on:
+      - redis
+
+  fce:
+    image: wirosol793/elevateprojects:api-fitness-app-fce-${TAG:-latest}
+    restart: unless-stopped
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:8080
+      - TZ=Africa/Cairo
+      - ConnectionStrings__cs=Server=${SQL_HOST},${SQL_PORT:-1433};Database=FceDB;User Id=${SQL_USER:-sa};Password=${SQL_PASSWORD};TrustServerCertificate=True;MultipleActiveResultSets=true
+      - Jwt__Key=${JWT_KEY}
+      - Jwt__Issuer=${JWT_ISSUER:-FitnessApp.AuthenticationService}
+      - Jwt__Audience=${JWT_AUDIENCE:-FitnessApp.Services}
+      - Redis__ConnectionString=redis:6379
+      - RabbitMq__Host=${RABBITMQ_HOST}
+      - RabbitMq__Username=${RABBITMQ_USERNAME}
+      - RabbitMq__Password=${RABBITMQ_PASSWORD}
+    depends_on:
+      - redis
+      - nutritionservice
+      - workoutservice
+
+  progresstrackingservice:
+    image: wirosol793/elevateprojects:api-fitness-app-progress-${TAG:-latest}
+    restart: unless-stopped
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:8080
+      - TZ=Africa/Cairo
+      - ConnectionStrings__ProgressTrackingDatabase=Server=${SQL_HOST},${SQL_PORT:-1433};Database=FitnessProgressTracking;User Id=${SQL_USER:-sa};Password=${SQL_PASSWORD};TrustServerCertificate=True;MultipleActiveResultSets=true
+      - Jwt__Key=${JWT_KEY}
+      - Jwt__Issuer=${JWT_ISSUER:-FitnessApp.AuthenticationService}
+      - Jwt__Audience=${JWT_AUDIENCE:-FitnessApp.Services}
+      - Redis__ConnectionString=redis:6379
+    depends_on:
+      - redis
+
+  notificationservice:
+    image: wirosol793/elevateprojects:api-fitness-app-notification-${TAG:-latest}
+    restart: unless-stopped
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:8080
+      - TZ=Africa/Cairo
+      - RabbitMq__Host=${RABBITMQ_HOST}
+      - RabbitMq__Username=${RABBITMQ_USERNAME}
+      - RabbitMq__Password=${RABBITMQ_PASSWORD}
+      - Email__Host=${EMAIL_HOST:-smtp.gmail.com}
+      - Email__Port=${EMAIL_PORT:-587}
+      - Email__UserName=${EMAIL_USERNAME}
+      - Email__Password=${EMAIL_PASSWORD}
+      - Email__FromEmail=${EMAIL_FROM}
+      - Email__FromName=${EMAIL_FROM_NAME:-Fitness App}
+      - Email__EnableSsl=${EMAIL_ENABLE_SSL:-true}
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis_data:/data
+
+volumes:
+  redis_data:
